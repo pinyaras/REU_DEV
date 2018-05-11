@@ -1,0 +1,11 @@
+<div class="form-group">
+  <input  #search type="search" class="form-control form-control-lg" placeholder="Search..."  (keyup)="onSearch(search.value)">
+</div>
+<ng2-smart-table
+  class='form-control'
+  [settings]="settings"
+  [source]="source"
+  (deleteConfirm)="onDeleteConfirm($event)"
+  (editConfirm)="onSaveConfirm($event)"
+  (createConfirm)="onCreateConfirm($event)">
+</ng2-smart-table>

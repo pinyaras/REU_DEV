@@ -1,0 +1,95 @@
+<p>
+  ap-detail works!
+  <button class="btn btn-default" (click)="goBack()">Back</button>
+</p>
+
+<div class="container">
+
+
+<h2>WuMesh AP {{id}}</h2>
+<hr/>
+
+ <div class="row">
+
+   <div class="col-xl-12 text-xs-center">
+     <div class="card mb-3">
+         <div class="card-header card-primary">
+           <h4 class="card-title">
+             <i class="fa fa-wifi" aria-hidden="true"></i>
+             Wireless
+           </h4>
+         </div>
+         <div class="card-block bg-white">
+           <p class="card-text">IP : {{router_ip}} </p>
+
+
+         </div>
+     </div>
+   </div>
+
+ </div>
+
+ <div class="row">
+
+   <div class="col-xl-6 text-xs-center">
+     <div class="card">
+       <div class="card-header card-info">
+         <h4 class="card-title">
+           <i class="fa fa-wifi" aria-hidden="true"></i>
+           Radio0  @2.4 GHz
+         </h4>
+
+       </div>
+       <div class="card-block">
+           <h5 class="card-subtitle mb-2"><strong>Mode: </strong> {{routerAPDetail?.cfg033579.mode }}</h5>
+           <h5 class="card-subtitle mb-2"><strong>Mesh ID: </strong> {{routerAPDetail?.cfg033579.mesh_id}}</h5>
+           <h5 class="card-subtitle mb-2"><strong>Network: </strong> {{routerAPDetail?.cfg033579.network}}</h5>
+
+            <hr>
+
+           <p class="card-text"><strong>Type:</strong>  {{routerAPDetail?.radio0.type}}</p>
+           <p class="card-text"><strong>Channel:</strong>  {{routerAPDetail?.radio0.channel}}</p>
+           <p class="card-text"><strong>HWmode:</strong>  {{routerAPDetail?.radio0.hwmode}}</p>
+           <p class="card-text"><strong>HTmode:</strong>  {{routerAPDetail?.radio0.htmode}}</p>
+           <p class="card-text"><strong>TXpower:</strong> {{routerAPDetail?.radio0.txpower}}
+
+         </p>
+
+
+
+
+       </div>
+
+     </div>
+   </div>
+
+   <div class="col-xl-6 text-xs-center">
+     <div class="card">
+       <div class="card-header card-info">
+         <h4 class="card-title">
+           <i class="fa fa-wifi" aria-hidden="true"></i>
+           Radio1 @5 GHz {{routerAPDetail?.radio1.name}}
+         </h4>
+
+       </div>
+       <div class="card-block">
+           <h5 class="card-subtitle mb-2"><strong>Mesh ID: </strong> {{routerAPDetail?.cfg083579.mesh_id}}</h5> <hr>
+
+         <p class="card-text"><strong>Type:</strong>  {{routerAPDetail?.radio1.type}}</p>
+         <p class="card-text"><strong>Channel:</strong>  {{routerAPDetail?.radio1.channel}}</p>
+         <p class="card-text"><strong>HWmode:</strong>  {{routerAPDetail?.radio1.hwmode}}</p>
+         <p class="card-text"><strong>HTmode:</strong>  {{routerAPDetail?.radio1.htmode}}</p>
+         <p class="card-text"><strong>TXpower:</strong> {{routerAPDetail?.radio1.txpower}}
+
+         </p>
+
+
+
+
+       </div>
+
+     </div>
+   </div>
+
+ </div>
+</div>

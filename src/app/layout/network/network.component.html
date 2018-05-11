@@ -1,0 +1,96 @@
+ <div class="container">
+
+
+<h2>WuMesh AP 30</h2>
+<hr/>
+
+  <div class="row">
+
+    <div class="col-xl-12 text-xs-center">
+      <div class="card mb-3">
+          <div class="card-header card-primary">
+            <h4 class="card-title">
+              <i class="fa fa-wifi" aria-hidden="true"></i>
+              Wireless
+            </h4>
+          </div>
+          <div class="card-block bg-white">
+            <p class="card-text">IP : 10.0.0.30 </p>
+
+
+          </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <div class="col-xl-6 text-xs-center">
+      <div class="card">
+        <div class="card-header card-info">
+          <h4 class="card-title">
+            <i class="fa fa-wifi" aria-hidden="true"></i>
+            Radio0  @2.4 GHz
+          </h4>
+
+        </div>
+        <div class="card-block">
+            <h5 class="card-subtitle mb-2"><strong>Mode: </strong> {{radios?.cfg033579.mode}}</h5>
+            <h5 class="card-subtitle mb-2"><strong>Mesh ID: </strong> {{radios?.cfg033579.mesh_id}}</h5>
+            <h5 class="card-subtitle mb-2"><strong>Network: </strong> {{radios?.cfg033579.network}}</h5>
+
+             <hr>
+
+            <p class="card-text"><strong>Type:</strong>  {{radios?.radio0.type}}</p>
+            <p class="card-text"><strong>Channel:</strong>  {{radios?.radio0.channel}}</p>
+            <p class="card-text"><strong>HWmode:</strong>  {{radios?.radio0.hwmode}}</p>
+            <p class="card-text"><strong>HTmode:</strong>  {{radios?.radio0.htmode}}</p>
+            <p class="card-text"><strong>TXpower:</strong>
+            <input type="text" [(ngModel)]="editConfig" placeholder={{radios?.radio0.txpower}} >
+            <button class="btn btn-info" (click)="setConfig()"> Change Txpower
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </p>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-xl-6 text-xs-center">
+      <div class="card">
+        <div class="card-header card-info">
+          <h4 class="card-title">
+            <i class="fa fa-wifi" aria-hidden="true"></i>
+            Radio1 @5 GHz {{radios?.radio1.name}}
+          </h4>
+
+        </div>
+        <div class="card-block">
+            <h5 class="card-subtitle mb-2"><strong>Mesh ID: </strong> {{radios?.cfg083579.mesh_id}}</h5> <hr>
+
+          <p class="card-text"><strong>Type:</strong>  {{radios?.radio1.type}}</p>
+          <p class="card-text"><strong>Channel:</strong>  {{radios?.radio1.channel}}</p>
+          <p class="card-text"><strong>HWmode:</strong>  {{radios?.radio1.hwmode}}</p>
+          <p class="card-text"><strong>HTmode:</strong>  {{radios?.radio1.htmode}}</p>
+          <p class="card-text"><strong>TXpower:</strong>
+            <input type="text" [(ngModel)]="editConfig" placeholder="5" >
+            <button class="btn btn-info" (click)="setConfig()"> Change Txpower
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </p>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

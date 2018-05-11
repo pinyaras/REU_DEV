@@ -1,0 +1,45 @@
+<!-- <div class="container">
+  <div class="row">
+    <div *ngFor="let item of routerAP"  class="col-md-4">
+      <div class="card card-block mb-3">
+        <div class="card-header card-primary">
+          <h3 class="card-title">
+            <i class="fa fa-wifi" aria-hidden="true"></i>
+            WuMesh AP {{item.router_id}}
+          </h3>
+        </div>
+          <hr>
+          <p class="card-text"> IP : {{ item.router_ip }}</p>
+          <p class="card-text"> <button class="btn btn-primary" (click)="onShowDetail(item)" >View</button> </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+ -->
+
+<div class="container">
+<div class="row">
+  <div *ngFor="let item of routerAP"  class="col-md-4">
+    <div class="card card-inverse card-primary mb-3">
+        <div class="card-header">
+            <div class="row">
+                <div class="col col-xs-3">
+                    <i class="fa fa-wifi fa-4x"></i>
+                </div>
+                <div class="col col-xs-9 ">
+                    <div class="title"> <h5><strong> WuMesh AP {{item.router_id}} </strong></h5></div>
+                    <div class="d-block">IP: {{item.router_ip}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a (click)="onShowDetail(item)" class="float-left">View Details </a>
+            <a href="javascript:void(0)" class="float-right card-inverse">
+                <span ><i (click)="onShowDetail(item)" class="fa fa-arrow-circle-right fa-2x"></i></span>
+            </a>
+        </div>
+    </div>
+  </div>
+</div>
+</div>

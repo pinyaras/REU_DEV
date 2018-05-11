@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div *ngFor="let item of routerNode"  class="col-md-4">
+      <div class="card card-inverse card-primary mb-3">
+          <div class="card-header">
+              <div class="row">
+                  <div class="col col-xs-3">
+                      <i class="fa fa-wifi fa-4x"></i>
+                  </div>
+                  <div class="col col-xs-9 ">
+                      <div class="title"> <h5><strong> WuMesh AP {{item.router_ip | slice:-2}} </strong></h5></div>
+                      <div class="d-block">IP: {{item.router_ip}}</div>
+                  </div>
+              </div>
+          </div>
+          <div class="card-footer">
+              <a (click)="onShowDetail(item)" class="float-left">View Details </a>
+              <a href="javascript:void(0)" class="float-right card-inverse">
+                  <span ><i (click)="onShowDetail(item)" class="fa fa-arrow-circle-right fa-2x"></i></span>
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
