@@ -14,7 +14,7 @@ import { NodeService } from './shared/services/node.service'
 import { apiRoutersService } from './shared/services/api_routers.service'
 import { apiUsersService } from './shared/services/api_users.service'
 
-
+import { D3Service } from 'd3-ng2-service'; // <-- import statement
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 
@@ -41,7 +41,7 @@ export function HttpLoaderFactory(http: Http) {
             }
         })
     ],
-    providers: [AuthGuard,RouterAPService,ApService,NodeService,apiRoutersService,apiUsersService],
+    providers: [AuthGuard, RouterAPService, ApService, NodeService, apiRoutersService, apiUsersService, D3Service],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

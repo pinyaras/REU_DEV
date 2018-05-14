@@ -21,6 +21,8 @@ const routes: Routes = [
             { path: 'node/:id/router_ip/:router_ip', loadChildren: './node/node-detail.module#NodeDetailModule' },
             { path: 'node-config', loadChildren: './node-config/node-config.module#NodeConfigModule' },
             { path: 'user', loadChildren: './user/user.module#UserModule' },
+            { path: 'test-d3', loadChildren: './test-d3/test-d3.module#TestD3Module' },
+
 
         ]
     }
