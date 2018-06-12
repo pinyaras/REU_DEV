@@ -47,8 +47,8 @@ export class Network {
         this.nodes.splice(index, 1);
         
         this.links.forEach(function(link, i) {
-            if(link.hasNode(node){
-				links.splice(i, 1);
+            if(link.hasNode(node)){
+				this.links.splice(i, 1);
 			}
 		})
 	}
