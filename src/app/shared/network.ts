@@ -32,8 +32,8 @@ export class Network {
         this.links.push(new Link(n1, n2))
     }
     addNode(name, type) : void { 
-        this.nodes.push(new Node(this.id, name, type)); 
-        id++;
+        this.nodes.push(new Node(Network.id, name, type)); 
+        Network.id++;
     }
 	removeLink(n1, n2) : void { 
 		for(let x = 0; x < this.links.length; x++) {
