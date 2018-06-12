@@ -1,6 +1,7 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { Node } from '../node';
-import { Network } from '../network';
+import { Node } from '../../shared/node';
+import { Link } from '../../shared/link';
+import { Network } from '../../shared/network';
 
 import {
   D3Service,
