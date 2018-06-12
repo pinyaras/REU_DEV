@@ -7,6 +7,6 @@ export class Link {
     delay: string;
 
     hasNode(n: Node) : boolean {
-        return node1 == n || node2 == n;
+        return this.node1 == n || this.node2 == n;
     }
 }
