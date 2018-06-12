@@ -41,7 +41,16 @@ export class TestD3Component implements OnInit {
         let svg = this.d3.select("svg")
         svg.style("background-color", TestD3Component.SVG_FILL);
 
+        svg.selectAll("circle")
+          .data(this.network.nodes)
+          .enter()
+          .append("circle.node")
+          .attr("r", TestD3Component.NODE_RADIUS)
+          .attr("fill", function(node){
+            return TestD3Component.NODE_COLORS[node.name]
+          })
+          .attr("cx", 20)
+          .attr("cy", 50)
         console.log(this.network);
-
     }
 }
