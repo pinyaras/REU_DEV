@@ -21,7 +21,7 @@ export class TestD3Component implements OnInit {
         "host": "tomato",
         "switch": "dodgerblue"
     };
-    private static readonly SVG_FILL = "LightSlateGray";
+    private static readonly SVG_FILL = "#292b2c";
 
   private d3: D3;
   private parentNativeElement: any;
