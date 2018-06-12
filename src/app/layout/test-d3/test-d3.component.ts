@@ -38,9 +38,32 @@ export class TestD3Component implements OnInit {
     }
 
     ngOnInit() {
-        
+        let d3 = this.d3;
         let svg = this.d3.select("svg")
         svg.style("background-color", TestD3Component.SVG_FILL);
+
+        let delete_hover = function(){
+          svg.select("#hover").remove();
+        }
+        
+        let on_hover = function(d){
+          svg.select("#hover").remove();
+          let coords = d3.mouse(this);
+          console.log(coords);
+          let g = svg.append("g")
+            .attr("id", "hover");
+          let text = g.append("text")
+            .attr("x", coords[0])
+            .attr("y", coords[1])
+            .attr("fill", "white");
+          text.append("tspan")
+            .attr("x", coords[0])
+            .text(d.name);
+          text.append("tspan")
+            .attr("x", coords[0])
+            .attr("dy", "1em")
+            .text(d.type);
+        }
 
         let lines = svg.selectAll('line')
           .data(this.network.links) 
@@ -63,6 +86,12 @@ export class TestD3Component implements OnInit {
           })
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; })
+          .on("mousemove", on_hover)
+          .on("mouseout", delete_hover);
+
+        
+
+
     }
 
 }
