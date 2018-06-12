@@ -8,7 +8,7 @@ export class Network {
 	nodes: Node[];
 
 	constructor() { }
-	areConnected(n1, n2) { 
+	areConnected(n1, n2): boolean { 
 		let isConnected = false;
 		this.links.forEach(function(link) {
 			if(link.node1.id == n1.id && link.node2.id == n2.id) {
@@ -20,7 +20,7 @@ export class Network {
 		})
 		return isConnected;
 	}
-	adjNodes(node) { 
+	adjNodes(node): Node[] { 
 		let aNodes = [];
 		this.links.forEach(function(link) {
 			if(link.hasNode(node)) {
@@ -43,9 +43,10 @@ export class Network {
 		}
 	}
 	removeNode(node) { 
+		var nodes = this.nodes;
 		this.nodes.forEach(function(n, i) {
 			if(n.id = node.id) {
-				this.nodes.splice(i, 1);
+				nodes.splice(i, 1);
 			}
 		})
 	}

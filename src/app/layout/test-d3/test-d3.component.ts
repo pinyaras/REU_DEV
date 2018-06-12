@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Node } from '../node';
-import { Netowrk } from '../network';
+import { Network } from '../network';
 
 import {
   D3Service,
@@ -32,6 +32,7 @@ export class TestD3Component implements OnInit {
 
   ngOnInit() {
         let svg = this.d3.select("svg")
-        svg.attr("fill", this.SVG_FILL);
+        svg.style("background-color", TestD3Component.SVG_FILL);
+
    }
 }
