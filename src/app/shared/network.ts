@@ -7,9 +7,14 @@ export class Network {
 	links: Link[];
 	nodes: Node[];
 
-    constructor() { }
+    constructor() { 
 
-    areConnected(n1, n2): boolean {  
+    	this.links = [];
+    	this.nodes = [];
+
+    }
+
+    areConnected(n1: Node, n2: Node): boolean {  
         return this.links.some(function(link) {
             return link.hasNode(n1) && link.hasNode(n2);
 		})
@@ -31,7 +36,7 @@ export class Network {
     addLink(n1, n2) : void { 
         this.links.push(new Link(n1, n2))
     }
-    addNode(name, type) : void { 
+    addNode(name: string, type: string) : void { 
         this.nodes.push(new Node(Network.id, name, type)); 
         Network.id++;
     }
