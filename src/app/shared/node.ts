@@ -4,6 +4,8 @@ export class Node {
 	id: number;
 	name: string;
 	type: string;
+	x: number;
+	y: number;
 
 	constructor(id, name, type) { 
         this.id = id;

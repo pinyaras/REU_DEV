@@ -18,10 +18,11 @@ import {
 export class TestD3Component implements OnInit {
 
     private static readonly NODE_RADIUS = 20;
-    private static readonly NODE_COLORS = {
-        "controller": "gray",
+    private static readonly COLORS = {
+        "controller": "#34BD62",
         "host": "tomato",
-        "switch": "dodgerblue"
+        "switch": "dodgerblue",
+        "line": "snow"
     };
 
     private static readonly SVG_FILL = "#292b2c";
@@ -41,16 +42,43 @@ export class TestD3Component implements OnInit {
         let svg = this.d3.select("svg")
         svg.style("background-color", TestD3Component.SVG_FILL);
 
-        svg.selectAll("circle")
+        let lines = svg.selectAll('line')
+          .data(this.network.links) 
+          .enter()
+          .append('line')
+          .attr('x1', function(d) { return d.node1.x})
+          .attr('y1', function(d) { return d.node1.y})
+          .attr('x2', function(d) { return d.node2.x})
+          .attr('y2', function(d) { return d.node2.y})
+          .attr('stroke', TestD3Component.COLORS['line'])
+          .attr('stroke-width', 5)
+
+        let circles = svg.selectAll("circle")
           .data(this.network.nodes)
           .enter()
-          .append("circle.node")
+          .append("circle")
           .attr("r", TestD3Component.NODE_RADIUS)
           .attr("fill", function(node){
-            return TestD3Component.NODE_COLORS[node.name]
+            return TestD3Component.COLORS[node.type]
           })
-          .attr("cx", 20)
-          .attr("cy", 50)
-        console.log(this.network);
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; })
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

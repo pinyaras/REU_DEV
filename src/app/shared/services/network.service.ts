@@ -17,11 +17,18 @@ export class NetworkService {
 			this.network.addNode('h' + x, 'host');
 
 		}
-
+		this.network.addNode('s1', 'switch');
+		this.network.addNode('c0', 'controller');
 		let nodes = this.network.nodes;
-		this.network.addLink(nodes[0], nodes[1]);
-		this.network.addLink(nodes[1], nodes[2]);
-		this.network.addLink(nodes[0], nodes[2]);
+		nodes.forEach(function(node, i) {
+
+			nodes[i].x = Math.cos((i/nodes.length)* Math.PI * 2) * 100 + 300;
+  			nodes[i].y = Math.sin((i/nodes.length)* Math.PI * 2) * 100 + 200;
+
+		}) 
+		this.network.addLink(nodes[0], nodes[3]);
+		this.network.addLink(nodes[1], nodes[3]);
+		this.network.addLink(nodes[2], nodes[3]);
 
 	} 
 
