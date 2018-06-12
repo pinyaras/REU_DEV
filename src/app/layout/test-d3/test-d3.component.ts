@@ -49,20 +49,23 @@ export class TestD3Component implements OnInit {
         let on_hover = function(d){
           svg.select("#hover").remove();
           let coords = d3.mouse(this);
-          console.log(coords);
+          // console.log(coords);
           let g = svg.append("g")
             .attr("id", "hover");
           let text = g.append("text")
-            .attr("x", coords[0])
-            .attr("y", coords[1])
+            .attr("x", coords[0] + 5)
+            .attr("y", coords[1] - 40)
             .attr("fill", "white");
-          text.append("tspan")
-            .attr("x", coords[0])
-            .text(d.name);
-          text.append("tspan")
-            .attr("x", coords[0])
-            .attr("dy", "1em")
-            .text(d.type);
+
+          d.getInfoLst().forEach(function(info) {
+
+            text.append('tspan')
+              .text(info)
+              .attr('dy', 1+'em')
+              .attr('x', coords[0] + 5);
+
+          })
+
         }
 
         let lines = svg.selectAll('line')
@@ -88,10 +91,6 @@ export class TestD3Component implements OnInit {
           .attr("cy", function(d) { return d.y; })
           .on("mousemove", on_hover)
           .on("mouseout", delete_hover);
-
-        
-
-
     }
 
 }

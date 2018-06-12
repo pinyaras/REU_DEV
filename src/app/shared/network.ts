@@ -3,7 +3,7 @@ import { Link } from './link';
 
 
 export class Network {
-    private static id: number;
+    private id: number = 1;
 	links: Link[];
 	nodes: Node[];
 
@@ -37,8 +37,8 @@ export class Network {
         this.links.push(new Link(n1, n2))
     }
     addNode(name: string, type: string) : void { 
-        this.nodes.push(new Node(Network.id, name, type)); 
-        Network.id++;
+        this.nodes.push(new Node(this.id, name, type)); 
+        this.id++;
     }
 	removeLink(n1, n2) : void { 
 		for(let x = 0; x < this.links.length; x++) {

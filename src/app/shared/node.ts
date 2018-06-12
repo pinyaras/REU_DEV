@@ -14,4 +14,10 @@ export class Node {
 
 	}
 
+	getInfoLst() {
+
+		return [this.name, this.type];
+
+	}
+
 }
