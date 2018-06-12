@@ -5,8 +5,8 @@ export class Node {
 	name: string;
 	type: string;
 
-	constructor(name, type) { 
-
+	constructor(id, name, type) { 
+        this.id = id;
 		this.name = name;
 		this.type = type;
 
