@@ -25,6 +25,13 @@ export class TestD3Component implements OnInit {
         "line": "snow",
         "text": "#292b2c"
     };
+    private static readonly NODE_IMAGES = {
+
+      'controller': 'controller.svg',
+      'host': 'host.svg',
+      'switch': 'router.svg'
+
+    }
 
     private static readonly SVG_FILL = "#292b2c";
 
@@ -98,7 +105,7 @@ export class TestD3Component implements OnInit {
           .enter()
           .append("image")
           .style("fill", 'red')
-          .attr('xlink:href', 'assets/images/router.svg')
+          .attr('xlink:href', function(d) { return 'assets/images/' + TestD3Component.NODE_IMAGES[d.type]})
           .attr('width', 60)
           .attr('height', 60)
           .attr("x", function(d) { return d.x - 30; })
