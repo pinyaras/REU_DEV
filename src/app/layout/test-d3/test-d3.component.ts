@@ -91,16 +91,16 @@ export class TestD3Component implements OnInit {
           .on("mousemove", on_hover)
           .on("mouseout", delete_hover);
 
-        let circles = svg.selectAll("circle")
+        let circles = svg.selectAll("image")
           .data(this.network.nodes)
           .enter()
-          .append("circle")
-          .attr("r", TestD3Component.NODE_RADIUS)
-          .attr("fill", function(node){
-            return TestD3Component.COLORS[node.type]
-          })
-          .attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; })
+          .append("image")
+          .style("fill", 'red')
+          .attr('xlink:href', 'assets/images/router.svg')
+          .attr('width', 60)
+          .attr('height', 60)
+          .attr("x", function(d) { return d.x - 30; })
+          .attr("y", function(d) { return d.y - 30; })
           .on("mousemove", on_hover)
           .on("mouseout", delete_hover);
     }
