@@ -45,11 +45,13 @@ export class TestD3Component implements OnInit {
 
         let delete_hover = function(){
           svg.select("#hover").remove();
+          d3.select(this).attr('r', TestD3Component.NODE_RADIUS);
         }
-        
+
         let on_hover = function(d){
           svg.select("#hover").remove();
           let coords = d3.mouse(this);
+          d3.select(this).attr('r', TestD3Component.NODE_RADIUS + 5);
           // console.log(coords);
           let g = svg.append("g")
             .attr("id", "hover");
@@ -79,7 +81,7 @@ export class TestD3Component implements OnInit {
         }
 
         let lines = svg.selectAll('line')
-          .data(this.network.links) 
+          .data(this.network.links)
           .enter()
           .append('line')
           .attr('x1', function(d) { return d.node1.x})
@@ -106,19 +108,3 @@ export class TestD3Component implements OnInit {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
