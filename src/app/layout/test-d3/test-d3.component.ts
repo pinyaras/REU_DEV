@@ -22,7 +22,8 @@ export class TestD3Component implements OnInit {
         "controller": "#34BD62",
         "host": "tomato",
         "switch": "dodgerblue",
-        "line": "snow"
+        "line": "snow",
+        "text": "#292b2c"
     };
 
     private static readonly SVG_FILL = "#292b2c";
@@ -52,13 +53,22 @@ export class TestD3Component implements OnInit {
           // console.log(coords);
           let g = svg.append("g")
             .attr("id", "hover");
+          let size = d.getInfoLst().length
+          g.append("rect")
+            .attr("x", coords[0]+1)
+            .attr("y", coords[1]-((size + 1)*12+7))
+            .attr("width", "100")
+            .attr("height", (size + 0.5)+"em" )
+            .attr("fill", "aliceblue")
+            .attr("opacity", ".750")
+            .attr("rx", 3)
+            .attr("ry", 3);
           let text = g.append("text")
             .attr("x", coords[0] + 5)
-            .attr("y", coords[1] - 40)
-            .attr("fill", "white");
+            .attr("y", coords[1] - ((size + 1)*12+5))
+            .attr("fill", TestD3Component.COLORS["TEXT"]);
 
           d.getInfoLst().forEach(function(info) {
-
             text.append('tspan')
               .text(info)
               .attr('dy', 1+'em')
@@ -78,6 +88,8 @@ export class TestD3Component implements OnInit {
           .attr('y2', function(d) { return d.node2.y})
           .attr('stroke', TestD3Component.COLORS['line'])
           .attr('stroke-width', 5)
+          .on("mousemove", on_hover)
+          .on("mouseout", delete_hover);
 
         let circles = svg.selectAll("circle")
           .data(this.network.nodes)

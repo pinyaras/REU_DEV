@@ -20,9 +20,8 @@ export class Link {
     }
 
     getInfoLst() {
-
-        return [this.node1.name + " < -- > " + this.node2.name, this.bw];
-
+        return [this.node1.name + " <--> " + this.node2.name, this.bw, this.delay]
+            .filter(function(e){ return e;});
     }
 
 }

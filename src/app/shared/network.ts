@@ -33,8 +33,8 @@ export class Network {
 		})
 		return aNodes;
 	}
-    addLink(n1, n2) : void { 
-        this.links.push(new Link(n1, n2))
+    addLink(n1, n2, bw='', delay='') : void { 
+        this.links.push(new Link(n1, n2, bw, delay))
     }
     addNode(name: string, type: string) : void { 
         this.nodes.push(new Node(this.id, name, type)); 
