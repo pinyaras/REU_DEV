@@ -26,9 +26,9 @@ export class NetworkService {
   			nodes[i].y = Math.sin((i/nodes.length)* Math.PI * 2) * 100 + 200;
 
 		}) 
-		this.network.addLink(nodes[0], nodes[3]);
-		this.network.addLink(nodes[1], nodes[3]);
-		this.network.addLink(nodes[2], nodes[3]);
+		this.network.addLink(nodes[0], nodes[3], "15 Mbps", "10 ms");
+		this.network.addLink(nodes[1], nodes[3], "30 Mbps", "5 ms");
+		this.network.addLink(nodes[2], nodes[3], "5 Mbps");
 
 	} 
 
