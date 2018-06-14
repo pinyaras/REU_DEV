@@ -61,8 +61,6 @@ export class TestD3Component implements OnInit {
       .attr('x', 20)
       .attr('y', 50)
 
-
-
     let delete_hover = function() {
       svg.select("#hover").remove();
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS);
@@ -116,9 +114,7 @@ export class TestD3Component implements OnInit {
 
     let dragHandler = d3.drag().on('start', function(d) {
 
-      console.log(d);
       svg.select("#hover").remove();
-
 
     })
       .on('drag', function(d) {
@@ -142,26 +138,32 @@ export class TestD3Component implements OnInit {
         .attr('y1', function(d) { return d.node1.y })
         .attr('x2', function(d) { return d.node2.x })
         .attr('y2', function(d) { return d.node2.y })
-        .attr('stroke', TestD3Component.COLORS['line'])
+        .attr('stroke', function(d) { 
+
+          if(d.enabled) {
+            return TestD3Component.COLORS['line'];
+          } else {
+            return 'snow';
+          }
+
+        })
         .attr('stroke-width', 5)
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover)
         .on("dblclick", function(d) {
 
-          let line = d3.select(this);
           d.enabled = !d.enabled;
-          if (d.enabled) {
-            line.attr('stroke', TestD3Component.COLORS['line'])
-              .attr('opacity', 1)
+          if(d.enabled) {
+            d3.select(this).attr('opacity', 1)
           } else {
-            line.attr('stroke', 'snow')
-              .attr('opacity', .25);
+            d3.select(this).attr('opacity', .25)
           }
-
+          render();
+          
         });
 
       nodes.style("fill", 'red')
-               .attr('class', 'nodes')
+         .attr('class', 'nodes')
         .attr('xlink:href', function(d) { return 'assets/images/' + TestD3Component.NODE_IMAGES[d.type] })
         .attr('width', 50)
         .attr('height', 50)
