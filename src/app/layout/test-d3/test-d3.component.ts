@@ -19,10 +19,10 @@ export class TestD3Component implements OnInit {
 
     private static readonly NODE_RADIUS = 20;
     private static readonly COLORS = {
-        "controller": "#34BD62",
+        "controller": "snow",
         "host": "tomato",
         "switch": "dodgerblue",
-        "line": "snow",
+        "line": "#34BD62",
         "text": "#292b2c"
     };
     private static readonly NODE_IMAGES = {
@@ -76,7 +76,7 @@ export class TestD3Component implements OnInit {
             .attr("id", "hover");
           let size = d.getInfoLst().length
           g.append("rect")
-            .attr("x", coords[0]+1)
+            .attr("x", coords[0]+3)
             .attr("y", coords[1]-((size + 1)*12+7))
             .attr("width", "100")
             .attr("height", (size + 0.5)+"em" )
@@ -110,11 +110,21 @@ export class TestD3Component implements OnInit {
           .attr('stroke', TestD3Component.COLORS['line'])
           .attr('stroke-width', 5)
           .on("mousemove", on_hover)
-          .on("mouseout", delete_hover);
+          .on("mouseout", delete_hover)
+          .on("dblclick", function(d) {
 
-        // console.log(this.network.nodes.length)
+              let line = d3.select(this);
+              d.enabled = !d.enabled;
+              if(d.enabled) {
+                line.attr('stroke', TestD3Component.COLORS['line'])
+                    .attr('opacity', 1)
+              } else {
+                line.attr('stroke', 'snow')
+                    .attr('opacity', .25);
+              }
 
 
+          });
 
         let nodes = svg.selectAll("image.nodes")
           .data(this.network.nodes)
@@ -128,8 +138,6 @@ export class TestD3Component implements OnInit {
           .attr("y", function(d) { return d.y - 30; })
           .on("mousemove", on_hover)
           .on("mouseout", delete_hover);
-
-
 
     }
 

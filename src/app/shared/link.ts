@@ -13,7 +13,7 @@ export class Link {
     	this.node2 = node2;
     	this.bw = bw;
     	this.delay = delay;
-        // this.enabled = true;
+        this.enabled = true;
 
     }
 
