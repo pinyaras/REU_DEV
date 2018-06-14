@@ -8,8 +8,6 @@ import {
   D3
 } from 'd3-ng2-service';
 
-
-
 @Component({
   selector: 'app-test-d3',
   templateUrl: './test-d3.component.html',
@@ -40,8 +38,17 @@ export class TestD3Component implements OnInit {
 
     ngOnInit() {
         let d3 = this.d3;
+
         let svg = this.d3.select("svg")
         svg.style("background-color", TestD3Component.SVG_FILL);
+
+
+        //let url = "http://maps.google.com/maps/api/staticmap?key=AIzaSyCDvRL-n6Nh7bnPv4VsAhFKdWCRxc6LcI8&center=woodwardhall,UNCC&zoom=20&size=1000x1000";
+         let url = "assets/images/staticmap.png";
+         let map = svg.append("image")
+          .attr("id", "map")
+          .attr("xlink:href", encodeURI(url));
+         console.log(map);
 
         let delete_hover = function(){
           svg.select("#hover").remove();
