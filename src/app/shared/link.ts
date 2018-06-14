@@ -5,6 +5,7 @@ export class Link {
     node2: Node;
     bw: string;
     delay: string;
+    enabled: boolean;
 
     constructor(node1, node2, bw='', delay='') {
 
@@ -12,6 +13,7 @@ export class Link {
     	this.node2 = node2;
     	this.bw = bw;
     	this.delay = delay;
+        // this.enabled = true;
 
     }
 

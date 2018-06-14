@@ -33,6 +33,7 @@ export class TestD3Component implements OnInit {
 
     }
 
+    private static readonly PADDING = 20;
     private static readonly SVG_FILL = "#292b2c";
 
     private network: Network;
@@ -49,6 +50,17 @@ export class TestD3Component implements OnInit {
         let d3 = this.d3;
         let svg = this.d3.select("svg")
         svg.style("background-color", TestD3Component.SVG_FILL);
+
+        let width = svg.style('width');
+        let height = parseInt(svg.style('height'));
+
+        svg.append('image')
+          .attr('xlink:href', 'assets/images/floor2.svg')
+          .attr('height', height-100)
+          .attr('x', 20)
+          .attr('y', 50)
+
+
 
         let delete_hover = function(){
           svg.select("#hover").remove();
@@ -100,18 +112,25 @@ export class TestD3Component implements OnInit {
           .on("mousemove", on_hover)
           .on("mouseout", delete_hover);
 
-        let circles = svg.selectAll("image")
+        // console.log(this.network.nodes.length)
+
+
+
+        let nodes = svg.selectAll("image.nodes")
           .data(this.network.nodes)
           .enter()
           .append("image")
           .style("fill", 'red')
           .attr('xlink:href', function(d) { return 'assets/images/' + TestD3Component.NODE_IMAGES[d.type]})
-          .attr('width', 60)
-          .attr('height', 60)
+          .attr('width', 50)
+          .attr('height', 50)
           .attr("x", function(d) { return d.x - 30; })
           .attr("y", function(d) { return d.y - 30; })
           .on("mousemove", on_hover)
           .on("mouseout", delete_hover);
+
+
+
     }
 
 }
