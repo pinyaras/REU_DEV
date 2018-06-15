@@ -136,7 +136,7 @@ export class TestD3Component implements OnInit {
       g.append("rect")
         .attr("x", coords[0] + 3)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
-        .attr("width", "100")
+        .attr("width", (size * 3.5) + 'em')
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "aliceblue")
         .attr("opacity", ".750")
@@ -214,7 +214,7 @@ export class TestD3Component implements OnInit {
       //     .attr('y1', function(d) { return d.node1.y })
       //     .attr('x2', function(d) { return d.node2.x })
       //     .attr('y2', function(d) { return d.node2.y })
-      //     .attr('stroke', function(d) { 
+      //     .attr('stroke', function(d) {
 
       //       if(d.enabled) {
       //         return TestD3Component.COLORS['line'];
