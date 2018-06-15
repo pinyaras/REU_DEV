@@ -57,11 +57,12 @@ export class TestD3Component implements OnInit {
           nodes.forEach(function(node) {
             this.nodes.push(new Node(node));
           }, this)
-          this.wirelessnodes = wirelessnodes;
-          this.links = links;
-          console.log(nodes);
-          console.log(wirelessnodes);
-          console.log(links);
+          wirelessnodes.forEach(function(wn) {
+            this.wirelessnodes.push(new WirelessNode(wn));
+          }, this)
+          links.forEach(function(link) {
+            this.links.push(new Link(link));
+          }, this)
           this.myOnInit();
         })
       })

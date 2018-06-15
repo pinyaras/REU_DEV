@@ -14,8 +14,13 @@ export class Link {
     //         1
     //     ]
     // },
-    constructor(){
+    constructor(obj: any) {
         
+        this.id = obj.id;
+        this.nexthopNode = obj.nexthopNode;
+        this.bw = obj.bw;
+        this.nodeId = obj.nodeId;
+
     }
     // constructor(node1, node2, bw='', delay='') {
     // 	this.node1 = node1;
