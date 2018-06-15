@@ -159,15 +159,16 @@ export class TestD3Component implements OnInit {
 
     // var lines;
     var lines = [];
+    var comp = this;
     this.links.forEach(function (linkObj) {
       lines.concat(svg.selectAll('line')
         .data(linkObj.nodeId)
         .enter()
         .append('line')
-        .attr("x1", function (l) { return this.getNodebyId(l); })
-        .attr("y1", function (l) { return this.getNodebyId(l); })
-        .attr("x2", function (l) { return this.getNodebyIp(linkObj.nexthopNode); })
-        .attr("y2", function (l) { return this.getNodebyIp(linkObj.nexthopNode); })
+        .attr("x1", function (l) { return comp.getNodeById(l); })
+        .attr("y1", function (l) { return comp.getNodeById(l); })
+        .attr("x2", function (l) { return comp.getNodeByIp(linkObj.nexthopNode); })
+        .attr("y2", function (l) { return comp.getNodeByIp(linkObj.nexthopNode); })
         .attr('stroke', function (d) {
           return "snow";
         })
