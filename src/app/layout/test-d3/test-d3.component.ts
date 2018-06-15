@@ -54,7 +54,7 @@ export class TestD3Component implements OnInit {
     networkService.getNodes().toPromise().then(nodes => {
       networkService.getWirelessNodes().toPromise().then(wirelessnodes => {
         networkService.getWirelessLinks().toPromise().then(links => {
-          nodes.forEach(function(node) {
+          nodes.forEach(function (node) {
             this.nodes.push(new Node(node));
           }, this)
           wirelessnodes.forEach(function(wn) {
@@ -70,12 +70,12 @@ export class TestD3Component implements OnInit {
 
   }
 
-  getNodeByIp(ip: string): Node{
-    return this.nodes.find(function(n){return n.nodeIp == ip;})
+  getNodeByIp(ip: string): Node {
+    return this.nodes.find(function (n) { return n.nodeIp == ip; })
   }
 
-  getNodeById(id: number): Node{
-    return this.nodes.find(function(n){return n.id == id;})
+  getNodeById(id: number): Node {
+    return this.nodes.find(function (n) { return n.id == id; })
   }
 
   ngOnInit() {
@@ -113,19 +113,19 @@ export class TestD3Component implements OnInit {
       .attr('y', 0)
     console.log(this.nodes);
     var length = this.nodes.length;
-    this.nodes.forEach(function(node, i) {
+    this.nodes.forEach(function (node, i) {
       // console.log(node)
       node.x = Math.cos((i / length) * Math.PI * 2) * 100 + 300;
       node.y = Math.sin((i / length) * Math.PI * 2) * 100 + 200;
 
     })
 
-    let delete_hover = function() {
+    let delete_hover = function () {
       svg.select("#hover").remove();
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS);
     }
 
-    let on_hover = function(d) {
+    let on_hover = function (d) {
       svg.select("#hover").remove();
       let coords = d3.mouse(this);
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS + 5);
@@ -147,7 +147,7 @@ export class TestD3Component implements OnInit {
         .attr("y", coords[1] - ((size + 1) * 12 + 5))
         .attr("fill", TestD3Component.COLORS["TEXT"]);
 
-      d.getInfoLst().forEach(function(info) {
+      d.getInfoLst().forEach(function (info) {
         text.append('tspan')
           .text(info)
           .attr('dy', 1 + 'em')
@@ -158,10 +158,22 @@ export class TestD3Component implements OnInit {
     }
 
     // var lines;
-    var lines = svg.selectAll('line')
-      .data(this.links)
-      .enter()
-      .append('line')
+    var lines = [];
+    this.links.forEach(function (linkObj) {
+      lines.concat(svg.selectAll('line')
+        .data(linkObj.nodeId)
+        .enter()
+        .append('line')
+        .attr("x1", function (l) { return this.getNodebyId(l); })
+        .attr("y1", function (l) { return this.getNodebyId(l); })
+        .attr("x2", function (l) { return this.getNodebyIp(linkObj.nexthopNode); })
+        .attr("y2", function (l) { return this.getNodebyIp(linkObj.nexthopNode); })
+        .attr('stroke', function (d) {
+          return "snow";
+        })
+        .attr('stroke-width', 5)
+      )
+    })
 
     // console.log(lines);
 
@@ -226,11 +238,11 @@ export class TestD3Component implements OnInit {
       //     });
 
       nodes.attr('class', 'nodes')
-        .attr('xlink:href', function(d) { return 'assets/images/' + TestD3Component.NODE_IMAGES['host'] })
+        .attr('xlink:href', function (d) { return 'assets/images/' + TestD3Component.NODE_IMAGES['host'] })
         .attr('width', 50)
         .attr('height', 50)
-        .attr("x", function(d) { return d.x + 100; })
-        .attr("y", function(d) { return d.y - 30; })
+        .attr("x", function (d) { return d.x + 100; })
+        .attr("y", function (d) { return d.y - 30; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
     }
