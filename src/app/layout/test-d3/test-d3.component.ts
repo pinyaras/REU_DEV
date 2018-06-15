@@ -124,7 +124,7 @@ export class TestD3Component implements OnInit {
     this.wirelessnodes.forEach(function (node) {
       allNodes.push(node)
     })
-    console.log(allNodes);
+    // console.log(allNodes);
     allNodes.forEach(function (node, i) {
       // console.log(node)
       node.x = Math.cos((i / allNodes.length) * Math.PI * 2) * 200 + 450;
@@ -171,7 +171,7 @@ export class TestD3Component implements OnInit {
 
     // var lines;
     var comp = this;
-    console.log(this.links.length);
+    // console.log(this.links.length);
     // this.links.forEach(function (linkObj) {
     //   console.log(linkObj.nodeId.length);
     //lines.concat(
@@ -179,7 +179,7 @@ export class TestD3Component implements OnInit {
       .data(this.links)
       .enter()
       .append('line')
-    console.log(lines);
+    // console.log(lines); 
 
 
     var nodes = svg.selectAll("image.nodes")
@@ -213,7 +213,7 @@ export class TestD3Component implements OnInit {
 
     function render() {
 
-      lines.attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); console.log(n); return n.x + 25; })
+      lines.attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); return n.x + 25; })
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y + 25; })
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x + 25; })
         .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y + 25; })

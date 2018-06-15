@@ -5,6 +5,7 @@ export class Link {
     nexthopNode: string;
     bw: number;
     nodeId: number[];
+    enabled: boolean;
 
     // {
     //     "id": 1,
@@ -34,9 +35,8 @@ export class Link {
     //     return this.node1 == n || this.node2 == n;
     // }
 
-    // getInfoLst() {
-    //     return [this.node1.name + " <--> " + this.node2.name, this.bw, this.delay]
-    //         .filter(function(e){ return e;});
-    // }
+    getInfoLst() {
+        return [];
+    }
 
 }
