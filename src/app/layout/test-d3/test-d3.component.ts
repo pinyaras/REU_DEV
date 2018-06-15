@@ -57,10 +57,10 @@ export class TestD3Component implements OnInit {
           nodes.forEach(function (node) {
             this.nodes.push(new Node(node));
           }, this)
-          wirelessnodes.forEach(function(wn) {
+          wirelessnodes.forEach(function (wn) {
             this.wirelessnodes.push(new WirelessNode(wn));
           }, this)
-          links.forEach(function(link) {
+          links.forEach(function (link) {
             this.links.push(new Link(link));
           }, this)
           this.myOnInit();
@@ -74,8 +74,7 @@ export class TestD3Component implements OnInit {
     var n = this.nodes.find(function (n) { return n.nodeIp == ip; })
     if (n) {
       return n;
-    } else 
-    {
+    } else {
       return this.wirelessnodes.find(function (n) { return n.ipAdd == ip; })
     }
   }
@@ -119,17 +118,17 @@ export class TestD3Component implements OnInit {
       .attr('y', 0)
     // console.log(this.nodes);
     var allNodes = [];
-    this.nodes.forEach(function(node) {
+    this.nodes.forEach(function (node) {
       allNodes.push(node)
     })
-    this.wirelessnodes.forEach(function(node) {
+    this.wirelessnodes.forEach(function (node) {
       allNodes.push(node)
     })
     console.log(allNodes);
     allNodes.forEach(function (node, i) {
       // console.log(node)
-      node.x = Math.cos((i / allNodes.length) * Math.PI * 2) * 100 + 300;
-      node.y = Math.sin((i / allNodes.length) * Math.PI * 2) * 100 + 200;
+      node.x = Math.cos((i / allNodes.length) * Math.PI * 2) * 200 + 450;
+      node.y = Math.sin((i / allNodes.length) * Math.PI * 2) * 200 + 300;
 
     })
 
@@ -175,22 +174,11 @@ export class TestD3Component implements OnInit {
     console.log(this.links.length);
     // this.links.forEach(function (linkObj) {
     //   console.log(linkObj.nodeId.length);
-      //lines.concat(
+    //lines.concat(
     var lines = svg.selectAll('line')
-        .data(this.links)
-        .enter()
-        .append('line')
-        //.append("class", linkObj.id)
-        .attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); console.log(n); return n.x + 25; })
-        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y + 25; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x + 25; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y + 25; })
-        .attr('stroke', function (d) {
-          return "snow";
-        })
-        .attr('stroke-width', 5)
-      //);
-    // })
+      .data(this.links)
+      .enter()
+      .append('line')
     console.log(lines);
 
 
@@ -203,55 +191,54 @@ export class TestD3Component implements OnInit {
 
     render();
 
-    // let dragHandler = d3.drag().on('start', function(d) {
+    let dragHandler = d3.drag().on('start', function (d) {
 
-    //   svg.select("#hover").remove();
+      svg.select("#hover").remove();
 
-    // })
-    //   .on('drag', function(d) {
+    })
+      .on('drag', function (d) {
 
-    //     svg.select("#hover").remove();
-    //     let coords = d3.mouse(this);
-    //     d.x = coords[0];
-    //     d.y = coords[1];
-    //     let node = d3.select(this);
-    //     node.attr('x', d.x - 30)
-    //     node.attr('y', d.y - 30);
-    //     render();
+        svg.select("#hover").remove();
+        let coords = d3.mouse(this);
+        d.x = coords[0];
+        d.y = coords[1];
+        let node = d3.select(this);
+        node.attr('x', d.x + 25)
+        node.attr('y', d.y + 25);
+        render();
 
-    //   })
+      })
 
-    // dragHandler(svg.selectAll('image.nodes'));
+    dragHandler(svg.selectAll('image.nodes'));
 
     function render() {
 
-      // lines.attr('x1', function(d) { return d; })
-      //     .attr('y1', function(d) { return d.node1.y })
-      //     .attr('x2', function(d) { return d.node2.x })
-      //     .attr('y2', function(d) { return d.node2.y })
-      //     .attr('stroke', function(d) { 
-
-      //       if(d.enabled) {
-      //         return TestD3Component.COLORS['line'];
-      //       } else {
-      //         return 'snow';
-      //       }
-
-      //     })
-      //     .attr('stroke-width', 5)
-      //     .on("mousemove", on_hover)
-      //     .on("mouseout", delete_hover)
-      //     .on("dblclick", function(d) {
-
-      //       d.enabled = !d.enabled;
-      //       if(d.enabled) {
-      //         d3.select(this).attr('opacity', 1)
-      //       } else {
-      //         d3.select(this).attr('opacity', .25)
-      //       }
-      //       render();
-
-      //     });
+      lines.attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); console.log(n); return n.x + 25; })
+        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y + 25; })
+        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x + 25; })
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y + 25; })
+        .attr('stroke', function (d) {
+          return "snow";
+        })
+        .attr('stroke-width', 5)
+        //     .attr('stroke', function(d) { 
+        //       if(d.enabled) {
+        //         return TestD3Component.COLORS['line'];
+        //       } else {
+        //         return 'snow';
+        //       }
+        //     })
+        .on("mousemove", on_hover)
+        .on("mouseout", delete_hover)
+        .on("dblclick", function (d) {
+          d.enabled = !d.enabled;
+          if (d.enabled) {
+            d3.select(this).attr('opacity', 1)
+          } else {
+            d3.select(this).attr('opacity', .25)
+          }
+          render();
+        });
 
       nodes.attr('class', 'nodes')
         .attr('xlink:href', function (d) { return 'assets/images/' + TestD3Component.NODE_IMAGES['host'] })
