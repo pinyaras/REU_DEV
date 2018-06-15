@@ -8,6 +8,7 @@ import {
   D3Service,
   D3
 } from 'd3-ng2-service';
+import { WirelessNode } from '../../shared/wirelessnode';
 
 @Component({
   selector: 'app-test-d3',
@@ -41,18 +42,36 @@ export class TestD3Component implements OnInit {
   private parentNativeElement: any;
 
   private nodes: Node[];
+  private wirelessnodes: WirelessNode[];
+  private links: Link[];
 
   constructor(d3Service: D3Service, networkService: NetworkService) {
     // this.d3 = d3Service.getD3();
     //let nodes = [];
-    let wirelessnodes = [];
-    let links = [];
-    networkService.getNodes().subscribe(data => this.nodes = data);
-    networkService.getWirelessNodes().subscribe(data => wirelessnodes = data);
-    networkService.getWirelessLinks().subscribe(data => links = data);
+    
+    
+    networkService.getNodes().toPromise().then( nodes => 
+      { networkService.getWirelessNodes().toPromise().then(wirelessnodes => {
+          networkService.getWirelessLinks().toPromise().then(links =>{
+            this.nodes = nodes;
+            this.wirelessnodes = wirelessnodes;
+            this.links = links;
+            console.log(nodes);
+            console.log(wirelessnodes);
+            console.log(links);
+            this.myOnInit();
+          })
+      })
+    });
+    
+    //.subscribe(data => this.nodes = data);
+    // networkService.getWirelessNodes().subscribe(data => wirelessnodes = data);
+    // networkService.getWirelessLinks().subscribe(data => links = data);
   }
 
-  ngOnInit() {
+  ngOnInit() {  }
+
+  myOnInit(){
     let svg = d3.select("svg")
     svg.style("background-color", TestD3Component.SVG_FILL);
 
