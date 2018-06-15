@@ -111,12 +111,19 @@ export class TestD3Component implements OnInit {
       .attr('height', 600)
       .attr('x', 0)
       .attr('y', 0)
-    console.log(this.nodes);
-    var length = this.nodes.length;
-    this.nodes.forEach(function (node, i) {
+    // console.log(this.nodes);
+    var allNodes = [];
+    this.nodes.forEach(function(node) {
+      allNodes.push(node)
+    })
+    this.wirelessnodes.forEach(function(node) {
+      allNodes.push(node)
+    })
+    console.log(allNodes);
+    allNodes.forEach(function (node, i) {
       // console.log(node)
-      node.x = Math.cos((i / length) * Math.PI * 2) * 100 + 300;
-      node.y = Math.sin((i / length) * Math.PI * 2) * 100 + 200;
+      node.x = Math.cos((i / allNodes.length) * Math.PI * 2) * 100 + 300;
+      node.y = Math.sin((i / allNodes.length) * Math.PI * 2) * 100 + 200;
 
     })
 
@@ -180,7 +187,7 @@ export class TestD3Component implements OnInit {
 
 
     var nodes = svg.selectAll("image.nodes")
-      .data(this.nodes)
+      .data(allNodes)
       .enter()
       .append("image")
 
