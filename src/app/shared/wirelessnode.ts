@@ -30,6 +30,7 @@ export class WirelessNode {
 	}
 
 	getInfoLst() {
-		return [this.intName, this.node];
+		return [this.node, this.intName, this.ipAdd, this.macAdd, this.channel, this.power, this.mode, this.bw, this.bssid,
+		this.bridge];
 	}
 }

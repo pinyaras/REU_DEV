@@ -28,8 +28,8 @@ export class TestD3Component implements OnInit {
   private static readonly NODE_IMAGES = {
 
     'controller': 'controller.svg',
-    'host': 'host.svg',
-    'switch': 'router.svg'
+    'Node': 'host.svg',
+    'WirelessNode': 'router.svg'
 
   }
 
@@ -254,7 +254,14 @@ export class TestD3Component implements OnInit {
       //     });
 
       nodes.attr('class', 'nodes')
-        .attr('xlink:href', function (d) { return 'assets/images/' + TestD3Component.NODE_IMAGES['host'] })
+        .attr('xlink:href', function (d) { 
+          let name = ''
+          if(d.bssid) {
+            name = 'WirelessNode';
+          } else {
+            name = 'Node';
+          }
+          return 'assets/images/' + TestD3Component.NODE_IMAGES[name]})
         .attr('width', 50)
         .attr('height', 50)
         .attr("x", function (d) { return d.x; })
