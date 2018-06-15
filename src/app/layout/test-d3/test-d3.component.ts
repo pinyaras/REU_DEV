@@ -103,8 +103,9 @@ export class TestD3Component implements OnInit {
       "?key=AIzaSyCDvRL-n6Nh7bnPv4VsAhFKdWCRxc6LcI8" +
       "&center=" + locations.woodward +
       "&zoom=20" +
-      "&size=900x600" +
+      "&size=300x600" +
       "&maptype=roadmap" +
+      // "&scale=2" + 
       "&style=feature:landscape|element:geometry.fill|color:0x292b2c" +
       "&style=feature:landscape|element:geometry.stoke||color:0x000000" +
       "&style=feature:all|element:labels|visibility:off"
@@ -112,11 +113,12 @@ export class TestD3Component implements OnInit {
       .attr("id", "map")
       .attr('xlink:href', url)
       //.attr('xlink:href', 'assets/images/floor2.svg')
-      .attr('width', 900)
-      .attr('height', 600)
-      .attr('x', 0)
-      .attr('y', 0)
-    // console.log(this.nodes);
+      // .attr('width', 300)
+      // .attr('height', 600)
+      // .attr('x', 0)
+      // .attr('y', 0)
+      // .attr('transform-origin', '150 150')
+      // .attr('transform', 'translate(0,300) rotate(90)')
     var allNodes = [];
     this.nodes.forEach(function (node) {
       allNodes.push(node)
@@ -213,21 +215,22 @@ export class TestD3Component implements OnInit {
 
     function render() {
 
-      lines.attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); return n.x + 25; })
-        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y + 25; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x + 25; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y + 25; })
-        .attr('stroke', function (d) {
-          return "snow";
+      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x;})
+        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
+        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y ; })
+        .attr('stroke-width', function(d) {
+
+          return d.bw / 20;
+
         })
-        .attr('stroke-width', 5)
-        //     .attr('stroke', function(d) { 
-        //       if(d.enabled) {
-        //         return TestD3Component.COLORS['line'];
-        //       } else {
-        //         return 'snow';
-        //       }
-        //     })
+        .attr('stroke', function(d) { 
+              if(d.enabled) {
+                return TestD3Component.COLORS['line'];
+              } else {
+                return 'snow';
+              }
+            })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover)
         .on("dblclick", function (d) {
@@ -251,8 +254,8 @@ export class TestD3Component implements OnInit {
           return 'assets/images/' + TestD3Component.NODE_IMAGES[name]})
         .attr('width', 50)
         .attr('height', 50)
-        .attr("x", function (d) { return d.x; })
-        .attr("y", function (d) { return d.y; })
+        .attr("x", function (d) { return d.x - 25; })
+        .attr("y", function (d) { return d.y - 25; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
     }
