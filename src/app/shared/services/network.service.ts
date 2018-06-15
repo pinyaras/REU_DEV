@@ -33,8 +33,10 @@ export class NetworkService {
 	}
 
 	getNodes():Observable<Node[]>{
-		return this.http.get("http://52.15.133.20/node/")
+		let h = this.http.get("http://52.15.133.20/node/")
     	.catch(this.handleErrorObservable);
+    	// console.log(h)
+		return h
 	}
 	getWirelessNodes():Observable<WirelessNode[]>{
 		return this.http.get("http://52.15.133.20/wireless/")

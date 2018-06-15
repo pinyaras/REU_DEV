@@ -14,6 +14,10 @@ export class WirelessNode {
 	x: number;
 	y: number;
 
+	constructor(obj: any) {
+
+	}
+
 	getInfoLst() {
 		return [this.intName, this.node];
 	}

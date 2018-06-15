@@ -15,9 +15,12 @@ export class Node {
     //     "nodeName": "Mesh1"
     // },
 
-	constructor(id, name, type) { 
-        this.id = id;
-		this.nodeName = name;
+	constructor(obj: any) { 
+
+        this.id = obj.id;
+		this.nodeName = obj.nodeName;
+		this.nodeIp = obj.nodeIp;
+		this.nodeMac = obj.nodeMac;
 
 	}
 	getInfoLst() {
