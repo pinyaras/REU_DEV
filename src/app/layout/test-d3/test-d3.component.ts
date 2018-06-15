@@ -69,6 +69,10 @@ export class TestD3Component implements OnInit {
     return this.nodes.find(function(n){return n.nodeIp == ip;})
   }
 
+  getNodeById(id: number): Node{
+    return this.nodes.find(function(n){return n.id == id;})
+  }
+
   ngOnInit() {  }
 
   myOnInit(){
