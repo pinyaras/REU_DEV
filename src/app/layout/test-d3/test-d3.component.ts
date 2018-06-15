@@ -79,8 +79,9 @@ export class TestD3Component implements OnInit {
     }
   }
 
-  getNodeById(id: number): Node {
-    return this.nodes.find(function (n) { return n.id == id; })
+  getNodeById(id: number): WirelessNode {
+    return this.wirelessnodes.find(function (n) { return n.node == id; })
+    //return this.nodes.find(function (n) { return n.id == id; })
   }
 
   ngOnInit() {
