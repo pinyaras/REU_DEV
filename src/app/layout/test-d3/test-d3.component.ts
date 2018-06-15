@@ -63,10 +63,10 @@ export class TestD3Component implements OnInit {
           })
       })
     });
-    
-    //.subscribe(data => this.nodes = data);
-    // networkService.getWirelessNodes().subscribe(data => wirelessnodes = data);
-    // networkService.getWirelessLinks().subscribe(data => links = data);
+  }
+
+  getNodeByIp(ip: string): Node{
+    return this.nodes.find(function(n){return n.nodeIp == ip;})
   }
 
   ngOnInit() {  }
@@ -215,17 +215,3 @@ export class TestD3Component implements OnInit {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
