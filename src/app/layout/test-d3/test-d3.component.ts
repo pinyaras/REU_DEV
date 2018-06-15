@@ -104,8 +104,9 @@ export class TestD3Component implements OnInit {
       "?key=AIzaSyCDvRL-n6Nh7bnPv4VsAhFKdWCRxc6LcI8" +
       "&center=" + locations.woodward +
       "&zoom=20" +
-      "&size=900x600" +
+      "&size=300x600" +
       "&maptype=roadmap" +
+      // "&scale=2" + 
       "&style=feature:landscape|element:geometry.fill|color:0x292b2c" +
       "&style=feature:landscape|element:geometry.stoke||color:0x000000" +
       "&style=feature:all|element:labels|visibility:off"
@@ -113,11 +114,12 @@ export class TestD3Component implements OnInit {
       .attr("id", "map")
       .attr('xlink:href', url)
       //.attr('xlink:href', 'assets/images/floor2.svg')
-      .attr('width', 900)
-      .attr('height', 600)
-      .attr('x', 0)
-      .attr('y', 0)
-    // console.log(this.nodes);
+      // .attr('width', 300)
+      // .attr('height', 600)
+      // .attr('x', 0)
+      // .attr('y', 0)
+      // .attr('transform-origin', '150 150')
+      // .attr('transform', 'translate(0,300) rotate(90)')
     var allNodes = [];
     this.nodes.forEach(function (node) {
       allNodes.push(node)
@@ -125,7 +127,7 @@ export class TestD3Component implements OnInit {
     this.wirelessnodes.forEach(function (node) {
       allNodes.push(node)
     })
-    console.log(allNodes);
+    // console.log(allNodes);
     allNodes.forEach(function (node, i) {
       // console.log(node)
       node.x = Math.cos((i / allNodes.length) * Math.PI * 2) * 200 + 450;
@@ -172,7 +174,7 @@ export class TestD3Component implements OnInit {
 
     // var lines;
     var comp = this;
-    console.log(this.links.length);
+    // console.log(this.links.length);
     // this.links.forEach(function (linkObj) {
     //   console.log(linkObj.nodeId.length);
     //lines.concat(
@@ -180,7 +182,7 @@ export class TestD3Component implements OnInit {
       .data(this.links)
       .enter()
       .append('line')
-    console.log(lines);
+    // console.log(lines); 
 
 
     var nodes = svg.selectAll("image.nodes")
@@ -218,17 +220,18 @@ export class TestD3Component implements OnInit {
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y ; })
-        .attr('stroke', function (d) {
-          return "snow";
+        .attr('stroke-width', function(d) {
+
+          return d.bw / 20;
+
         })
-        .attr('stroke-width', 5)
-        //     .attr('stroke', function(d) {
-        //       if(d.enabled) {
-        //         return TestD3Component.COLORS['line'];
-        //       } else {
-        //         return 'snow';
-        //       }
-        //     })
+        .attr('stroke', function(d) { 
+              if(d.enabled) {
+                return TestD3Component.COLORS['line'];
+              } else {
+                return 'snow';
+              }
+            })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover)
         .on("dblclick", function (d) {
