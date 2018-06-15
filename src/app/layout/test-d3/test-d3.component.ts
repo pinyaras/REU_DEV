@@ -70,8 +70,14 @@ export class TestD3Component implements OnInit {
 
   }
 
-  getNodeByIp(ip: string): Node {
-    return this.nodes.find(function (n) { return n.nodeIp == ip; })
+  getNodeByIp(ip: string): Node | WirelessNode {
+    var n = this.nodes.find(function (n) { return n.nodeIp == ip; })
+    if (n) {
+      return n;
+    } else 
+    {
+      return this.wirelessnodes.find(function (n) { return n.ipAdd == ip; })
+    }
   }
 
   getNodeById(id: number): Node {
@@ -165,25 +171,27 @@ export class TestD3Component implements OnInit {
     }
 
     // var lines;
-    var lines = [];
     var comp = this;
-    this.links.forEach(function (linkObj) {
-      lines.concat(svg.selectAll('line')
-        .data(linkObj.nodeId)
+    console.log(this.links.length);
+    // this.links.forEach(function (linkObj) {
+    //   console.log(linkObj.nodeId.length);
+      //lines.concat(
+    var lines = svg.selectAll('line')
+        .data(this.links)
         .enter()
         .append('line')
-        .attr("x1", function (l) { return comp.getNodeById(l); })
-        .attr("y1", function (l) { return comp.getNodeById(l); })
-        .attr("x2", function (l) { return comp.getNodeByIp(linkObj.nexthopNode); })
-        .attr("y2", function (l) { return comp.getNodeByIp(linkObj.nexthopNode); })
+        //.append("class", linkObj.id)
+        .attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); console.log(n); return n.x; })
+        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
+        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
         .attr('stroke', function (d) {
           return "snow";
         })
         .attr('stroke-width', 5)
-      )
-    })
-
-    // console.log(lines);
+      //);
+    // })
+    console.log(lines);
 
 
     var nodes = svg.selectAll("image.nodes")
