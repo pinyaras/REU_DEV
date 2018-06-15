@@ -150,7 +150,7 @@ export class TestD3Component implements OnInit {
       g.append("rect")
         .attr("x", coords[0] + 3)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
-        .attr("width", "100")
+        .attr("width", (size * 3.5) + 'em')
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "aliceblue")
         .attr("opacity", ".750")
@@ -244,7 +244,7 @@ export class TestD3Component implements OnInit {
         });
 
       nodes.attr('class', 'nodes')
-        .attr('xlink:href', function (d) { 
+        .attr('xlink:href', function (d) {
           let name = ''
           if(d.bssid) {
             name = 'WirelessNode';
