@@ -213,10 +213,10 @@ export class TestD3Component implements OnInit {
 
     function render() {
 
-      lines.attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); console.log(n); return n.x + 25; })
-        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y + 25; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x + 25; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y + 25; })
+      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x;})
+        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
+        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y ; })
         .attr('stroke', function (d) {
           return "snow";
         })
@@ -251,8 +251,8 @@ export class TestD3Component implements OnInit {
           return 'assets/images/' + TestD3Component.NODE_IMAGES[name]})
         .attr('width', 50)
         .attr('height', 50)
-        .attr("x", function (d) { return d.x; })
-        .attr("y", function (d) { return d.y; })
+        .attr("x", function (d) { return d.x - 25; })
+        .attr("y", function (d) { return d.y - 25; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
     }
