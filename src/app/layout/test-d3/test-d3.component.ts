@@ -113,13 +113,13 @@ export class TestD3Component implements OnInit {
     svg.append('image')
       .attr("id", "map")
       .attr('xlink:href', url)
-      //.attr('xlink:href', 'assets/images/floor2.svg')
-      // .attr('width', 300)
-      // .attr('height', 600)
-      // .attr('x', 0)
-      // .attr('y', 0)
-      // .attr('transform-origin', '150 150')
-      // .attr('transform', 'translate(0,300) rotate(90)')
+    //.attr('xlink:href', 'assets/images/floor2.svg')
+    // .attr('width', 300)
+    // .attr('height', 600)
+    // .attr('x', 0)
+    // .attr('y', 0)
+    // .attr('transform-origin', '150 150')
+    // .attr('transform', 'translate(0,300) rotate(90)')
     var allNodes = [];
     this.nodes.forEach(function (node) {
       allNodes.push(node)
@@ -211,27 +211,55 @@ export class TestD3Component implements OnInit {
         render();
 
       })
-
     dragHandler(svg.selectAll('image.nodes'));
+
+    for (var i = 1; i <= 3; i++) {
+      lines.each(function (line) {
+        var lineSel = d3.select(this);
+        var x = parseInt(lineSel.attr("x1"));
+        var y = parseInt(lineSel.attr("y1"));
+        var finalX = parseInt(lineSel.attr("x2"));
+        var finalY = parseInt(lineSel.attr("y2"));
+
+        console.log("appending pebble");
+        var pebble = svg.append("circle")
+          .attr("cx", x)
+          .attr("cy", y)
+          .attr("r", 8)
+          .attr("fill", TestD3Component.COLORS["line"]);
+        var dx = (x - finalX) / (50 + 50 / i);
+        var dy = (y - finalY) / (50 + 50 / i);
+        var tx = x;
+        var ty = y;
+        var t = d3.timer(function (elapased) {
+          pebble.attr("cx", tx)
+            .attr("cy", ty);
+          tx -= dx;
+          ty -= dy;
+          if (Math.abs(tx - finalX) <= Math.abs(dx)) {
+            tx = x
+            ty = y;
+          }
+        })
+      })
+    };
 
     function render() {
 
-      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x;})
+      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x; })
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y ; })
-        .attr('stroke-width', function(d) {
-
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
+        .attr('stroke-width', function (d) {
           return d.bw / 20;
-
         })
-        .attr('stroke', function(d) { 
-              if(d.enabled) {
-                return TestD3Component.COLORS['line'];
-              } else {
-                return 'snow';
-              }
-            })
+        .attr('stroke', function (d) {
+          if (d.enabled) {
+            return TestD3Component.COLORS['line'];
+          } else {
+            return 'snow';
+          }
+        })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover)
         .on("dblclick", function (d) {
@@ -244,15 +272,19 @@ export class TestD3Component implements OnInit {
           render();
         });
 
+
+
+
       nodes.attr('class', 'nodes')
         .attr('xlink:href', function (d) {
           let name = ''
-          if(d.bssid) {
+          if (d.bssid) {
             name = 'WirelessNode';
           } else {
             name = 'Node';
           }
-          return 'assets/images/' + TestD3Component.NODE_IMAGES[name]})
+          return 'assets/images/' + TestD3Component.NODE_IMAGES[name]
+        })
         .attr('width', 50)
         .attr('height', 50)
         .attr("x", function (d) { return d.x - 25; })
