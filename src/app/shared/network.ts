@@ -13,7 +13,7 @@ export class Network {
     	this.nodes = [];
 
     }
-
+/*
     areConnected(n1: Node, n2: Node): boolean {  
         return this.links.some(function(link) {
             return link.hasNode(n1) && link.hasNode(n2);
@@ -57,6 +57,7 @@ export class Network {
 			}
 		}, this.links);
 	}
+	*/
 }
 
 

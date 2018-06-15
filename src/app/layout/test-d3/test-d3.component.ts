@@ -40,13 +40,19 @@ export class TestD3Component implements OnInit {
   // private d3: D3;
   private parentNativeElement: any;
 
+  private nodes: Node[];
+
   constructor(d3Service: D3Service, networkService: NetworkService) {
     // this.d3 = d3Service.getD3();
-    networkService.getNetwork().subscribe(data => this.network = data);
+    //let nodes = [];
+    let wirelessnodes = [];
+    let links = [];
+    networkService.getNodes().subscribe(data => this.nodes = data);
+    networkService.getWirelessNodes().subscribe(data => wirelessnodes = data);
+    networkService.getWirelessLinks().subscribe(data => links = data);
   }
 
   ngOnInit() {
-
     let svg = d3.select("svg")
     svg.style("background-color", TestD3Component.SVG_FILL);
 
@@ -111,14 +117,15 @@ export class TestD3Component implements OnInit {
 
     }
 
-    var lines = svg.selectAll('line')
-      .data(this.network.links)
-      .enter()
-      .append('line')
+    var lines;
+    // var lines = svg.selectAll('line')
+    //   .data(this.network.links)
+    //   .enter()
+    //   .append('line')
 
 
     var nodes = svg.selectAll("image.nodes")
-      .data(this.network.nodes)
+      .data(this.nodes)
       .enter()
       .append("image")
 

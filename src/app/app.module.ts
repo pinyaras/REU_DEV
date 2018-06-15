@@ -16,7 +16,7 @@ import { apiUsersService } from './shared/services/api_users.service'
 import { NetworkService } from './shared/services/network.service'
 import { D3Service } from 'd3-ng2-service'; // <-- import statement
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-
+import { HttpClientModule } from '@angular/common/http';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: Http) {
@@ -33,6 +33,7 @@ export function HttpLoaderFactory(http: Http) {
         HttpModule,
         AppRoutingModule,
         Ng2SmartTableModule,
+        HttpClientModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
