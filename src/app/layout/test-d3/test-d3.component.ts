@@ -181,10 +181,10 @@ export class TestD3Component implements OnInit {
         .enter()
         .append('line')
         //.append("class", linkObj.id)
-        .attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); console.log(n); return n.x; })
-        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
+        .attr("x1", function (l) { var n = comp.getNodeById(l.nodeId[0]); console.log(n); return n.x + 25; })
+        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y + 25; })
+        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x + 25; })
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y + 25; })
         .attr('stroke', function (d) {
           return "snow";
         })
@@ -257,8 +257,8 @@ export class TestD3Component implements OnInit {
         .attr('xlink:href', function (d) { return 'assets/images/' + TestD3Component.NODE_IMAGES['host'] })
         .attr('width', 50)
         .attr('height', 50)
-        .attr("x", function (d) { return d.x + 100; })
-        .attr("y", function (d) { return d.y - 30; })
+        .attr("x", function (d) { return d.x; })
+        .attr("y", function (d) { return d.y; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
     }
