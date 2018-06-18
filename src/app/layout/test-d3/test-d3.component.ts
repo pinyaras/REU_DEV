@@ -134,7 +134,7 @@ export class TestD3Component implements OnInit {
       let g = svg.append("g")
         .attr("id", "hover");
       let size = d.getInfoLst().length
-      console.log(d.getInfoLst())
+      // console.log(d.getInfoLst())
 
       // let GetWidth = function (d) {
       //   console.log(d)
@@ -176,16 +176,7 @@ export class TestD3Component implements OnInit {
       .data(this.links)
       .enter()
       .append('line')
-    console.log("Hello")
-    console.log(lines);
 
-
-    // let x  = 0
-    // for ( y = 0; y < this.nodes.length, y++){
-    //     for(i = 0, i < y; i++  )
-    //     line = line
-    //
-    // }
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
       .enter()
@@ -219,7 +210,6 @@ export class TestD3Component implements OnInit {
         var finalX = parseInt(lineSel.attr("x2"));
         var finalY = parseInt(lineSel.attr("y2"));
 
-        console.log("appending pebble");
         var pebble = svg.append("circle")
           .attr("cx", x)
           .attr("cy", y)
@@ -244,9 +234,7 @@ export class TestD3Component implements OnInit {
 
 
     function render(comp) {
-
       let al = svg.selectAll('.allLines');
-
 
       al.each(function () {
         let line = d3.select(this);
@@ -267,7 +255,26 @@ export class TestD3Component implements OnInit {
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
         .attr('stroke-width', 5)
-        .attr('stroke', TestD3Component.COLORS["line"])
+        .attr('stroke', function(l) {
+
+          if(l.enabled){
+            return TestD3Component.COLORS['line'];
+          } else {
+            return 'snow';
+          }
+
+        })
+        .on('dblclick', function(l) {
+
+          l.enabled = !l.enabled;
+          if(l.enabled) {
+            d3.select(this).attr('opacity', 1)
+          } else {
+            d3.select(this).attr('opacity', .25)
+          }
+          render(comp);
+
+        })
 
       nodes.attr('class', 'nodes')
         .attr('xlink:href', function (d) { return 'assets/images/router.svg' })
@@ -277,7 +284,7 @@ export class TestD3Component implements OnInit {
         .attr("y", function (d) { return d.y - 25; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
-      console.log(svg);
+      // console.log(svg);
 
     }
   }
