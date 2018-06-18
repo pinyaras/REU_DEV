@@ -97,15 +97,15 @@ export class TestD3Component implements OnInit {
       "&zoom=20" +
       "&size=300x600" +
       "&maptype=roadmap" +
-      // "&scale=2" + 
+      // "&scale=2" +
       "&style=feature:landscape|element:geometry.fill|color:0x292b2c" +
       "&style=feature:landscape|element:geometry.stoke||color:0x000000" +
       "&style=feature:all|element:labels|visibility:off"
     svg.append('image')
       .attr("id", "map")
-
       .attr('xlink:href', url)
-      // .attr('xlink:href', 'assets/images/floor2.svg')
+      //.attr('xlink:href', 'assets/images/floor2.svg')
+      .attr('transform', "translate(550) rotate(90 180 15)")
       .attr('width', 900)
       .attr('height', 600)
     // .attr('x', 0)
@@ -134,10 +134,15 @@ export class TestD3Component implements OnInit {
       let g = svg.append("g")
         .attr("id", "hover");
       let size = d.getInfoLst().length
+      console.log(d.getInfoLst())
+
+      // let GetWidth = function (d) {
+      //   console.log(d)
+      // }
       g.append("rect")
         .attr("x", coords[0] + 3)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
-        .attr("width", (size * 3.5) + 'em')
+        .attr("width", 100)
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "aliceblue")
         .attr("opacity", ".750")
@@ -171,7 +176,16 @@ export class TestD3Component implements OnInit {
       .data(this.links)
       .enter()
       .append('line')
+    console.log("Hello")
+    console.log(lines);
 
+
+    // let x  = 0
+    // for ( y = 0; y < this.nodes.length, y++){
+    //     for(i = 0, i < y; i++  )
+    //     line = line
+    //
+    // }
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
       .enter()
@@ -232,6 +246,7 @@ export class TestD3Component implements OnInit {
     function render(comp) {
 
       let al = svg.selectAll('.allLines');
+
 
       al.each(function () {
         let line = d3.select(this);
