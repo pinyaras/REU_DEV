@@ -53,10 +53,10 @@ export class TestD3Component implements OnInit {
     networkService.getNodes().toPromise().then(nodes => {
       networkService.getWirelessNodes().toPromise().then(wirelessnodes => {
         networkService.getWirelessLinks().toPromise().then(links => {
-          nodes.forEach(function (node, i) {
+          nodes.forEach(function(node, i) {
             this.nodes.push(new Node(node, wirelessnodes[i]));
           }, this)
-          links.forEach(function (link) {
+          links.forEach(function(link) {
             this.links.push(new Link(link));
           }, this)
           this.myOnInit();
@@ -66,13 +66,13 @@ export class TestD3Component implements OnInit {
 
   }
 
-  getNodeByIp(ip: string): Node  {
-    return this.nodes.find(function (n) { return n.wireless.ipAdd == ip; })
+  getNodeByIp(ip: string): Node {
+    return this.nodes.find(function(n) { return n.wireless.ipAdd == ip; })
   }
 
 
   getNodeById(id: number): Node {
-    return this.nodes.find(function (n) { return n.id == id; })
+    return this.nodes.find(function(n) { return n.id == id; })
   }
 
   ngOnInit() {
@@ -103,9 +103,9 @@ export class TestD3Component implements OnInit {
       "&style=feature:all|element:labels|visibility:off"
     svg.append('image')
       .attr("id", "map")
-      .attr('xlink:href', url)
-      //.attr('xlink:href', 'assets/images/floor2.svg')
-      .attr('transform', "translate(550) rotate(90 180 15)")
+      // .attr('xlink:href', url)
+      .attr('xlink:href', 'assets/images/floor2.svg')
+      // .attr('transform', "translate(550) rotate(90 180 15)")
       .attr('width', 900)
       .attr('height', 600)
     // .attr('x', 0)
@@ -114,19 +114,19 @@ export class TestD3Component implements OnInit {
     // .attr('transform', 'translate(0,300) rotate(90)')
 
 
-    this.nodes.forEach(function (node, i) {
+    this.nodes.forEach(function(node, i) {
       // console.log(node)
       node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
       node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
 
     }, this)
 
-    let delete_hover = function () {
+    let delete_hover = function() {
       svg.select("#hover").remove();
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS);
     }
 
-    let on_hover = function (d) {
+    let on_hover = function(d) {
       svg.select("#hover").remove();
       let coords = d3.mouse(this);
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS + 5);
@@ -134,11 +134,7 @@ export class TestD3Component implements OnInit {
       let g = svg.append("g")
         .attr("id", "hover");
       let size = d.getInfoLst().length
-      // console.log(d.getInfoLst())
 
-      // let GetWidth = function (d) {
-      //   console.log(d)
-      // }
       g.append("rect")
         .attr("x", coords[0] + 3)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
@@ -153,7 +149,7 @@ export class TestD3Component implements OnInit {
         .attr("y", coords[1] - ((size + 1) * 12 + 5))
         .attr("fill", TestD3Component.COLORS["TEXT"]);
 
-      d.getInfoLst().forEach(function (info) {
+      d.getInfoLst().forEach(function(info) {
         text.append('tspan')
           .text(info)
           .attr('dy', 1 + 'em')
@@ -184,12 +180,12 @@ export class TestD3Component implements OnInit {
 
     render(comp);
 
-    let dragHandler = d3.drag().on('start', function (d) {
+    let dragHandler = d3.drag().on('start', function(d) {
 
       svg.select("#hover").remove();
 
     })
-      .on('drag', function (d) {
+      .on('drag', function(d) {
         svg.select("#hover").remove();
         let coords = d3.mouse(this);
         d.x = coords[0];
@@ -203,7 +199,7 @@ export class TestD3Component implements OnInit {
     dragHandler(svg.selectAll('image.nodes'));
 
     for (var i = 1; i <= 3; i++) {
-      lines.each(function (line) {
+      lines.each(function(line) {
         var lineSel = d3.select(this);
         var x = parseInt(lineSel.attr("x1"));
         var y = parseInt(lineSel.attr("y1"));
@@ -213,13 +209,13 @@ export class TestD3Component implements OnInit {
         var pebble = svg.append("circle")
           .attr("cx", x)
           .attr("cy", y)
-          .attr("r", 8)
+          .attr("r", 5)
           .attr("fill", TestD3Component.COLORS["line"]);
         var dx = (x - finalX) / (50 + 50 / i);
         var dy = (y - finalY) / (50 + 50 / i);
         var tx = x;
         var ty = y;
-        var t = d3.timer(function (elapased) {
+        var t = d3.timer(function(elapased) {
           pebble.attr("cx", tx)
             .attr("cy", ty);
           tx -= dx;
@@ -236,7 +232,7 @@ export class TestD3Component implements OnInit {
     function render(comp) {
       let al = svg.selectAll('.allLines');
 
-      al.each(function () {
+      al.each(function() {
         let line = d3.select(this);
         let node1 = parseInt(line.attr('node1'))
         let node2 = parseInt(line.attr('node2'))
@@ -247,17 +243,17 @@ export class TestD3Component implements OnInit {
           .attr('y2', comp.nodes[node2].y)
           .attr('stroke-width', 5)
           .attr('stroke', '#406368')
-          .attr('opacity', .5)
+          .attr('opacity', .20)
 
       })
-      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x; })
-        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
+      lines.attr("x1", function(l) { return comp.getNodeById(l.nodeId[0]).x; })
+        .attr("y1", function(l) { return comp.getNodeById(l.nodeId[0]).y; })
+        .attr("x2", function(l) { return comp.getNodeByIp(l.nexthopNode).x; })
+        .attr("y2", function(l) { return comp.getNodeByIp(l.nexthopNode).y; })
         .attr('stroke-width', 5)
         .attr('stroke', function(l) {
 
-          if(l.enabled){
+          if (l.enabled) {
             return TestD3Component.COLORS['line'];
           } else {
             return 'snow';
@@ -267,7 +263,7 @@ export class TestD3Component implements OnInit {
         .on('dblclick', function(l) {
 
           l.enabled = !l.enabled;
-          if(l.enabled) {
+          if (l.enabled) {
             d3.select(this).attr('opacity', 1)
           } else {
             d3.select(this).attr('opacity', .25)
@@ -275,13 +271,15 @@ export class TestD3Component implements OnInit {
           render(comp);
 
         })
+        .on("mousemove", on_hover)
+        .on("mouseout", delete_hover);
 
       nodes.attr('class', 'nodes')
-        .attr('xlink:href', function (d) { return 'assets/images/router.svg' })
+        .attr('xlink:href', function(d) { return 'assets/images/router.svg' })
         .attr('width', 50)
         .attr('height', 50)
-        .attr("x", function (d) { return d.x - 25; })
-        .attr("y", function (d) { return d.y - 25; })
+        .attr("x", function(d) { return d.x - 25; })
+        .attr("y", function(d) { return d.y - 25; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
       // console.log(svg);

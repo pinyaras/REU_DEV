@@ -19,7 +19,7 @@ export class Link {
    
 
     getInfoLst() {
-        return [this.bw];
+        return [this.bw.toString()];
     }
 
 }
