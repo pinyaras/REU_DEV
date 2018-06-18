@@ -115,8 +115,6 @@ export class TestD3Component implements OnInit {
     // .attr('transform-origin', '150 150')
     // .attr('transform', 'translate(0,300) rotate(90)')
 
-
-
     this.nodes.forEach(function (node, i) {
       node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
       node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
@@ -128,6 +126,7 @@ export class TestD3Component implements OnInit {
     }
 
     let on_hover = function (d) {
+      console.log(d3.select(this).attr("class"));
       svg.select("#hover").remove();
       let coords = d3.mouse(this);
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS + 5);
@@ -148,7 +147,6 @@ export class TestD3Component implements OnInit {
         }
       }
 
-
       g.append("rect")
         .attr("x", coords[0] + 3)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
@@ -168,9 +166,7 @@ export class TestD3Component implements OnInit {
           .text(info)
           .attr('dy', 1 + 'em')
           .attr('x', coords[0] + 5);
-
       })
-
     }
 
     var comp = this;
@@ -182,26 +178,43 @@ export class TestD3Component implements OnInit {
       }
     }
 
+    // Visual lines between nodes
     var lines = svg.selectAll('.link')
       .data(this.links)
       .enter()
       .append('line')
-
+      .attr('stroke-width', 5)
+      .attr("class", "link")
+      .attr("stroke", TestD3Component.COLORS['line'])
+      .on("mousemove", on_hover)
+      .on("mouseout", delete_hover);;
+    // "Packet" animation object
     var packets = []
     for (var i = 0; i < this.links.length * TestD3Component.PACKETS_PER_LINE; i++) {
-      packets.push({ "line": Math.floor(i / TestD3Component.PACKETS_PER_LINE), "i": (i % TestD3Component.PACKETS_PER_LINE) });
+      var index = Math.floor(i/ TestD3Component.PACKETS_PER_LINE);
+      packets.push({ "line": index, 
+        "i": (i % TestD3Component.PACKETS_PER_LINE),
+        "getInfoLst": function() {console.log("packet " + i + " " + index); return comp.links[index].getInfoLst();}
+      });
     }
     svg.selectAll("polygon.packet")
       .data(packets)
       .enter()
       .append("polygon")
       .attr("class", "packet")
-      .attr("fill", TestD3Component.COLORS["packet"]);
+      .attr("fill", TestD3Component.COLORS["packet"])
+      .on("mousemove", on_hover)
+      .on("mouseout", delete_hover);
 
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
       .enter()
       .append("image")
+      .attr('xlink:href', function (d) { return 'assets/images/router.svg' })
+      .attr('width', 50)
+      .attr('height', 50)
+      .on("mousemove", on_hover)
+      .on("mouseout", delete_hover);
 
     render(comp);
 
@@ -253,63 +266,48 @@ export class TestD3Component implements OnInit {
       })
     };
 
-
     function render(comp) {
-      let al = svg.selectAll('.allLines');
+      svg.selectAll('.allLines')
+        .each(function () {
+          let line = d3.select(this);
+          let node1 = parseInt(line.attr('node1'))
+          let node2 = parseInt(line.attr('node2'))
 
-      al.each(function () {
-        let line = d3.select(this);
-        let node1 = parseInt(line.attr('node1'))
-        let node2 = parseInt(line.attr('node2'))
+          line.attr('x1', comp.nodes[node1].x)
+            .attr('y1', comp.nodes[node1].y)
+            .attr('x2', comp.nodes[node2].x)
+            .attr('y2', comp.nodes[node2].y)
+            .attr('stroke-width', 5)
+            .attr('stroke', '#406368')
+            .attr('opacity', .20)
 
-        line.attr('x1', comp.nodes[node1].x)
-          .attr('y1', comp.nodes[node1].y)
-          .attr('x2', comp.nodes[node2].x)
-          .attr('y2', comp.nodes[node2].y)
-          .attr('stroke-width', 5)
-          .attr('stroke', '#406368')
-          .attr('opacity', .20)
-
-      })
+        })
       lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x; })
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
-        .attr('stroke-width', 5)
-        .attr('stroke', function (l) {
-
-          if (l.enabled) {
-            return TestD3Component.COLORS['line'];
-          } else {
-            return 'snow';
-          }
-
-        })
-        .on('dblclick', function (l) {
-
-          l.enabled = !l.enabled;
-          if (l.enabled) {
-            d3.select(this).attr('opacity', 1)
-          } else {
-            d3.select(this).attr('opacity', .25)
-          }
-          render(comp);
-
-        })
-        .on("mousemove", on_hover)
-        .on("mouseout", delete_hover);
+      // .attr('stroke', function (l) {
+      //   if (l.enabled) {
+      //     return TestD3Component.COLORS['line'];
+      //   } else {
+      //     return 'snow';
+      //   }
+      // })
+      // .on('dblclick', function (l) {
+      //   l.enabled = !l.enabled;
+      //   if (l.enabled) {
+      //     d3.select(this).attr('opacity', 1)
+      //   } else {
+      //     d3.select(this).attr('opacity', .25)
+      //   }
+      //   render(comp);
+      // })
 
       makeAnimation();
 
       nodes.attr('class', 'nodes')
-        .attr('xlink:href', function (d) { return 'assets/images/router.svg' })
-        .attr('width', 50)
-        .attr('height', 50)
         .attr("x", function (d) { return d.x - 25; })
         .attr("y", function (d) { return d.y - 25; })
-        .on("mousemove", on_hover)
-        .on("mouseout", delete_hover);
-
     }
   }
 
