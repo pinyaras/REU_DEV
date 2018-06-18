@@ -67,7 +67,7 @@ export class TestD3Component implements OnInit {
   }
 
   getNodeByIp(ip: string): Node {
-    return this.nodes.find(function(n) { return n.wireless.ipAdd == ip; })
+    return this.nodes.find(function (n) { return n.wireless.ipAdd == ip; })
   }
 
 
@@ -76,8 +76,6 @@ export class TestD3Component implements OnInit {
   }
 
   ngOnInit() {
-
-
   }
 
   myOnInit() {
@@ -114,11 +112,10 @@ export class TestD3Component implements OnInit {
     // .attr('transform', 'translate(0,300) rotate(90)')
 
 
-    this.nodes.forEach(function(node, i) {
-      // console.log(node)
+
+    this.nodes.forEach(function (node, i) {
       node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
       node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
-
     }, this)
 
     let delete_hover = function() {
@@ -173,6 +170,18 @@ export class TestD3Component implements OnInit {
       .enter()
       .append('line')
 
+    var packets = []
+    for (var i = 0; i < this.links.length * 3; i++) {
+      packets.push({ "line": Math.floor(i / 3), "i": (i % 3)+1 });
+    }
+    svg.selectAll("circle.packet")
+      .data(packets)
+      .enter()
+      .append("circle")
+      .attr("class", "packet")
+      .attr("r", 5)
+      .attr("fill", TestD3Component.COLORS["line"]);
+
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
       .enter()
@@ -180,10 +189,8 @@ export class TestD3Component implements OnInit {
 
     render(comp);
 
-    let dragHandler = d3.drag().on('start', function(d) {
-
+    let dragHandler = d3.drag().on('start', function (d) {
       svg.select("#hover").remove();
-
     })
       .on('drag', function(d) {
         svg.select("#hover").remove();
@@ -198,31 +205,27 @@ export class TestD3Component implements OnInit {
       })
     dragHandler(svg.selectAll('image.nodes'));
 
-    for (var i = 1; i <= 3; i++) {
-      lines.each(function(line) {
-        var lineSel = d3.select(this);
-        var x = parseInt(lineSel.attr("x1"));
-        var y = parseInt(lineSel.attr("y1"));
-        var finalX = parseInt(lineSel.attr("x2"));
-        var finalY = parseInt(lineSel.attr("y2"));
-
-        var pebble = svg.append("circle")
-          .attr("cx", x)
-          .attr("cy", y)
-          .attr("r", 5)
-          .attr("fill", TestD3Component.COLORS["line"]);
-        var dx = (x - finalX) / (50 + 50 / i);
-        var dy = (y - finalY) / (50 + 50 / i);
-        var tx = x;
-        var ty = y;
-        var t = d3.timer(function(elapased) {
-          pebble.attr("cx", tx)
-            .attr("cy", ty);
-          tx -= dx;
-          ty -= dy;
-          if (Math.abs(tx - finalX) <= Math.abs(dx)) {
-            tx = x
-            ty = y;
+// 
+    function makeAnimation() {
+      svg.selectAll(".packet").each(function (packet) {
+        if (packet.timer) {
+          packet.timer.stop();
+        }
+        var l = comp.links[packet.line];
+        var x1 = comp.getNodeById(l.nodeId[0]).x;
+        var y1 = comp.getNodeById(l.nodeId[0]).y;
+        var x2 = comp.getNodeByIp(l.nexthopNode).x;
+        var y2 = comp.getNodeByIp(l.nexthopNode).y;
+        var packetSel = d3.select(this);
+        var dx = (x2 - x1) / (50 + 50 / packet.i);
+        var dy = (y2 - y1) / (50 + 50 / packet.i);
+        packet.t = 0;
+        packet.timer = d3.timer(function (elapased) {
+          packetSel.attr("cx", x1 + dx * packet.t)
+            .attr("cy", y1 + dy * packet.t)
+          packet.t++;
+          if (packet.t > 50 + 50 / packet.i) {
+            packet.t = 0;
           }
         })
       })
@@ -232,7 +235,7 @@ export class TestD3Component implements OnInit {
     function render(comp) {
       let al = svg.selectAll('.allLines');
 
-      al.each(function() {
+      al.each(function () {
         let line = d3.select(this);
         let node1 = parseInt(line.attr('node1'))
         let node2 = parseInt(line.attr('node2'))
@@ -274,6 +277,8 @@ export class TestD3Component implements OnInit {
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
 
+      makeAnimation();
+
       nodes.attr('class', 'nodes')
         .attr('xlink:href', function(d) { return 'assets/images/router.svg' })
         .attr('width', 50)
@@ -282,7 +287,6 @@ export class TestD3Component implements OnInit {
         .attr("y", function(d) { return d.y - 25; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
-      // console.log(svg);
 
     }
   }
