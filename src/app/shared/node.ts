@@ -1,4 +1,6 @@
 
+import { WirelessNode } from './wirelessnode'
+
 export class Node {
 
 	id: number;
@@ -7,6 +9,7 @@ export class Node {
 	nodeMac: string;
 	x: number;
 	y: number;
+	wireless: WirelessNode;
 
 	// {
     //     "id": 1,
@@ -15,12 +18,14 @@ export class Node {
     //     "nodeName": "Mesh1"
     // },
 
-	constructor(obj: any) { 
+	constructor(obj: any, wireless: WirelessNode) { 
 
         this.id = obj.id;
 		this.nodeName = obj.nodeName;
 		this.nodeIp = obj.nodeIp;
 		this.nodeMac = obj.nodeMac;
+		this.wireless = wireless;
+
 
 	}
 	getInfoLst() {
