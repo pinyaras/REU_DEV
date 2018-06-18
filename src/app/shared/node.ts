@@ -18,7 +18,7 @@ export class Node {
     //     "nodeName": "Mesh1"
     // },
 
-	constructor(obj: any, wireless: WirelessNode) { 
+	constructor(obj: any, wireless: WirelessNode) {
 
         this.id = obj.id;
 		this.nodeName = obj.nodeName;

@@ -134,19 +134,31 @@ export class TestD3Component implements OnInit {
       svg.select("#hover").remove();
       let coords = d3.mouse(this);
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS + 5);
+      let info = d.getInfoLst()
+      console.log(info)
+      console.log("hello")
+      console.log(d.getInfoLst())
 
       let g = svg.append("g")
         .attr("id", "hover");
       let size = d.getInfoLst().length
-      console.log(d.getInfoLst())
+      let NodeInfo = d.getInfoLst()
+      let MaxInfolen = 0
+      let CurInfoLen = 0
 
-      // let GetWidth = function (d) {
-      //   console.log(d)
-      // }
+      //to find width of rect down below (line 161)
+      for(var x = 0; x<NodeInfo.length; x++){
+          CurInfoLen = NodeInfo[x].length
+          if(CurInfoLen> MaxInfolen){
+              MaxInfolen = CurInfoLen
+          }
+      }
+
+
       g.append("rect")
         .attr("x", coords[0] + 3)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
-        .attr("width", 100)
+        .attr("width", MaxInfolen * 8.5)
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "aliceblue")
         .attr("opacity", ".750")
