@@ -49,15 +49,14 @@ export class TestD3Component implements OnInit {
     // this.d3 = d3Service.getD3();
     //let nodes = [];
     this.nodes = [];
-    this.wirelessnodes = [];
     this.links = [];
     networkService.getNodes().toPromise().then(nodes => {
       networkService.getWirelessNodes().toPromise().then(wirelessnodes => {
         networkService.getWirelessLinks().toPromise().then(links => {
-          nodes.forEach(function(node, i) {
+          nodes.forEach(function (node, i) {
             this.nodes.push(new Node(node, wirelessnodes[i]));
           }, this)
-          links.forEach(function(link) {
+          links.forEach(function (link) {
             this.links.push(new Link(link));
           }, this)
           this.myOnInit();
@@ -67,22 +66,16 @@ export class TestD3Component implements OnInit {
 
   }
 
-  getNodeByIp(ip: string): Node | WirelessNode {
-    var n = this.nodes.find(function(n) { return n.nodeIp == ip; })
-    if (n) {
-      return n;
-    } else {
-      return this.wirelessnodes.find(function(n) { return n.ipAdd == ip; })
-    }
+  getNodeByIp(ip: string): Node {
+    return this.nodes.find(function (n) { return n.wireless.ipAdd == ip; })
   }
 
+
   getNodeById(id: number): Node {
-    return this.nodes.find(function(n) { return n.id == id; })
+    return this.nodes.find(function (n) { return n.id == id; })
   }
 
   ngOnInit() {
-
-
   }
 
   myOnInit() {
@@ -118,19 +111,18 @@ export class TestD3Component implements OnInit {
     // .attr('transform-origin', '150 150')
     // .attr('transform', 'translate(0,300) rotate(90)')
 
-    this.nodes.forEach(function(node, i) {
-      // console.log(node)
+
+    this.nodes.forEach(function (node, i) {
       node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
       node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
-
     }, this)
 
-    let delete_hover = function() {
+    let delete_hover = function () {
       svg.select("#hover").remove();
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS);
     }
 
-    let on_hover = function(d) {
+    let on_hover = function (d) {
       svg.select("#hover").remove();
       let coords = d3.mouse(this);
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS + 5);
@@ -169,7 +161,7 @@ export class TestD3Component implements OnInit {
         .attr("y", coords[1] - ((size + 1) * 12 + 5))
         .attr("fill", TestD3Component.COLORS["TEXT"]);
 
-      d.getInfoLst().forEach(function(info) {
+      d.getInfoLst().forEach(function (info) {
         text.append('tspan')
           .text(info)
           .attr('dy', 1 + 'em')
@@ -192,16 +184,20 @@ export class TestD3Component implements OnInit {
       .data(this.links)
       .enter()
       .append('line')
-    console.log("Hello")
-    console.log(lines);
+
+    var packets = []
+    for (var i = 0; i < this.links.length * 3; i++) {
+      packets.push({ "line": Math.floor(i / 3), "i": (i % 3)+1 });
+    }
+    svg.selectAll("circle.packet")
+      .data(packets)
+      .enter()
+      .append("circle")
+      .attr("class", "packet")
+      .attr("r", 8)
+      .attr("fill", TestD3Component.COLORS["line"]);
 
 
-    // let x  = 0
-    // for ( y = 0; y < this.nodes.length, y++){
-    //     for(i = 0, i < y; i++  )
-    //     line = line
-    //
-    // }
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
       .enter()
@@ -209,12 +205,10 @@ export class TestD3Component implements OnInit {
 
     render(comp);
 
-    let dragHandler = d3.drag().on('start', function(d) {
-
+    let dragHandler = d3.drag().on('start', function (d) {
       svg.select("#hover").remove();
-
     })
-      .on('drag', function(d) {
+      .on('drag', function (d) {
         svg.select("#hover").remove();
         let coords = d3.mouse(this);
         d.x = coords[0];
@@ -225,37 +219,68 @@ export class TestD3Component implements OnInit {
         render(comp);
 
       })
-
     dragHandler(svg.selectAll('image.nodes'));
 
-    function render(comp) {
+    function makeAnimation() {
+      svg.selectAll(".packet").each(function (packet) {
+        if (packet.timer) {
+          packet.timer.stop();
+        }
+        var l = comp.links[packet.line];
+        var x1 = comp.getNodeById(l.nodeId[0]).x;
+        var y1 = comp.getNodeById(l.nodeId[0]).y;
+        var x2 = comp.getNodeByIp(l.nexthopNode).x;
+        var y2 = comp.getNodeByIp(l.nexthopNode).y;
+        var packetSel = d3.select(this);
+        var dx = (x2 - x1) / (50 + 50 / packet.i);
+        var dy = (y2 - y1) / (50 + 50 / packet.i);
+        packet.t = 0;
+        packet.timer = d3.timer(function (elapased) {
+          packetSel.attr("cx", x1 + dx * packet.t)
+            .attr("cy", y1 + dy * packet.t)
+          packet.t++;
+          if (packet.t > 50 + 50 / packet.i) {
+            packet.t = 0;
+          }
+        })
+      })
+    };
 
+
+    function render(comp) {
       let al = svg.selectAll('.allLines');
 
-      al.each(function() {
-          let line = d3.select(this);
-          let node1 = parseInt(line.attr('node1'))
-          let node2 = parseInt(line.attr('node2'))
+      al.each(function () {
+        let line = d3.select(this);
+        let node1 = parseInt(line.attr('node1'))
+        let node2 = parseInt(line.attr('node2'))
 
-          line.attr('x1', comp.nodes[node1].x)
-            .attr('y1', comp.nodes[node1].y)
-            .attr('x2', comp.nodes[node2].x)
-            .attr('y2', comp.nodes[node2].y)
-            .attr('stroke-width', 5)
-            .attr('stroke', '#406368')
-            .attr('opacity', .5)
+        line.attr('x1', comp.nodes[node1].x)
+          .attr('y1', comp.nodes[node1].y)
+          .attr('x2', comp.nodes[node2].x)
+          .attr('y2', comp.nodes[node2].y)
+          .attr('stroke-width', 5)
+          .attr('stroke', '#406368')
+          .attr('opacity', .5)
 
       })
+      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x; })
+        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
+        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
+        .attr('stroke-width', 5)
+        .attr('stroke', TestD3Component.COLORS["line"])
+
+      makeAnimation();
+
       nodes.attr('class', 'nodes')
-        .attr('xlink:href', function(d) { return 'assets/images/router.svg' })
+        .attr('xlink:href', function (d) { return 'assets/images/router.svg' })
         .attr('width', 50)
         .attr('height', 50)
-        .attr("x", function(d) { return d.x - 25; })
-        .attr("y", function(d) { return d.y - 25; })
+        .attr("x", function (d) { return d.x - 25; })
+        .attr("y", function (d) { return d.y - 25; })
         .on("mousemove", on_hover)
         .on("mouseout", delete_hover);
-      console.log(svg);
-
     }
   }
 
