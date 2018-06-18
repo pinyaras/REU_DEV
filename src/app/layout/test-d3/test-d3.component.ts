@@ -128,9 +128,6 @@ export class TestD3Component implements OnInit {
       let coords = d3.mouse(this);
       d3.select(this).attr('r', TestD3Component.NODE_RADIUS + 5);
       let info = d.getInfoLst()
-      console.log(info)
-      console.log("hello")
-      console.log(d.getInfoLst())
 
       let g = svg.append("g")
         .attr("id", "hover");
@@ -143,7 +140,7 @@ export class TestD3Component implements OnInit {
       for(var x = 0; x<NodeInfo.length; x++){
           CurInfoLen = NodeInfo[x].length
           if(CurInfoLen> MaxInfolen){
-              MaxInfolen = CurInfoLen
+              MaxInfolen = CurInfoLen;
           }
       }
 
