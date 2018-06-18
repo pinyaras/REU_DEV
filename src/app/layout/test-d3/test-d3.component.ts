@@ -105,11 +105,11 @@ export class TestD3Component implements OnInit {
       "&style=feature:all|element:labels|visibility:off"
     svg.append('image')
       .attr("id", "map")
-      // .attr('xlink:href', url)
-      .attr('xlink:href', 'assets/images/floor2.svg')
-      // .attr('transform', "translate(550) rotate(90 180 15)")
-      .attr('width', 900)
-      .attr('height', 600)
+       .attr('xlink:href', url)
+      //.attr('xlink:href', 'assets/images/floor2.svg')
+      .attr('transform', "translate(650 -200) rotate(90 180 15)")
+      .attr('width', 1350)
+      .attr('height', 900)
     // .attr('x', 0)
     // .attr('y', 0)
     // .attr('transform-origin', '150 150')
@@ -146,13 +146,14 @@ export class TestD3Component implements OnInit {
           MaxInfolen = CurInfoLen
         }
       }
+      console.log(MaxInfolen)
 
       g.append("rect")
         .attr("x", coords[0] + 3)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
-        .attr("width", MaxInfolen * 8.5)
+        .attr("width", (MaxInfolen * 8.5) + 10)
         .attr("height", (size + 0.5) + "em")
-        .attr("fill", "aliceblue")
+        .attr("fill", "AliceBlue")
         .attr("opacity", ".750")
         .attr("rx", 3)
         .attr("ry", 3);
