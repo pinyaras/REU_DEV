@@ -1,4 +1,4 @@
-import { Component, ElementRef, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, OnInit, Input } from '@angular/core';
 import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
 import { Network } from '../../shared/network';
@@ -35,26 +35,41 @@ export class NetworkSvgComponent implements OnInit {
 
   private parentNativeElement: any;
 
-  private nodes: Node[];
-  private links: Link[];
+  @Input()
+  nodes: Node[];
+  @Input()
+  links: Link[];
 
   constructor(d3Service: D3Service, networkService: NetworkService) {
-    // this.d3 = d3Service.getD3();
-    this.nodes = [];
-    this.links = [];
-    networkService.getNodes().toPromise().then(nodes => {
-      networkService.getWirelessNodes().toPromise().then(wirelessnodes => {
-        networkService.getWirelessLinks().toPromise().then(links => {
-          nodes.forEach(function (node, i) {
-            this.nodes.push(new Node(node, wirelessnodes[i]));
-          }, this)
-          links.forEach(function (link) {
-            this.links.push(new Link(link));
-          }, this)
-          this.myOnInit();
-        })
-      })
-    });
+
+
+
+    // // this.d3 = d3Service.getD3();
+    // this.nodes = [];
+    // this.links = [];
+    // networkService.getNodes().toPromise().then(nodes => {
+    //   networkService.getWirelessNodes().toPromise().then(wirelessnodes => {
+    //     networkService.getWirelessLinks().toPromise().then(links => {
+    //       nodes.forEach(function (node, i) {
+    //         this.nodes.push(new Node(node, wirelessnodes[i]));
+    //       }, this)
+    //       links.forEach(function (link) {
+    //         this.links.push(new Link(link));
+    //       }, this)
+          
+    //     })
+    //   })
+    // });
+  }
+
+  ngOnChanges(): void {
+
+   console.log(this.nodes)
+   console.log(this.links)
+
+   if(this.nodes) {
+     this.myOnInit();
+   }
   }
 
   getNodeByIp(ip: string): Node {
