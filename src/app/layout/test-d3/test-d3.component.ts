@@ -14,11 +14,10 @@ export class TestD3Component {
   nodes: Node[];
   links: Link[];
   constructor(networkService: NetworkService) {
-    this.nodes = [];
-    this.links = [];
+    
     var comp = this;
     networkService.getNodes().subscribe(data => {
-      // this.nodes = data
+      this.nodes = [];
       data.forEach(node => {
         this.nodes.push(new Node(node))
       }, this)
@@ -33,6 +32,7 @@ export class TestD3Component {
       });
     });
     networkService.getWirelessLinks().subscribe(data => {
+      this.links = [];
       data.forEach(link => {
         this.links.push(new Link(link))
       }, this)
