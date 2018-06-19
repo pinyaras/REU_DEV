@@ -64,9 +64,6 @@ export class NetworkSvgComponent implements OnChanges {
 
   ngOnChanges(): void {
 
-    console.log(this.nodes)
-    // console.log(this.links)
-
     if (this.nodes) {
       this.myOnInit();
     }
@@ -85,6 +82,10 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   myOnInit() {
+
+    if(this.nodes.length > 0 && !this.nodes[0].wireless) {
+      return;
+    }
 
     var svg = d3.select("svg")
     d3.selectAll('svg > *').remove()
