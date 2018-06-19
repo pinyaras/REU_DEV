@@ -47,16 +47,16 @@ export class TestD3Component {
 
     });
 
-    setTimeout(function() {
+    // setTimeout(function() {
 
-      comp.nodes.push(new Node({
-        "id": 7,
-        "nodeIp": "10.0.0.7",
-        "nodeMac": "00:00:00:00:00:07",
-        "nodeName": "Mesh7"
-      }))
-      comp.nodes = comp.nodes.slice();
-    }, 2000)
+    //   comp.nodes.push(new Node({
+    //     "id": 7,
+    //     "nodeIp": "10.0.0.7",
+    //     "nodeMac": "00:00:00:00:00:07",
+    //     "nodeName": "Mesh7"
+    //   }))
+    //   comp.nodes = comp.nodes.slice();
+    // }, 2000)
 
   }
 

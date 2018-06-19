@@ -40,27 +40,7 @@ export class NetworkSvgComponent implements OnChanges {
   @Input()
   links: Link[];
 
-  constructor(d3Service: D3Service, networkService: NetworkService) {
-
-
-
-    // // this.d3 = d3Service.getD3();
-    // this.nodes = [];
-    // this.links = [];
-    // networkService.getNodes().toPromise().then(nodes => {
-    //   networkService.getWirelessNodes().toPromise().then(wirelessnodes => {
-    //     networkService.getWirelessLinks().toPromise().then(links => {
-    //       nodes.forEach(function (node, i) {
-    //         this.nodes.push(new Node(node, wirelessnodes[i]));
-    //       }, this)
-    //       links.forEach(function (link) {
-    //         this.links.push(new Link(link));
-    //       }, this)
-
-    //     })
-    //   })
-    // });
-  }
+  constructor(d3Service: D3Service, networkService: NetworkService) { }
 
   ngOnChanges(): void {
 
@@ -76,9 +56,6 @@ export class NetworkSvgComponent implements OnChanges {
 
   getNodeById(id: number): Node {
     return this.nodes.find(function(n) { return n.id == id; })
-  }
-
-  ngOnInit() {
   }
 
   myOnInit() {
