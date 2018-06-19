@@ -19,22 +19,64 @@ export class TestD3Component {
     this.links = [];
     var comp = this;
     networkService.getNodes().subscribe(data => {
+      // this.nodes = data
       data.forEach(node => {
         this.nodes.push(new Node(node))
       }, this)
-      // networkService.getWirelessNodes().subscribe(function(data) {
-      //   data.forEach(function(wn) {
-      //     var node = comp.nodes.find(function(node) {
-      //       return node.id === wn.node;
-      //     })
-      //     node.wireless = wn;
-      //   })
-      // });
+
+    comp.nodes = comp.nodes.slice();
+
+      networkService.getWirelessNodes().subscribe(function(data) {
+        data.forEach(function(wn) {
+          var node = comp.nodes.find(function(node) {
+            return node.id === wn.node;
+          })
+          node.wireless = wn;
+        })
+      });
     });
-    networkService.getWirelessLinks().subscribe(data => {
-      data.forEach(link => {
-        this.links.push(new Link(link))
-      }, this)
-    });
+    // networkService.getWirelessLinks().subscribe(data => {
+    //   data.forEach(link => {
+    //     this.links.push(new Link(link))
+    //   }, this)
+    // });
+
+    setTimeout(function() { 
+
+      comp.nodes.push(new Node({
+        "id": 7,
+        "nodeIp": "10.0.0.7",
+        "nodeMac": "00:00:00:00:00:07",
+        "nodeName": "Mesh7"
+    }))  
+
+    comp.nodes = comp.nodes.slice();
+
+    }, 2000)
+
   }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
