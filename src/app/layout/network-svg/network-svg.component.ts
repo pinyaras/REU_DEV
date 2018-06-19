@@ -43,11 +43,9 @@ export class NetworkSvgComponent implements OnChanges {
   constructor(d3Service: D3Service, networkService: NetworkService) { }
 
   ngOnChanges(): void {
-
     if (this.nodes) {
       this.myOnInit();
     }
-
   }
 
   getNodeByIp(ip: string): Node {
@@ -59,7 +57,6 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   myOnInit() {
-
     if(this.nodes.length > 0 && !this.nodes[0].wireless) {
       return;
     }

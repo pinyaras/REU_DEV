@@ -3,7 +3,6 @@ import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
 import { Network } from '../../shared/network';
 import { NetworkService } from '../../shared/services/network.service'
-
 import { WirelessNode } from '../../shared/wirelessnode';
 
 @Component({
@@ -23,7 +22,6 @@ export class TestD3Component {
       data.forEach(node => {
         this.nodes.push(new Node(node))
       }, this)
-
       networkService.getWirelessNodes().subscribe(function(data) {
         data.forEach(function(wn) {
           var node = comp.nodes.find(function(node) {
@@ -31,22 +29,17 @@ export class TestD3Component {
           })
           node.wireless = wn;
         })
-
         comp.nodes = comp.nodes.slice();
-
       });
     });
     networkService.getWirelessLinks().subscribe(data => {
       data.forEach(link => {
         this.links.push(new Link(link))
       }, this)
-
       comp.links = comp.links.slice()
-
     });
 
     // setTimeout(function() {
-
     //   comp.nodes.push(new Node({
     //     "id": 7,
     //     "nodeIp": "10.0.0.7",
@@ -55,31 +48,5 @@ export class TestD3Component {
     //   }))
     //   comp.nodes = comp.nodes.slice();
     // }, 2000)
-
-
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
