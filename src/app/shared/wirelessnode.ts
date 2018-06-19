@@ -33,4 +33,18 @@ export class WirelessNode {
 		return [this.node, this.intName, this.ipAdd, this.macAdd, this.channel, this.power, this.mode, this.bw, this.bssid,
 		this.bridge];
 	}
+
+	equals(other: WirelessNode): boolean {
+		if (!other) return false;
+		return this.node == other.node
+			&& this.intName == other.intName
+			&& this.ipAdd == other.ipAdd
+			&& this.macAdd == other.macAdd
+			&& this.channel == other.channel
+			&& this.power == other.power
+			&& this.mode == other.mode
+			&& this.bw == other.bw
+			&& this.bssid == other.bssid
+			&& this.bridge == other.bridge
+	}
 }
