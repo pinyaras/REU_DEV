@@ -18,14 +18,12 @@ export class Node {
     //     "nodeName": "Mesh1"
     // },
 
-	constructor(obj: any, wireless: WirelessNode) {
+	constructor(obj: any) {
 
         this.id = obj.id;
 		this.nodeName = obj.nodeName;
 		this.nodeIp = obj.nodeIp;
 		this.nodeMac = obj.nodeMac;
-		this.wireless = wireless;
-
 
 	}
 	getInfoLst() {
