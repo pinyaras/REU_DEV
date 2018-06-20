@@ -24,6 +24,7 @@ export class NetworkSvgComponent implements OnChanges {
     "host": "tomato",
     "switch": "dodgerblue",
     "line": "#34BD62",
+    "line-disabled": "darkred",
     "text": "#292b2c",
     "packet": "white"
   };
@@ -159,48 +160,17 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("class", "link")
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
       .on("mousemove", on_hover)
-        .on("mouseout", delete_hover)
-    // "Packet" animation object
-    // var packets = []
-    // for (var i = 0; i < this.links.length * NetworkSvgComponent.PACKETS_PER_LINE; i++) {
-    //   var index = Math.floor(i / NetworkSvgComponent.PACKETS_PER_LINE);
-    //   packets.push({
-    //     "line": index,
-    //     "i": (i % NetworkSvgComponent.PACKETS_PER_LINE),
-    //     "getInfoLst": function () { return comp.links[this.line].getInfoLst(); }
-    //   });
-    // }
-    // svg.selectAll("polygon.packet")
-    //   .data(packets)
-    //   .enter()
-    //   .append("polygon")
-    //   .attr("class", "packet")
-    //   .attr("fill", NetworkSvgComponent.COLORS["packet"])
-    // Lines used just for hover so packets don't interfere
-    // var link_refs = []
-    // for (var i = 0; i < this.links.length; i++) {
-    //   link_refs.push({
-    //     "index": i,
-    //     "getInfoLst": function () { return comp.links[this.index].getInfoLst() }
-    //   });
-    // }
-    // var hidden_lines = svg.selectAll('.link_hid')
-    //   .data(link_refs)
-    //   .enter()
-    //   .append('line')
-    //   .attr('stroke-width', 10)
-    //   .attr("class", "link_hid")
-    //   .attr("stroke", "red")
-    //   .attr("opacity", "0")
-    //   .on("mousemove", on_hover)
-    //   .on("mouseout", delete_hover)
-
+      .on("mouseout", delete_hover)
+      .on('dblclick', function (l) {
+        l.enabled = !l.enabled;
+        render(comp);
+      })
 
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
       .enter()
       .append("image")
-      .attr('xlink:href', function (d) { return 'assets/images/router.svg' })
+      .attr('xlink:href', 'assets/images/router.svg')
       .attr('width', 50)
       .attr('height', 50)
       .on("mousemove", on_hover)
@@ -241,6 +211,10 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
+        .attr('stroke', function (l) {
+          return l.enabled ? NetworkSvgComponent.COLORS['line']
+            : NetworkSvgComponent.COLORS['line-disabled']
+        })
 
       nodes.attr('class', 'nodes')
         .attr("x", function (d) { return d.x - 25; })
