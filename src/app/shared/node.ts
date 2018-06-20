@@ -17,6 +17,8 @@ export class Node {
 		this.nodeName = obj.nodeName;
 		this.nodeIp = obj.nodeIp;
 		this.nodeMac = obj.nodeMac;
+		this.x = obj.x;
+		this.y = obj.y;
 
 	}
 	getInfoLst() {

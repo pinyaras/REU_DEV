@@ -39,6 +39,7 @@ export class NetworkSvgComponent implements OnChanges {
   nodes: Node[];
   @Input()
   links: Link[];
+  selectedNode = new Node({});
 
   constructor(d3Service: D3Service, networkService: NetworkService) { }
 
@@ -57,6 +58,7 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   myOnInit() {
+
     if (this.nodes.length > 0 && !this.nodes[0].wireless) {
       return;
     }
@@ -89,8 +91,9 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('height', 1020)
 
     this.nodes.forEach(function (node, i) {
-      node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
-      node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
+      if(node.x || node.y) return;
+        node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
+        node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
     }, this)
 
     let delete_hover = function () {
@@ -120,7 +123,7 @@ export class NetworkSvgComponent implements OnChanges {
       }
 
       g.append("rect")
-        .attr("x", coords[0] + 3)
+        .attr("x", coords[0] + 5)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
         .attr("width", (MaxInfolen * 8.5) + 10)
         .attr("height", (size + 0.5) + "em")
@@ -164,21 +167,21 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("class", "link")
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
     // "Packet" animation object
-    var packets = []
-    for (var i = 0; i < this.links.length * NetworkSvgComponent.PACKETS_PER_LINE; i++) {
-      var index = Math.floor(i / NetworkSvgComponent.PACKETS_PER_LINE);
-      packets.push({
-        "line": index,
-        "i": (i % NetworkSvgComponent.PACKETS_PER_LINE),
-        "getInfoLst": function () { return comp.links[this.line].getInfoLst(); }
-      });
-    }
-    svg.selectAll("polygon.packet")
-      .data(packets)
-      .enter()
-      .append("polygon")
-      .attr("class", "packet")
-      .attr("fill", NetworkSvgComponent.COLORS["packet"])
+    // var packets = []
+    // for (var i = 0; i < this.links.length * NetworkSvgComponent.PACKETS_PER_LINE; i++) {
+    //   var index = Math.floor(i / NetworkSvgComponent.PACKETS_PER_LINE);
+    //   packets.push({
+    //     "line": index,
+    //     "i": (i % NetworkSvgComponent.PACKETS_PER_LINE),
+    //     "getInfoLst": function () { return comp.links[this.line].getInfoLst(); }
+    //   });
+    // }
+    // svg.selectAll("polygon.packet")
+    //   .data(packets)
+    //   .enter()
+    //   .append("polygon")
+    //   .attr("class", "packet")
+    //   .attr("fill", NetworkSvgComponent.COLORS["packet"])
     // Lines used just for hover so packets don't interfere
     var link_refs = []
     for (var i = 0; i < this.links.length; i++) {
@@ -208,7 +211,8 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('width', 50)
       .attr('height', 50)
       .on("mousemove", on_hover)
-      .on("mouseout", delete_hover);
+      .on("mouseout", delete_hover)
+      .on("click", this.editNode);
 
     render(comp);
 
@@ -230,6 +234,7 @@ export class NetworkSvgComponent implements OnChanges {
       })
     dragHandler(svg.selectAll('image.nodes'));
 
+    /*
     function makeAnimation() {
       svg.selectAll(".packet").each(function (packet) {
         if (packet.timer) {
@@ -261,6 +266,7 @@ export class NetworkSvgComponent implements OnChanges {
         })
       })
     };
+    */
 
     function render(comp) {
       svg.selectAll('.allLines')
@@ -282,7 +288,7 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("x2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).y; })
 
-      makeAnimation();
+      //makeAnimation();
 
       nodes.attr('class', 'nodes')
         .attr("x", function (d) { return d.x - 25; })
@@ -290,5 +296,35 @@ export class NetworkSvgComponent implements OnChanges {
     }
   }
 
+  editNode = function(d) {
+
+    let modal = document.getElementById('myModal');
+    let node = d3.select(this);
+    this.selectedNode = d;
+    console.log(this.selectedNode)
+    modal.style.display = "block";
+    let span = document.getElementsByClassName("close")[0];
+    span.addEventListener("click", function() {
+      modal.style.display = "none";
+    })
+
+  }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
