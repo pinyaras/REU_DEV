@@ -215,13 +215,15 @@ export class NetworkSvgComponent implements OnChanges {
       .on('drag', function (d) {
         svg.select("#hover").remove();
         let coords = d3.mouse(this);
-        d.x = coords[0];
-        d.y = coords[1];
-        let node = d3.select(this);
-        node.attr('x', d.x + 25)
-        node.attr('y', d.y + 25);
-        render(comp);
-
+        if(coords[0] + 20 < parseInt(width) && coords[0] - 20 > 0
+          && coords[1] + 20 < height && coords[1] - 20 > 0) {
+          d.x = coords[0];
+          d.y = coords[1];
+          let node = d3.select(this);
+          node.attr('x', d.x + 25)
+          node.attr('y', d.y + 25);
+          render(comp);
+        }
       })
     dragHandler(svg.selectAll('image.nodes'));
 
