@@ -86,9 +86,9 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("id", "map")
       .attr('xlink:href', url)
       //.attr('xlink:href', 'assets/images/floor2.svg')
-      .attr('transform', "translate(650 -200) rotate(90 180 15)")
-      .attr('width', 1350)
-      .attr('height', 900)
+      .attr('transform', "translate(705 -300) rotate(90 180 15)")
+      .attr('width', 1530)              //Original dimensions 900 x 600
+      .attr('height', 1020)
 
     this.nodes.forEach(function (node, i) {
       if(node.x || node.y) return;
@@ -164,21 +164,21 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("class", "link")
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
     // "Packet" animation object
-    var packets = []
-    for (var i = 0; i < this.links.length * NetworkSvgComponent.PACKETS_PER_LINE; i++) {
-      var index = Math.floor(i / NetworkSvgComponent.PACKETS_PER_LINE);
-      packets.push({
-        "line": index,
-        "i": (i % NetworkSvgComponent.PACKETS_PER_LINE),
-        "getInfoLst": function () { return comp.links[this.line].getInfoLst(); }
-      });
-    }
-    svg.selectAll("polygon.packet")
-      .data(packets)
-      .enter()
-      .append("polygon")
-      .attr("class", "packet")
-      .attr("fill", NetworkSvgComponent.COLORS["packet"])
+    // var packets = []
+    // for (var i = 0; i < this.links.length * NetworkSvgComponent.PACKETS_PER_LINE; i++) {
+    //   var index = Math.floor(i / NetworkSvgComponent.PACKETS_PER_LINE);
+    //   packets.push({
+    //     "line": index,
+    //     "i": (i % NetworkSvgComponent.PACKETS_PER_LINE),
+    //     "getInfoLst": function () { return comp.links[this.line].getInfoLst(); }
+    //   });
+    // }
+    // svg.selectAll("polygon.packet")
+    //   .data(packets)
+    //   .enter()
+    //   .append("polygon")
+    //   .attr("class", "packet")
+    //   .attr("fill", NetworkSvgComponent.COLORS["packet"])
     // Lines used just for hover so packets don't interfere
     var link_refs = []
     for (var i = 0; i < this.links.length; i++) {
@@ -231,6 +231,7 @@ export class NetworkSvgComponent implements OnChanges {
       })
     dragHandler(svg.selectAll('image.nodes'));
 
+    /*
     function makeAnimation() {
       svg.selectAll(".packet").each(function (packet) {
         if (packet.timer) {
@@ -262,6 +263,7 @@ export class NetworkSvgComponent implements OnChanges {
         })
       })
     };
+    */
 
     function render(comp) {
       svg.selectAll('.allLines')
@@ -283,7 +285,7 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("x2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).y; })
 
-      makeAnimation();
+      //makeAnimation();
 
       nodes.attr('class', 'nodes')
         .attr("x", function (d) { return d.x - 25; })
