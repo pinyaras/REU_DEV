@@ -39,6 +39,7 @@ export class NetworkSvgComponent implements OnChanges {
   nodes: Node[];
   @Input()
   links: Link[];
+  selectedNode = new Node({});
 
   constructor(d3Service: D3Service, networkService: NetworkService) { }
 
@@ -57,6 +58,7 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   myOnInit() {
+
     if (this.nodes.length > 0 && !this.nodes[0].wireless) {
       return;
     }
@@ -89,8 +91,9 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('height', 900)
 
     this.nodes.forEach(function (node, i) {
-      node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
-      node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
+      if(node.x || node.y) return;
+        node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
+        node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
     }, this)
 
     let delete_hover = function () {
@@ -120,7 +123,7 @@ export class NetworkSvgComponent implements OnChanges {
       }
 
       g.append("rect")
-        .attr("x", coords[0] + 3)
+        .attr("x", coords[0] + 5)
         .attr("y", coords[1] - ((size + 1) * 12 + 7))
         .attr("width", (MaxInfolen * 8.5) + 10)
         .attr("height", (size + 0.5) + "em")
@@ -205,7 +208,8 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('width', 50)
       .attr('height', 50)
       .on("mousemove", on_hover)
-      .on("mouseout", delete_hover);
+      .on("mouseout", delete_hover)
+      .on("click", this.editNode);
 
     render(comp);
 
@@ -287,5 +291,35 @@ export class NetworkSvgComponent implements OnChanges {
     }
   }
 
+  editNode = function(d) {
+
+    let modal = document.getElementById('myModal');
+    let node = d3.select(this);
+    this.selectedNode = d;
+    console.log(this.selectedNode)
+    modal.style.display = "block";
+    let span = document.getElementsByClassName("close")[0];
+    span.addEventListener("click", function() {
+      modal.style.display = "none";
+    })
+
+  }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
