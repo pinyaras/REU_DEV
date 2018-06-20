@@ -22,8 +22,15 @@ export class Node {
 
 	}
 	getInfoLst() {
-		let info = [this.nodeName, this.nodeIp, this.nodeMac];
-		return info;
+		if(this.wireless){
+			return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
+			"MAC: " + this.nodeMac, "Channel: " + this.wireless.channel,
+			"Power: " + this.wireless.power, "Mode: " + this.wireless.mode, "Bandwidth: " + this.wireless.bw,
+			"BSSID: " + this.wireless.bssid, "Bridge: " + this.wireless.bridge];
+
+		}else{return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
+		"MAC: " + this.nodeMac]
+		}
 	}
 
 	equals(other: Node): boolean {
