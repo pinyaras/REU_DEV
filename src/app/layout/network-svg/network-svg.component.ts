@@ -109,11 +109,9 @@ export class NetworkSvgComponent implements OnChanges {
       let size = d.getInfoLst().length
       let NodeInfo = d.getInfoLst()
       let MaxInfolen = 0
-      let CurInfoLen = 0
 
-      //to find width of rect down below (line 161)
       for (var x = 0; x < NodeInfo.length; x++) {
-        CurInfoLen = NodeInfo[x].length
+        var CurInfoLen = NodeInfo[x].length
         if (CurInfoLen > MaxInfolen) {
           MaxInfolen = CurInfoLen
         }
@@ -160,6 +158,8 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('stroke-width', 5)
       .attr("class", "link")
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
+      .on("mousemove", on_hover)
+        .on("mouseout", delete_hover)
     // "Packet" animation object
     // var packets = []
     // for (var i = 0; i < this.links.length * NetworkSvgComponent.PACKETS_PER_LINE; i++) {
@@ -177,24 +177,23 @@ export class NetworkSvgComponent implements OnChanges {
     //   .attr("class", "packet")
     //   .attr("fill", NetworkSvgComponent.COLORS["packet"])
     // Lines used just for hover so packets don't interfere
-    var link_refs = []
-    for (var i = 0; i < this.links.length; i++) {
-      link_refs.push({
-        "index": i,
-        "getInfoLst": function () { return comp.links[this.index].getInfoLst() }
-      });
-    }
-    var hidden_lines = svg.selectAll('.link_hid')
-      .data(link_refs)
-      .enter()
-      .append('line')
-      .attr('stroke-width', 10)
-      .attr("class", "link_hid")
-      .attr("stroke", "red")
-      .attr("opacity", "0")
-      .on("mousemove", on_hover)
-      .on("mouseout", delete_hover)
-      .call(function (d) { });
+    // var link_refs = []
+    // for (var i = 0; i < this.links.length; i++) {
+    //   link_refs.push({
+    //     "index": i,
+    //     "getInfoLst": function () { return comp.links[this.index].getInfoLst() }
+    //   });
+    // }
+    // var hidden_lines = svg.selectAll('.link_hid')
+    //   .data(link_refs)
+    //   .enter()
+    //   .append('line')
+    //   .attr('stroke-width', 10)
+    //   .attr("class", "link_hid")
+    //   .attr("stroke", "red")
+    //   .attr("opacity", "0")
+    //   .on("mousemove", on_hover)
+    //   .on("mouseout", delete_hover)
 
 
     var nodes = svg.selectAll("image.nodes")
@@ -215,7 +214,7 @@ export class NetworkSvgComponent implements OnChanges {
       .on('drag', function (d) {
         svg.select("#hover").remove();
         let coords = d3.mouse(this);
-        if(coords[0] + 20 < parseInt(width) && coords[0] - 20 > 0
+        if (coords[0] + 20 < parseInt(width) && coords[0] - 20 > 0
           && coords[1] + 20 < height && coords[1] - 20 > 0) {
           d.x = coords[0];
           d.y = coords[1];
@@ -226,40 +225,6 @@ export class NetworkSvgComponent implements OnChanges {
         }
       })
     dragHandler(svg.selectAll('image.nodes'));
-
-    /*
-    function makeAnimation() {
-      svg.selectAll(".packet").each(function (packet) {
-        if (packet.timer) {
-          packet.timer.stop();
-        }
-        var l = comp.links[packet.line];
-        var x1 = comp.getNodeById(l.nodeId[0]).x;
-        var y1 = comp.getNodeById(l.nodeId[0]).y;
-        var x2 = comp.getNodeByIp(l.nexthopNode).x;
-        var y2 = comp.getNodeByIp(l.nexthopNode).y;
-        var packetSel = d3.select(this);
-        var dx = (x2 - x1) / NetworkSvgComponent.PACKET_TIME;
-        var dy = (y2 - y1) / NetworkSvgComponent.PACKET_TIME;
-        packet.t = (NetworkSvgComponent.PACKET_TIME / NetworkSvgComponent.PACKETS_PER_LINE) * packet.i;
-        packet.timer = d3.timer(function (elapased) {
-          var x = x1 + dx * packet.t;
-          var y = y1 + dy * packet.t;
-          var length = Math.sqrt(dx * dx + dy * dy);
-          var v = { "x": dx * 2 / length, "y": dy * 2 / length };
-          var p1 = (x - v.y) + "," + (y + v.x)
-          var p2 = (x + v.y) + "," + (y - v.x)
-          var p3 = (x + v.x * NetworkSvgComponent.PACKET_LENGTH + v.y) + "," + (y + v.y * NetworkSvgComponent.PACKET_LENGTH - v.x)
-          var p4 = (x + v.x * NetworkSvgComponent.PACKET_LENGTH - v.y) + "," + (y + v.y * NetworkSvgComponent.PACKET_LENGTH + v.x)
-          packetSel.attr("points", p1 + " " + p2 + " " + p3 + " " + p4)
-          packet.t++;
-          if (packet.t > NetworkSvgComponent.PACKET_TIME) {
-            packet.t = 0;
-          }
-        })
-      })
-    };
-    */
 
     function render(comp) {
       svg.selectAll('.allLines')
@@ -276,12 +241,6 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
-      hidden_lines.attr("x1", function (d) { var l = comp.links[d.index]; return comp.getNodeById(l.nodeId[0]).x; })
-        .attr("y1", function (d) { var l = comp.links[d.index]; return comp.getNodeById(l.nodeId[0]).y; })
-        .attr("x2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).x; })
-        .attr("y2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).y; })
-
-      //makeAnimation();
 
       nodes.attr('class', 'nodes')
         .attr("x", function (d) { return d.x - 25; })
