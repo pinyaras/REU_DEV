@@ -84,9 +84,9 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("id", "map")
       .attr('xlink:href', url)
       //.attr('xlink:href', 'assets/images/floor2.svg')
-      .attr('transform', "translate(650 -200) rotate(90 180 15)")
-      .attr('width', 1350)
-      .attr('height', 900)
+      .attr('transform', "translate(705 -300) rotate(90 180 15)")
+      .attr('width', 1530)              //Original dimensions 900 x 600
+      .attr('height', 1020)
 
     this.nodes.forEach(function (node, i) {
       node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
