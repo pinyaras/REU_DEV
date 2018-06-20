@@ -19,8 +19,8 @@ export class ControllerStatsticsService {
     	.catch(this.handleErrorObservable);
   }
 
-  getPortStats(switch_no:number, port: number) {
-    return this.http.get(this.controller_url + "stats/port/"+switch_no + "/" + port)
+  getPortStats(switch_no:number) {
+    return this.http.get(this.controller_url + "stats/port/"+switch_no)
     	.catch(this.handleErrorObservable);
   }
 
