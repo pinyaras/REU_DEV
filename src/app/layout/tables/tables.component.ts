@@ -8,10 +8,10 @@ import { ControllerStatsticsService } from '../../shared/services/controller-sta
 })
 export class TablesComponent implements OnInit {
     private switches: number[];
-    private flowStats: {};
+    private flowStats: any[];
 
     constructor(private controllerStatsticsService: ControllerStatsticsService) {
-        this.flowStats = {};
+        this.flowStats = [];
         this.switches = [];
         //this.getSwitches();
         this.getFlowStats();
@@ -27,9 +27,9 @@ export class TablesComponent implements OnInit {
     getFlowStats() {
         var after = function (comp) {
             for (var i = 0; i < comp.switches.length; i++) {
-                comp.controllerStatsticsService.getFlowStats(comp.switches[i]).subscribe((data) => {
-                    comp.flowStats[i] = data[i];
-                    console.log(comp.flowStats);
+                var switch_no = comp.switches[i];
+                comp.controllerStatsticsService.getFlowStats(switch_no).subscribe(data => {
+                    comp.flowStats.push(data)
                 });
             }
         }
@@ -40,4 +40,14 @@ export class TablesComponent implements OnInit {
             after(this);
         }
     }
+    getFlowStatsBySwitchNumber(switch_no) {
+        var item = this.flowStats.find(function (element) {
+            return element[switch_no];
+        })
+        if (item) {
+            return item[switch_no];
+        }
+        return undefined;
+    }
+
 }

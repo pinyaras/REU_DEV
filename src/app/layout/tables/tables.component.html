@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let flow of flowStats[switch]">
+                        <tr *ngFor="let flow of getFlowStatsBySwitchNumber(switch)">
                             <td>{{flow.match | json}}</td>
                             <td>
                                 <ul>
