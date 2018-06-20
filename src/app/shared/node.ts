@@ -20,7 +20,15 @@ export class Node {
 
 	}
 	getInfoLst() {
-		return [this.nodeName, this.nodeIp, this.nodeMac];
+		if(this.wireless){
+			return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
+			"MAC: " + this.nodeMac, "Channel: " + this.wireless.channel,
+			"Power: " + this.wireless.power, "Mode: " + this.wireless.mode, "Bandwidth: " + this.wireless.bw,
+			"BSSID: " + this.wireless.bssid, "Bridge: " + this.wireless.bridge];
+
+		}else{return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
+		"MAC: " + this.nodeMac]
+		}
 	}
 
 	equals(other: Node): boolean {

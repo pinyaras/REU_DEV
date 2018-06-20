@@ -100,7 +100,7 @@ export class NetworkSvgComponent implements OnChanges {
 
     let on_hover = function (d) {
       svg.select("#hover").remove();
-      let coords = d3.mouse(this);
+      let coords = d3.mouse(this)   //FOR CORNER [640, 100];
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5);
       let info = d.getInfoLst()
 
@@ -125,6 +125,9 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("width", (MaxInfolen * 8.5) + 10)
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "AliceBlue")
+        .attr("stroke", "#333333")
+        .attr("stroke-width", 2)
+        .attr("stroke-opacity", .4)
         .attr("opacity", ".750")
         .attr("rx", 3)
         .attr("ry", 3);
@@ -137,7 +140,7 @@ export class NetworkSvgComponent implements OnChanges {
         text.append('tspan')
           .text(info)
           .attr('dy', 1 + 'em')
-          .attr('x', coords[0] + 5);
+          .attr('x', coords[0] + 10); //Orginal + 5
       })
     }
 

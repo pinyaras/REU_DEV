@@ -15,8 +15,10 @@ export class Link {
     }
 
 
-    getInfoLst() {
-        return [this.bw.toString()];
+    getInfoLst() { //Reconsider the format of "connection: node... substring(7)"
+        return ["Link ID: " + this.id.toString(),"Connection: Node " + this.nodeId.toString() + ", Node " + this.nexthopNode.substring(7),
+        "Bandwidth: " + this.bw.toString()];
+
     }
     equals(other: Link): boolean {
         if (!other) return false;
