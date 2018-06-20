@@ -276,22 +276,6 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("y1", function (d) { var l = comp.links[d.index]; return comp.getNodeById(l.nodeId[0]).y; })
         .attr("x2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (d) { var l = comp.links[d.index]; return comp.getNodeByIp(l.nexthopNode).y; })
-      // .attr('stroke', function (l) {
-      //   if (l.enabled) {
-      //     return TestD3Component.COLORS['line'];
-      //   } else {
-      //     return 'snow';
-      //   }
-      // })
-      // .on('dblclick', function (l) {
-      //   l.enabled = !l.enabled;
-      //   if (l.enabled) {
-      //     d3.select(this).attr('opacity', 1)
-      //   } else {
-      //     d3.select(this).attr('opacity', .25)
-      //   }
-      //   render(comp);
-      // })
 
       makeAnimation();
 
