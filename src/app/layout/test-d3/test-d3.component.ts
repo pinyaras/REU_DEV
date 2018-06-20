@@ -18,6 +18,7 @@ export class TestD3Component {
   private old_links: Link[];
   constructor(private networkService: NetworkService) {
     this.load();
+    setTimeout(() => this.load(), 6000);
   }
   private array_equal(a1, a2): boolean {
     if (a1 && a2) {
@@ -68,7 +69,5 @@ export class TestD3Component {
       }
       comp.old_links = link_data;
     });
-
-    setTimeout(() => this.load(), 6000);
   }
 }
