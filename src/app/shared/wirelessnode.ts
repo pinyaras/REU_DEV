@@ -11,8 +11,6 @@ export class WirelessNode {
 	bw: string
 	bssid: string
 	bridge: string
-	x: number;
-	y: number;
 
 	constructor(obj: any) {
 
@@ -30,8 +28,8 @@ export class WirelessNode {
 	}
 
 	getInfoLst() {
-		return [this.node, this.intName, this.ipAdd, this.macAdd, this.channel, this.power, this.mode, this.bw, this.bssid,
-		this.bridge];
+		return [this.node.toString(), this.intName.toString(), this.ipAdd.toString(), this.macAdd.toString(), this.channel.toString(), this.power.toString(), this.mode.toString(), this.bw.toString(), this.bssid.toString(),
+		this.bridge.toString()];
 	}
 
 	equals(other: WirelessNode): boolean {

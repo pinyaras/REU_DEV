@@ -17,10 +17,13 @@ export class Node {
 		this.nodeName = obj.nodeName;
 		this.nodeIp = obj.nodeIp;
 		this.nodeMac = obj.nodeMac;
+		this.x = obj.x;
+		this.y = obj.y;
 
 	}
 	getInfoLst() {
-		return [this.nodeName, this.nodeIp, this.nodeMac];
+		let info = [this.nodeName, this.nodeIp, this.nodeMac];
+		return info;
 	}
 
 	equals(other: Node): boolean {

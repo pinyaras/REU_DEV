@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpModule, Http} from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -14,6 +14,7 @@ import { NodeService } from './shared/services/node.service'
 import { apiRoutersService } from './shared/services/api_routers.service'
 import { apiUsersService } from './shared/services/api_users.service'
 import { NetworkService } from './shared/services/network.service'
+import { ControllerStatsticsService } from './shared/services/controller-statstics.service'
 import { D3Service } from 'd3-ng2-service'; // <-- import statement
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { HttpClientModule } from '@angular/common/http';
@@ -42,7 +43,7 @@ export function HttpLoaderFactory(http: Http) {
             }
         })
     ],
-    providers: [AuthGuard, RouterAPService, ApService, NodeService, apiRoutersService, apiUsersService, D3Service, NetworkService],
+    providers: [AuthGuard, RouterAPService, ApService, NodeService, apiRoutersService, apiUsersService, D3Service, NetworkService, ControllerStatsticsService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
