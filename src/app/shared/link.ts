@@ -5,6 +5,8 @@ export class Link {
     nexthopNode: string;
     bw: number;
     nodeId: number[];
+    xloc: number;
+    yloc: number;
     enabled: boolean;
 
     constructor(obj: any) {
@@ -12,6 +14,8 @@ export class Link {
         this.nexthopNode = obj.nexthopNode;
         this.bw = obj.bw;
         this.nodeId = obj.nodeId;
+        this.xloc = obj.xloc;
+        this.yloc = obj.yloc;
         this.enabled = true;
     }
 
@@ -26,6 +30,8 @@ export class Link {
         return this.id == other.id
             && this.nexthopNode == other.nexthopNode
             && this.bw == other.bw
+            && this.xloc == other.xloc
+            && this.yloc == other.yloc
             && this.nodeId[0] == other.nodeId[0]
     }
 }

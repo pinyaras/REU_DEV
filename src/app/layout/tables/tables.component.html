@@ -1,45 +1,72 @@
 <!-- <app-page-header [heading]="'Tables'" [icon]="'fa-table'"></app-page-header> -->
 <div class="row">
-    <div class="col col-xl-6 col-lg-12">
-        Flow Stats
-        <div class="card mb-3" *ngFor="let switch of switches">
-            <div class="card-header">Switch {{switch}}</div>
+    <div class="col">
+        <div class="card mb-3">
+            <div class="card-header">Flow Stats</div>
             <div class="card-block table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>match</th>
+                            <th colspan="2"></th>
+                            <th colspan="3">mac</th>
+                            <th colspan="3">ip</th>
+                            <th colspan="2">transport</th>
+                        </tr>
+                        <tr>
+                            <th>{{Switch}} </th>
+                            <!-- <th>match</th> -->
+                            <th>in_port</th>
+                            <th>dl_src</th>
+                            <th>dl_dst</th>
+                            <th>dl_type</th>
+                            <th>nw_src</th>
+                            <th>nw_dst</th>
+                            <th>nw_proto</th>
+                            <th>tp_src</th>
+                            <th>tp_dst</th>
                             <th>actions</th>
-                            <th>length</th>
-                            <th>table_id</th>
+                            <!-- <th>length</th>
+                            <th>table_id</th> -->
                             <th>duration_sec</th>
-                            <th>duration_nsec</th>
-                            <th>priority</th>
+                            <!-- <th>duration_nsec</th> -->
+                            <!-- <th>priority</th>
                             <th>idle_timeout</th>
                             <th>hard_timeout</th>
                             <th>flags</th>
-                            <th>cookie</th>
+                            <th>cookie</th> -->
                             <th>packet_count</th>
                             <th>byte_count</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let flow of getFlowStatsBySwitchNumber(switch)">
-                            <td>{{flow.match | json}}</td>
+                    <tbody *ngFor="let switch of switches">
+                        <tr *ngFor="let flow of getFlowStatsBySwitchNumber(switch); first as isFirst">
+                            <td *ngIf="isFirst" [rowSpan]="getFlowStatsBySwitchNumber(switch).length">{{switch}}</td>
+                            <!-- <td>
+                                <pre>{{flow.match | json}}</pre>
+                            </td> -->
+                            <td>{{flow.match.in_port}}</td>
+                            <td>{{flow.match.dl_src}}</td>
+                            <td>{{flow.match.dl_dst}}</td>
+                            <td>{{flow.match.dl_type}}</td>
+                            <td>{{flow.match.nw_src}}</td>
+                            <td>{{flow.match.nw_dst}}</td>
+                            <td>{{flow.match.nw_proto}}</td>
+                            <td>{{flow.match.tp_src}}</td>
+                            <td>{{flow.match.tp_dst}}</td>
                             <td>
                                 <ul>
                                     <li *ngFor="let action of flow.actions">{{action}}</li>
                                 </ul>
                             </td>
-                            <td>{{flow.length}}</td>
-                            <td>{{flow.table_id}}</td>
+                            <!-- <td>{{flow.length}}</td>
+                            <td>{{flow.table_id}}</td> -->
                             <td>{{flow.duration_sec}}</td>
-                            <td>{{flow.duration_nsec}}</td>
+                            <!-- <td>{{flow.duration_nsec}}</td>
                             <td>{{flow.priority}}</td>
                             <td>{{flow.idle_timeout}}</td>
                             <td>{{flow.hard_timeout}}</td>
                             <td>{{flow.flags}}</td>
-                            <td>{{flow.cookie}}</td>
+                            <td>{{flow.cookie}}</td> -->
                             <td>{{flow.packet_count}}</td>
                             <td>{{flow.byte_count}}</td>
                         </tr>
@@ -47,53 +74,65 @@
                 </table>
             </div>
         </div>
+        <div class="card-body" *ngIf="flowStats && flowStats.length == switches.length">
+            <canvas baseChart [datasets]="flowBarChartData()" [labels]="flowBarChartLabels()" chartType="bar" [legend]="false"></canvas>
+        </div>
     </div>
-    <div class="col col-xl-6 col-lg-12">
-        Port Stats
-        <div class="card mb-3" *ngFor="let switch of switches">
-            <div class="card-header">Switch {{switch}}</div>
+    <div class="col">
+        <div class="card mb-3">
+            <div class="card-header">Port Stats </div>
             <div class="card-block table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
+                            <th colspan="2"></th>
+                            <th colspan="4">receive</th>
+                            <th colspan="4">transmit</th>
+                        </tr>
+                        <tr>
+                            <th>Switch</th>
                             <th>port_no</th>
                             <th>rx_packets</th>
-                            <th>tx_packets</th>
                             <th>rx_bytes</th>
-                            <th>tx_bytes</th>
                             <th>rx_dropped</th>
-                            <th>tx_dropped</th>
                             <th>rx_errors</th>
+                            <th>tx_packets</th>
+                            <th>tx_bytes</th>
+                            <th>tx_dropped</th>
                             <th>tx_errors</th>
-                            <th>rx_frame_err</th>
+                            <!-- <th>rx_frame_err</th>
                             <th>rx_over_err</th>
                             <th>rx_crc_err</th>
                             <th>collisions</th>
                             <th>duration_sec</th>
-                            <th>duration_nsec</th>
+                            <th>duration_nsec</th> -->
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let stats of getPortStatsBySwitchNumber(switch)">
+                    <tbody *ngFor="let switch of switches">
+                        <tr *ngFor="let stats of getPortStatsBySwitchNumber(switch); first as isFirst">
+                            <td *ngIf="isFirst" [rowSpan]="getPortStatsBySwitchNumber(switch).length">{{switch}}</td>
                             <td>{{stats.port_no}}</td>
                             <td>{{stats.rx_packets}}</td>
-                            <td>{{stats.tx_packets}}</td>
                             <td>{{stats.rx_bytes}}</td>
-                            <td>{{stats.tx_bytes}}</td>
                             <td>{{stats.rx_dropped}}</td>
-                            <td>{{stats.tx_dropped}}</td>
                             <td>{{stats.rx_errors}}</td>
+                            <td>{{stats.tx_packets}}</td>
+                            <td>{{stats.tx_bytes}}</td>
+                            <td>{{stats.tx_dropped}}</td>
                             <td>{{stats.tx_errors}}</td>
-                            <td>{{stats.rx_frame_err}}</td>
+                            <!-- <td>{{stats.rx_frame_err}}</td>
                             <td>{{stats.rx_over_err}}</td>
                             <td>{{stats.rx_crc_err}}</td>
                             <td>{{stats.collisions}}</td>
                             <td>{{stats.duration_sec}}</td>
-                            <td>{{stats.duration_nsec}}</td>
+                            <td>{{stats.duration_nsec}}</td> -->
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="card-body" *ngIf="portStats && portStats.length == switches.length">
+            <canvas baseChart [datasets]="portBarChartData()" [labels]="portBarChartLabels()" chartType="bar" [legend]="false"></canvas>
         </div>
     </div>
 </div>
