@@ -21,10 +21,10 @@
 					<p>Bridge: {{selectedNode.wireless.bridge}}</p>
 				</div>
      		</div>
-     		<div *ngIf="editting">
-     			<div class="editInput">
+     		<div *ngIf="editting" class="form-inline">
+     			<div class="form-group">
 	     			<label for="name">Name: </label>
-			      	<input type="text" name="name" [(ngModel)]="selectedNode.nodeName">
+			      	<input type="text" name="name" class="form-control" [(ngModel)]="selectedNode.nodeName">
 				</div>
 				<div class="editInput">
 			     	<label for="ip">Ip Address: </label>

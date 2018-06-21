@@ -1,41 +1,95 @@
 <!-- <app-page-header [heading]="'Tables'" [icon]="'fa-table'"></app-page-header> -->
 <div class="row">
     <div class="col col-xl-6 col-lg-12">
-        <div class="card mb-3">
-            <div class="card-header">Bordered table</div>
+        Flow Stats
+        <div class="card mb-3" *ngFor="let switch of switches">
+            <div class="card-header">Switch {{switch}}</div>
             <div class="card-block table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Username</th>
+                            <th>match</th>
+                            <th>actions</th>
+                            <th>length</th>
+                            <th>table_id</th>
+                            <th>duration_sec</th>
+                            <th>duration_nsec</th>
+                            <th>priority</th>
+                            <th>idle_timeout</th>
+                            <th>hard_timeout</th>
+                            <th>flags</th>
+                            <th>cookie</th>
+                            <th>packet_count</th>
+                            <th>byte_count</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                        <tr *ngFor="let flow of getFlowStatsBySwitchNumber(switch)">
+                            <td>{{flow.match | json}}</td>
+                            <td>
+                                <ul>
+                                    <li *ngFor="let action of flow.actions">{{action}}</li>
+                                </ul>
+                            </td>
+                            <td>{{flow.length}}</td>
+                            <td>{{flow.table_id}}</td>
+                            <td>{{flow.duration_sec}}</td>
+                            <td>{{flow.duration_nsec}}</td>
+                            <td>{{flow.priority}}</td>
+                            <td>{{flow.idle_timeout}}</td>
+                            <td>{{flow.hard_timeout}}</td>
+                            <td>{{flow.flags}}</td>
+                            <td>{{flow.cookie}}</td>
+                            <td>{{flow.packet_count}}</td>
+                            <td>{{flow.byte_count}}</td>
                         </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col col-xl-6 col-lg-12">
+        Port Stats
+        <div class="card mb-3" *ngFor="let switch of switches">
+            <div class="card-header">Switch {{switch}}</div>
+            <div class="card-block table-responsive">
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <th scope="row">2</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@TwBootstrap</td>
+                            <th>port_no</th>
+                            <th>rx_packets</th>
+                            <th>tx_packets</th>
+                            <th>rx_bytes</th>
+                            <th>tx_bytes</th>
+                            <th>rx_dropped</th>
+                            <th>tx_dropped</th>
+                            <th>rx_errors</th>
+                            <th>tx_errors</th>
+                            <th>rx_frame_err</th>
+                            <th>rx_over_err</th>
+                            <th>rx_crc_err</th>
+                            <th>collisions</th>
+                            <th>duration_sec</th>
+                            <th>duration_nsec</th>
                         </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let stats of getPortStatsBySwitchNumber(switch)">
+                            <td>{{stats.port_no}}</td>
+                            <td>{{stats.rx_packets}}</td>
+                            <td>{{stats.tx_packets}}</td>
+                            <td>{{stats.rx_bytes}}</td>
+                            <td>{{stats.tx_bytes}}</td>
+                            <td>{{stats.rx_dropped}}</td>
+                            <td>{{stats.tx_dropped}}</td>
+                            <td>{{stats.rx_errors}}</td>
+                            <td>{{stats.tx_errors}}</td>
+                            <td>{{stats.rx_frame_err}}</td>
+                            <td>{{stats.rx_over_err}}</td>
+                            <td>{{stats.rx_crc_err}}</td>
+                            <td>{{stats.collisions}}</td>
+                            <td>{{stats.duration_sec}}</td>
+                            <td>{{stats.duration_nsec}}</td>
                         </tr>
                     </tbody>
                 </table>
