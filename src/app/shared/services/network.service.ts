@@ -32,6 +32,10 @@ export class NetworkService {
 		.catch(this.handleErrorObservable);
 	}
 
+	updateTopology(link: Link): Observable<Link> {
+		return this.http.put<Link>("http://52.15.133.20/topology/" + link.id + "/", link, httpOptions);
+	}
+
 	updateNode(node: Node): Observable<Node> {
 		return this.http.put<Node>("http://52.15.133.20/node/" + node.id + "/", node, httpOptions)
 	}
