@@ -74,6 +74,10 @@
                 </table>
             </div>
         </div>
+        <div class="card-body" *ngIf="flowStats && flowStats.length == switches.length">
+            <canvas baseChart [datasets]="barChartData()" [labels]="barChartLabels()" 
+            chartType="bar" [legend]="false"></canvas>
+        </div>
     </div>
     <div class="col">
         <div class="card mb-3">
