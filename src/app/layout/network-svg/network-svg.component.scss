@@ -18,10 +18,23 @@ body {font-family: Arial, Helvetica, sans-serif;}
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
+    p { 
+	    margin-bottom: 5px; 
+    }
+
+    button {
+
+    	position: relative;
+    	bottom: 30px;
+    	left: 95%;
+    }
+
 }
 
 /* Modal Content */
 .modal-content {
+	border-radius: 5px;
     position: relative;
     background-color: #fefefe;
     margin: auto;

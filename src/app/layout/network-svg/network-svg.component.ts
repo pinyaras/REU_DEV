@@ -23,7 +23,8 @@ export class NetworkSvgComponent implements OnChanges {
     "controller": "snow",
     "host": "tomato",
     "switch": "dodgerblue",
-    "line": "#34BD62",
+    "line": "dodgerblue",
+    //#34BD62
     "text": "#292b2c",
     "packet": "white"
   };
@@ -39,9 +40,15 @@ export class NetworkSvgComponent implements OnChanges {
   nodes: Node[];
   @Input()
   links: Link[];
-  selectedNode = new Node({});
+  selectedNode: Node = new Node({});
+  editting: boolean = false;
+  networkService: NetworkService;
 
-  constructor(d3Service: D3Service, networkService: NetworkService) { }
+  constructor(d3Service: D3Service, networkService: NetworkService) {
+
+    this.networkService = networkService;
+
+  }
 
   ngOnChanges(): void {
     if (this.nodes) {
@@ -209,7 +216,7 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('height', 50)
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
-      .on("click", this.editNode);
+      .on("click", function(d) { comp.editNode(d) });
 
     render(comp);
 
@@ -293,35 +300,35 @@ export class NetworkSvgComponent implements OnChanges {
     }
   }
 
-  editNode = function(d) {
-
+  editNode(d) {
+    var comp = this;
     let modal = document.getElementById('myModal');
+    let editModal = document.getElementById('myEditModal');
     let node = d3.select(this);
     this.selectedNode = d;
-    console.log(this.selectedNode)
     modal.style.display = "block";
     let span = document.getElementsByClassName("close")[0];
     span.addEventListener("click", function() {
+
       modal.style.display = "none";
+      comp.editting = false;
+
     })
 
+    let editButton = document.getElementById("editButton");
+    editButton.addEventListener("click", function() {
+
+      comp.editting = true;
+
+    })
+
+    let saveButton = document.getElementById("saveButton");
+    saveButton.addEventListener("click", function() {
+
+      comp.editting = false;
+      modal.style.display = "none";
+      comp.networkService.updateNode(comp.selectedNode).subscribe()
+
+    })
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

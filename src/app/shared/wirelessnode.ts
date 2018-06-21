@@ -1,6 +1,7 @@
 
 export class WirelessNode {
 
+
 	node: number;
 	intName: string;
 	ipAdd: string;
@@ -11,6 +12,7 @@ export class WirelessNode {
 	bw: string
 	bssid: string
 	bridge: string
+	modes: string[] = ['Mesh', 'AP']
 
 	constructor(obj: any) {
 
