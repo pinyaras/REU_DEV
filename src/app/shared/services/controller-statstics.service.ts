@@ -6,14 +6,15 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class ControllerStatsticsService {
 
-  private controller_url = "http://localhost:8080/";
+  private controller_url = "http://192.168.52.101:8080/";
 
   constructor(private http: HttpClient) { }
 
   getNodes(){
     return this.http.get("http://52.15.133.20/node/")
      .catch(this.handleErrorObservable);
- }
+  }
+
   getFlowStats(switch_no:number){
     return this.http.get(this.controller_url + "stats/flow/" + switch_no)
     	.catch(this.handleErrorObservable);

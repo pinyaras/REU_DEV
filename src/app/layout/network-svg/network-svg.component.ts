@@ -20,10 +20,8 @@ export class NetworkSvgComponent implements OnChanges {
 
   private static readonly NODE_RADIUS = 20;
   private static readonly COLORS = {
-    "controller": "snow",
-    "host": "tomato",
-    "switch": "dodgerblue",
-    "line": "#34BD62",
+    "line": "dodgerblue",
+    // "line": "#34BD62",
     "line-disabled": "darkred",
     "text": "#292b2c",
     "packet": "white"
@@ -40,9 +38,15 @@ export class NetworkSvgComponent implements OnChanges {
   nodes: Node[];
   @Input()
   links: Link[];
-  selectedNode = new Node({});
+  selectedNode: Node = new Node({});
+  editting: boolean = false;
+  networkService: NetworkService;
 
-  constructor(d3Service: D3Service, networkService: NetworkService) { }
+  constructor(d3Service: D3Service, networkService: NetworkService) {
+
+    this.networkService = networkService;
+
+  }
 
   ngOnChanges(): void {
     if (this.nodes) {
@@ -103,11 +107,40 @@ export class NetworkSvgComponent implements OnChanges {
     }
     let path_mode = function(d) {
         let line = d3.select(this)
-        .attr('stroke', '#406368')
+    console.log("path_mode running")
+    if(line.attr('stroke') == '#34BD62'){
+            line.attr('stroke', 'dodgerblue')
+        }else if(line.attr('stroke') =='dodgerblue'){
+            line.attr('stroke', '#34BD62')
+        }else{
+            return
+        }
     }
+//show mouse location textbox-------------------------
+/*/
+let text = svg.append('text')
+    .attr('x', 20)
+    .attr('y', 580)
+    .text('0 0')
+    .attr('font-size', '20px')
+    .attr('fill', 'white')
+svg.on('mousemove', function(d) {
+    let coords = d3.mouse(this);
+    text.text(coords[0] + " " + coords[1])
+}) //------------------------------------------------ */
+    //HoverBox
     let on_hover = function (d) {
       svg.select("#hover").remove();
-      let coords = d3.mouse(this)   //FOR CORNER [640, 100];
+      // me
+
+      var test = [0,0]
+      test = d3.mouse(this).y
+      console.log(test)
+      console.log('test^')
+      console.log(d3.mouse(this))
+      console.log(d3.mouse(this)[1])
+      let coords = [0, 0] //need this for later when if statements are implemented
+      coords = d3.mouse(this)
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5)
       let info = d.getInfoLst()
 
@@ -145,7 +178,7 @@ export class NetworkSvgComponent implements OnChanges {
         text.append('tspan')
           .text(info)
           .attr('dy', 1 + 'em')
-          .attr('x', coords[0] + 10); //Orginal + 5
+          .attr('x', coords[0] + 10); //Original + 5
       })
     }
 
@@ -185,7 +218,7 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('height', 50)
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
-      .on("click", this.editNode);
+      .on("click", function(d) { comp.editNode(d) });
 
     render(comp);
 
@@ -233,18 +266,36 @@ export class NetworkSvgComponent implements OnChanges {
     }
   }
 
-  editNode = function(d) {
-
+  editNode(d) {
+    var comp = this;
     let modal = document.getElementById('myModal');
+    let editModal = document.getElementById('myEditModal');
     let node = d3.select(this);
     this.selectedNode = d;
-    console.log(this.selectedNode)
     modal.style.display = "block";
     let span = document.getElementsByClassName("close")[0];
     span.addEventListener("click", function() {
+
       modal.style.display = "none";
+      comp.editting = false;
+
     })
 
+    let editButton = document.getElementById("editButton");
+    editButton.addEventListener("click", function() {
+
+      comp.editting = true;
+
+    })
+
+    let saveButton = document.getElementById("saveButton");
+    saveButton.addEventListener("click", function() {
+
+      comp.editting = false;
+      modal.style.display = "none";
+      comp.networkService.updateNode(comp.selectedNode).subscribe()
+
+    })
   }
 
 }
