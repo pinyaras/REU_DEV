@@ -1,4 +1,3 @@
-<!-- <app-page-header [heading]="'Tables'" [icon]="'fa-table'"></app-page-header> -->
 <div class="row">
     <div class="col">
         <div class="card mb-3">
@@ -14,7 +13,6 @@
                         </tr>
                         <tr>
                             <th>{{Switch}} </th>
-                            <!-- <th>match</th> -->
                             <th>in_port</th>
                             <th>dl_src</th>
                             <th>dl_dst</th>
@@ -25,15 +23,7 @@
                             <th>tp_src</th>
                             <th>tp_dst</th>
                             <th>actions</th>
-                            <!-- <th>length</th>
-                            <th>table_id</th> -->
                             <th>duration_sec</th>
-                            <!-- <th>duration_nsec</th> -->
-                            <!-- <th>priority</th>
-                            <th>idle_timeout</th>
-                            <th>hard_timeout</th>
-                            <th>flags</th>
-                            <th>cookie</th> -->
                             <th>packet_count</th>
                             <th>byte_count</th>
                         </tr>
@@ -41,9 +31,6 @@
                     <tbody *ngFor="let switch of switches">
                         <tr *ngFor="let flow of getFlowStatsBySwitchNumber(switch); first as isFirst">
                             <td *ngIf="isFirst" [rowSpan]="getFlowStatsBySwitchNumber(switch).length">{{switch}}</td>
-                            <!-- <td>
-                                <pre>{{flow.match | json}}</pre>
-                            </td> -->
                             <td>{{flow.match.in_port}}</td>
                             <td>{{flow.match.dl_src}}</td>
                             <td>{{flow.match.dl_dst}}</td>
@@ -54,19 +41,11 @@
                             <td>{{flow.match.tp_src}}</td>
                             <td>{{flow.match.tp_dst}}</td>
                             <td>
-                                <ul>
+                                <ul class="actions-list">
                                     <li *ngFor="let action of flow.actions">{{action}}</li>
                                 </ul>
                             </td>
-                            <!-- <td>{{flow.length}}</td>
-                            <td>{{flow.table_id}}</td> -->
                             <td>{{flow.duration_sec}}</td>
-                            <!-- <td>{{flow.duration_nsec}}</td>
-                            <td>{{flow.priority}}</td>
-                            <td>{{flow.idle_timeout}}</td>
-                            <td>{{flow.hard_timeout}}</td>
-                            <td>{{flow.flags}}</td>
-                            <td>{{flow.cookie}}</td> -->
                             <td>{{flow.packet_count}}</td>
                             <td>{{flow.byte_count}}</td>
                         </tr>
@@ -100,12 +79,6 @@
                             <th>tx_bytes</th>
                             <th>tx_dropped</th>
                             <th>tx_errors</th>
-                            <!-- <th>rx_frame_err</th>
-                            <th>rx_over_err</th>
-                            <th>rx_crc_err</th>
-                            <th>collisions</th>
-                            <th>duration_sec</th>
-                            <th>duration_nsec</th> -->
                         </tr>
                     </thead>
                     <tbody *ngFor="let switch of switches">
@@ -120,12 +93,6 @@
                             <td>{{stats.tx_bytes}}</td>
                             <td>{{stats.tx_dropped}}</td>
                             <td>{{stats.tx_errors}}</td>
-                            <!-- <td>{{stats.rx_frame_err}}</td>
-                            <td>{{stats.rx_over_err}}</td>
-                            <td>{{stats.rx_crc_err}}</td>
-                            <td>{{stats.collisions}}</td>
-                            <td>{{stats.duration_sec}}</td>
-                            <td>{{stats.duration_nsec}}</td> -->
                         </tr>
                     </tbody>
                 </table>
