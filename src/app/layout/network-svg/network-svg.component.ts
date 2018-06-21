@@ -101,11 +101,14 @@ export class NetworkSvgComponent implements OnChanges {
       svg.select("#hover").remove();
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS);
     }
-
+    let path_mode = function(d) {
+        let line = d3.select(this)
+        .attr('stroke', '#406368')
+    }
     let on_hover = function (d) {
       svg.select("#hover").remove();
       let coords = d3.mouse(this)   //FOR CORNER [640, 100];
-      d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5);
+      d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5)
       let info = d.getInfoLst()
 
       let g = svg.append("g")
@@ -153,8 +156,8 @@ export class NetworkSvgComponent implements OnChanges {
           .attr('node1', x)
           .attr('node2', i)
           .attr('stroke-width', 5)
-          .attr('stroke', '#406368')
-          .attr('opacity', .20)
+          .attr('stroke', 'dodgerblue')
+          .attr('opacity', .2)
       }
     }
     // Visual lines between nodes
@@ -167,6 +170,7 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
+      .on('click', path_mode)
       .on('dblclick', function (l) {
         l.enabled = !l.enabled;
         render(comp);
@@ -244,20 +248,3 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
