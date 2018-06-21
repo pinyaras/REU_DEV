@@ -20,10 +20,8 @@ export class NetworkSvgComponent implements OnChanges {
 
   private static readonly NODE_RADIUS = 20;
   private static readonly COLORS = {
-    "controller": "snow",
-    "host": "tomato",
-    "switch": "dodgerblue",
-    "line": "#34BD62",
+    "line": "dodgerblue",
+    // "line": "#34BD62",
     "line-disabled": "darkred",
     "text": "#292b2c",
     "packet": "white"
@@ -40,9 +38,17 @@ export class NetworkSvgComponent implements OnChanges {
   nodes: Node[];
   @Input()
   links: Link[];
-  selectedNode = new Node({});
+  selectedNode: Node = new Node({});
+  editting: boolean = false;
+  networkService: NetworkService;
+  oldx: number = 0;
+  oldy: number = 0;
 
-  constructor(d3Service: D3Service, networkService: NetworkService) { }
+  constructor(d3Service: D3Service, networkService: NetworkService) {
+
+    this.networkService = networkService;
+
+  }
 
   ngOnChanges(): void {
     if (this.nodes) {
@@ -60,9 +66,23 @@ export class NetworkSvgComponent implements OnChanges {
 
   myOnInit() {
 
+    var comp = this;
+
     if (this.nodes.length > 0 && !this.nodes[0].wireless) {
       return;
     }
+
+    this.links.forEach(function(link) {
+
+      let n = comp.nodes.find(function(node) {
+        return node.id === link.nodeId[0];
+      })
+      if(n) {
+        n.x = link.xloc;
+        n.y = link.yloc;
+      }
+
+    })
 
     var svg = d3.select("svg")
     d3.selectAll('svg > *').remove()
@@ -146,7 +166,7 @@ export class NetworkSvgComponent implements OnChanges {
       })
     }
 
-    var comp = this;
+    
     for (let x = 0; x < this.nodes.length; x++) {
       for (let i = x + 1; i < this.nodes.length; i++) {
         svg.append('line').attr('class', 'allLines')
@@ -181,12 +201,14 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('height', 50)
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
-      .on("click", this.editNode);
+      .on("click", function(d) { comp.editNode(d) });
 
     render(comp);
 
     let dragHandler = d3.drag().on('start', function (d) {
       svg.select("#hover").remove();
+      comp.oldx = d.x;
+      comp.oldy = d.y;
     })
       .on('drag', function (d) {
         svg.select("#hover").remove();
@@ -201,6 +223,24 @@ export class NetworkSvgComponent implements OnChanges {
           render(comp);
         }
       })
+      .on("end", function(d) {
+
+        let links = []
+        comp.links.forEach(function(link) {
+          if(link.nodeId[0] === d.id) {
+            links.push(link);
+          }
+        }) 
+
+        if(comp.oldx != d.x || comp.oldy != d.y) {
+          links.forEach(function(link) {
+            link.xloc = d.x;
+            link.yloc = d.y;
+            comp.networkService.updateTopology(link).subscribe()
+          })
+        }
+      })
+
     dragHandler(svg.selectAll('image.nodes'));
 
     function render(comp) {
@@ -226,38 +266,39 @@ export class NetworkSvgComponent implements OnChanges {
       nodes.attr('class', 'nodes')
         .attr("x", function (d) { return d.x - 25; })
         .attr("y", function (d) { return d.y - 25; })
+
     }
   }
 
-  editNode = function(d) {
-
+  editNode(d) {
+    var comp = this;
     let modal = document.getElementById('myModal');
+    let editModal = document.getElementById('myEditModal');
     let node = d3.select(this);
     this.selectedNode = d;
-    console.log(this.selectedNode)
     modal.style.display = "block";
     let span = document.getElementsByClassName("close")[0];
     span.addEventListener("click", function() {
+
       modal.style.display = "none";
+      comp.editting = false;
+
     })
 
+    let editButton = document.getElementById("editButton");
+    editButton.addEventListener("click", function() {
+
+      comp.editting = true;
+
+    })
+
+    let saveButton = document.getElementById("saveButton");
+    saveButton.addEventListener("click", function() {
+
+      comp.editting = false;
+      modal.style.display = "none";
+      comp.networkService.updateNode(comp.selectedNode).subscribe()
+
+    })
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

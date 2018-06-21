@@ -18,14 +18,26 @@ body {font-family: Arial, Helvetica, sans-serif;}
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
+    p { 
+	    margin-bottom: 5px; 
+    }
+
+    button {
+
+        margin: 3px;
+
+    }
+
 }
 
 /* Modal Content */
 .modal-content {
+	border-radius: 5px;
     position: relative;
     background-color: #fefefe;
     margin: auto;
-    padding: 0;
+    padding: 3px;
     border: 1px solid #888;
     width: 90%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -62,3 +74,11 @@ body {font-family: Arial, Helvetica, sans-serif;}
 }
 
 .modal-body {padding: 2px 16px;}
+
+
+input, select {
+    
+    margin: 5px;
+    padding: 3px;
+
+}
