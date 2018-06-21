@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SwitchFlowStats } from '../switch-flow-stats';
+import { SwitchPortStats } from '../switch-port-stats';
 
 @Injectable()
 export class ControllerStatsticsService {
@@ -10,21 +12,17 @@ export class ControllerStatsticsService {
 
   constructor(private http: HttpClient) { }
 
-  getNodes(){
-    return this.http.get("http://52.15.133.20/node/")
-     .catch(this.handleErrorObservable);
- }
-  getFlowStats(switch_no:number){
+  getFlowStats(switch_no:number): Observable<SwitchFlowStats>{
     return this.http.get(this.controller_url + "stats/flow/" + switch_no)
     	.catch(this.handleErrorObservable);
   }
 
-  getPortStats(switch_no:number) {
+  getPortStats(switch_no:number): Observable<SwitchPortStats>{
     return this.http.get(this.controller_url + "stats/port/"+switch_no)
     	.catch(this.handleErrorObservable);
   }
 
-  getSwitches() {
+  getSwitches(): Observable<number[]> {
     return this.http.get(this.controller_url + "stats/switches")
     	.catch(this.handleErrorObservable);
   }

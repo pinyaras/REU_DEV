@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
 
+import {FlowStats} from '../../shared/flow-stats'
+import { SwitchFlowStats } from '../../shared/switch-flow-stats';
+import { SwitchPortStats } from '../../shared/switch-port-stats';
+import { PortStats } from '../../shared/port-stats';
+
 @Component({
     selector: 'app-tables',
     templateUrl: './tables.component.html',
@@ -8,8 +13,8 @@ import { ControllerStatsticsService } from '../../shared/services/controller-sta
 })
 export class TablesComponent implements OnInit {
     private switches: number[];
-    private flowStats: any[];
-    private portStats: any[];
+    private flowStats: SwitchFlowStats[];
+    private portStats: SwitchPortStats[];
 
     constructor(private controllerStatsticsService: ControllerStatsticsService) {
         this.flowStats = [];
@@ -31,7 +36,7 @@ export class TablesComponent implements OnInit {
             for (var i = 0; i < comp.switches.length; i++) {
                 var switch_no = comp.switches[i];
                 comp.controllerStatsticsService.getFlowStats(switch_no).subscribe(data => {
-                    comp.flowStats.push(data)
+                    comp.flowStats.push(new SwitchFlowStats(data));
                 });
             }
         }
@@ -48,7 +53,7 @@ export class TablesComponent implements OnInit {
             for (var i = 0; i < comp.switches.length; i++) {
                 var switch_no = comp.switches[i];
                 comp.controllerStatsticsService.getPortStats(switch_no).subscribe(data => {
-                    comp.portStats.push(data)
+                    comp.portStats.push(new SwitchPortStats(data));
                 });
             }
         }
@@ -60,22 +65,22 @@ export class TablesComponent implements OnInit {
         }
     }
 
-    getFlowStatsBySwitchNumber(switch_no) {
+    getFlowStatsBySwitchNumber(switch_no): FlowStats[] {
         var item = this.flowStats.find(function (element) {
-            return element[switch_no];
+            return parseInt(element.id) == switch_no;
         })
         if (item) {
-            return item[switch_no];
+            return item.stats;
         }
         return undefined;
     }
 
-    getPortStatsBySwitchNumber(switch_no) {
+    getPortStatsBySwitchNumber(switch_no): PortStats[] {
         var item = this.portStats.find(function (element) {
-            return element[switch_no];
+            return parseInt(element.id) == switch_no;
         })
         if (item) {
-            return item[switch_no];
+            return item.stats;
         }
         return undefined;
     }
