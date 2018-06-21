@@ -18,20 +18,24 @@ export class TablesComponent implements OnInit {
 
     private flowStats: SwitchFlowStats[];
     private portStats: SwitchPortStats[];
-    private old_data;
-    private labels;
+    private flow_data;
+    private flow_labels;
+    private port_data;
+    private port_labels;
 
     constructor(private controllerStatsticsService: ControllerStatsticsService) {
         this.flowStats = [];
         this.portStats = [];
         this.switches = [];
-        this.old_data = [];
-        this.labels = [];
+        this.flow_data = [];
+        this.flow_labels = [];
+        this.port_data = [];
+        this.port_labels = [];
         this.getFlowStats();
         this.getPortStats();
     }
 
-    barChartData(): any[] {
+    flowBarChartData(): any[] {
         if (!this.flowStats) {
             return []
         }
@@ -64,12 +68,77 @@ export class TablesComponent implements OnInit {
                 }
             }
         }
-
-        if (this.dataChanged(data, this.old_data)) {
-            this.old_data = data;
+        if (this.dataChanged(data, this.flow_data)) {
+            this.flow_data = data;
         }
-        return this.old_data;
+        return this.flow_data;
     }
+    flowBarChartLabels(): string[] {
+        if (!this.flowStats) {
+            return []
+        }
+        var labels = this.flowStats.map(function (element) {
+            return "Switch " + element.id;
+        });
+
+        if (this.labelsChanged(labels, this.flow_labels)) {
+            this.flow_labels = labels;
+        }
+        return this.flow_labels;
+    }
+
+    portBarChartData(): any[] {
+        if (!this.flowStats) {
+            return []
+        }
+        var portStatsList = this.portStats.map(function (element) {
+            return element.stats
+        });
+        var data = [];
+        var index = 0;
+        var max_length = 0;
+        for (let i = 0; i < portStatsList.length; i++) {
+            if (portStatsList[i].length > max_length) {
+                max_length = portStatsList[i].length;
+            }
+        }
+        for (let i = 0; i < max_length; i++) {
+            data.push(
+                {
+                    "data": [],
+                    "label": i
+                }
+            )
+        }
+        for (let i = 0; i < max_length; i++) {
+            var list = data[i].data;
+            for (let j = 0; j < portStatsList.length; j++) {
+                if (portStatsList[j][i]) {
+                    list.push(portStatsList[j][i].rx_packets)
+                } else {
+                    list.push(0);
+                }
+            }
+        }
+        if (this.dataChanged(data, this.port_data)) {
+            this.port_data = data;
+        }
+        return this.port_data;
+    }
+    portBarChartLabels(): string[] {
+        if (!this.flowStats) {
+            return []
+        }
+        var labels = this.portStats.map(function (element) {
+            return "Switch " + element.id;
+        });
+
+        if (this.labelsChanged(labels, this.port_labels)) {
+            this.port_labels = labels;
+        }
+        return this.port_labels;
+    }
+
     dataChanged(data, old_data): boolean {
         if (data.length != old_data.length) {
             return true;
@@ -89,25 +158,18 @@ export class TablesComponent implements OnInit {
         }
         return false;
     }
-    barChartLabels(): string[] {
-        if (!this.flowStats) {
-            return []
+    labelsChanged(labels, old_labels) {
+        if (labels.length != old_labels.length) {
+            return true;
         }
-        var labels = this.flowStats.map(function (element) {
-            return "Switch " + element.id;
-        });
-        if (this.labels.length != labels.length) {
-            // console.log(labels);
-            this.labels = labels;
-        }
-        for (var i = 0; i < this.labels.length; i++) {
-            if (this.labels[i] != (labels[i])) {
-                this.labels = labels;
-                return this.labels;
+        for (var i = 0; i < old_labels.length; i++) {
+            if (old_labels[i] != (labels[i])) {
+                return true;
             }
         }
-        return this.labels;
+        return false;
     }
+
     ngOnInit() { }
 
     getSwitches(after = null) {
