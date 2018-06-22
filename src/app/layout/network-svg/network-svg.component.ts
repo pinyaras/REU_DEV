@@ -134,7 +134,7 @@ export class NetworkSvgComponent implements OnChanges {
         }
     }
 //show mouse location textbox-------------------------
-
+/*
 let text = svg.append('text')
     .attr('x', 20)
     .attr('y', 580)
@@ -144,29 +144,11 @@ let text = svg.append('text')
 svg.on('mousemove', function(d) {
     let coords = d3.mouse(this);
     text.text(coords[0] + " " + coords[1])
-}) //------------------------------------------------
+}) //------------------------------------------------ */
     //HoverBox
     let on_hover = function (d) {
       svg.select("#hover").remove();
-      // me
-      console.log(d3.mouse(this)[1])
-      var coords = [0, 0]
-      coords = d3.mouse(this)
-      //if(d3.mouse(this)[1] < 138 && d3.mouse(this)[0] <)
-      if(d3.mouse(this)[1] < 138){
-        coords[1] = 138
-     }
 
-  //if(d3.mouse(this).x > 698){
-  //
-  //
-  //   }
-  //   else{
-  //       coords = d3.mouse(this)   //FOR CORNER [640, 100];
-  // }
-
-      //let coords = [0, 0] //need this for later when if statements are implemented
-      //coords = d3.mouse(this)
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5)
       let info = d.getInfoLst()
 
@@ -176,17 +158,36 @@ svg.on('mousemove', function(d) {
       let NodeInfo = d.getInfoLst()
       let MaxInfolen = 0
 
+      // Calculate Rectangle width
       for (var x = 0; x < NodeInfo.length; x++) {
         var CurInfoLen = NodeInfo[x].length
         if (CurInfoLen > MaxInfolen) {
           MaxInfolen = CurInfoLen
         }
       }
+      var RectWidth = (MaxInfolen * 8.5) + 10
+
+      //Determine HoverBox position & keeps it inside the map
+      var imagelimit = d3.select('#map').attr('height')
+      var coords = d3.mouse(this)
+
+      // X component limiter (flip over)
+      if(d3.mouse(this)[0] > 668){
+          coords[0] = coords[0] - 10 - RectWidth
+      }
+      // Y component limiter
+      if(d3.mouse(this)[1] > 300){
+        coords[1] = coords[1] - 15
+      }
+      // bottom of image
+     if(d3.mouse(this)[1] + ((size + 0.5) * 13.90) > imagelimit){
+        coords[1] = imagelimit - ((size + 0.5) * 13.90) - 30
+     }
 
       g.append("rect")
         .attr("x", coords[0] + 5)
-        .attr("y", coords[1] - ((size + 1) * 12 + 7))
-        .attr("width", (MaxInfolen * 8.5) + 10)
+        .attr("y", coords[1] - (((size + 1) * 2.3) - 27))
+        .attr("width", RectWidth)
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "AliceBlue")
         .attr("stroke", "#333333")
@@ -197,9 +198,8 @@ svg.on('mousemove', function(d) {
         .attr("ry", 3);
       let text = g.append("text")
         .attr("x", coords[0] + 5)
-        .attr("y", coords[1] - ((size + 1) * 12 + 5))
+        .attr("y", coords[1] - (((size + 1) * 2.3) - 27 ))
         .attr("fill", NetworkSvgComponent.COLORS["TEXT"]);
-
       d.getInfoLst().forEach(function (info) {
         text.append('tspan')
           .text(info)
@@ -207,7 +207,6 @@ svg.on('mousemove', function(d) {
           .attr('x', coords[0] + 10); //Original + 5
       })
     }
-
 
     for (let x = 0; x < this.nodes.length; x++) {
       for (let i = x + 1; i < this.nodes.length; i++) {
