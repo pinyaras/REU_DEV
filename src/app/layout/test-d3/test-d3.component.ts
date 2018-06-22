@@ -1,10 +1,14 @@
 import { Component, ElementRef, NgZone, OnDestroy } from '@angular/core';
+
 import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
 import { Network } from '../../shared/network';
+import { WirelessNode } from '../../shared/wirelessnode';
+import { SwitchFlowStats } from '../../shared/switch-flow-stats';
+import { FlowStats } from '../../shared/flow-stats';
+
 import { NetworkService } from '../../shared/services/network.service'
 import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
-import { WirelessNode } from '../../shared/wirelessnode';
 import { NetworkSvgComponent } from '../network-svg/network-svg.component';
 
 @Component({
@@ -18,11 +22,11 @@ export class TestD3Component {
 
   private old_nodes: Node[];
   private old_links: Link[];
-  constructor(private networkService: NetworkService) {
+  constructor(private networkService: NetworkService, private controllerStatsService: ControllerStatsticsService) {
     this.load();
     setInterval(() => {
-      
-      if(!NetworkSvgComponent.mousedown) {
+
+      if (!NetworkSvgComponent.mousedown) {
         this.load()
       }
 
@@ -44,6 +48,7 @@ export class TestD3Component {
     return !this.array_equal(link_data, this.old_links)
   }
 
+  switchFlowStats: SwitchFlowStats[] = [];
   load(): void {
     var comp = this;
     // Get Nodes
@@ -64,6 +69,30 @@ export class TestD3Component {
           comp.nodes = new_nodes;
         }
         comp.old_nodes = new_nodes;
+
+        // Get stats to compare
+        comp.controllerStatsService.getSwitches().subscribe(function (data) {
+          let switches = data;
+          var updated_matches = [];
+          for (let switch_no of switches) {
+            comp.controllerStatsService.getFlowStats(switch_no).subscribe(function (stats) {
+              var sfs = new SwitchFlowStats(stats);
+              if (sfs.id in comp.switchFlowStats) {
+                // console.log("searching for "+sfs.id);
+                // console.log(comp.switchFlowStats[sfs.id])
+                for (let fs of comp.switchFlowStats[sfs.id].stats) {
+                  var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
+                  if (old_fs && old_fs.packet_count != fs.packet_count) {
+                    // console.log("flow was hit " + JSON.stringify(fs.match));
+                    updated_matches.push(fs.match);
+                  }
+                }
+              }
+              comp.switchFlowStats[sfs.id] = sfs;
+            })
+          }
+          console.log(updated_matches);
+        })
       });
     });
     //Get Links
