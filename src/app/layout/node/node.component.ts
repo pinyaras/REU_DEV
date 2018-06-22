@@ -10,37 +10,36 @@ import { DataJson } from '../../shared/DataJson';
 
 
 @Component({
-    selector: 'app-node',
-    templateUrl: './node.component.html',
-    styleUrls: ['./node.component.scss']
+  selector: 'app-node',
+  templateUrl: './node.component.html',
+  styleUrls: ['./node.component.scss']
 })
 export class NodeComponent implements OnInit {
 
-    routerAP: RouterAP[];
-    routerNode: RouterNode[];
-    dataJson:DataJson;
+  routerAP: RouterAP[];
+  routerNode: RouterNode[];
+  dataJson: DataJson;
 
-    constructor(
-      private _NodeService :NodeService,
-      private router : Router) { }
+  constructor(
+    private _NodeService: NodeService,
+    private router: Router) { }
 
-    ngOnInit() {
-      this.getRouter();
-  //  console.log("node WOrks");
+  ngOnInit() {
+    this.getRouter();
+    //  console.log("node WOrks");
 
-     }
+  }
 
-    getRouter() {
-      this._NodeService.getIwinfo().subscribe(
-        routerNode => { this.routerNode = routerNode,
+  getRouter() {
+    this._NodeService.getIwinfo().subscribe(
+      routerNode => {
+      this.routerNode = routerNode,
         console.log(this.routerNode);
-        //console.log("");
-        });
-    }
+      });
+  }
 
-    onShowDetail(routerNode:RouterNode) {
-
-  this.router.navigate(['/node', routerNode.router_id, 'router_ip', routerNode.router_ip]);
-}
+  onShowDetail(routerNode: RouterNode) {
+    this.router.navigate(['/node', routerNode.router_id, 'router_ip', routerNode.router_ip]);
+  }
 
 }

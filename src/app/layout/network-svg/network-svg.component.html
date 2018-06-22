@@ -4,7 +4,7 @@
 	<div class="modal-content">
     	<div class="modal-body">
     		<span class="close">&times;</span>
-      		<div *ngIf="!editting">
+      		<div *ngIf="!editting" class="not-editting">
       			<p>Name: {{selectedNode.nodeName}}</p>
 				<p>ID: {{selectedNode.id}}</p>
 				<p>IP Adress: {{selectedNode.nodeIp}}</p>
