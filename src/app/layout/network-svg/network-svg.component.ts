@@ -43,6 +43,7 @@ export class NetworkSvgComponent implements OnChanges {
   networkService: NetworkService;
   oldx: number = 0;
   oldy: number = 0;
+  static mousedown: boolean = false;
 
   constructor(d3Service: D3Service, networkService: NetworkService) {
 
@@ -105,11 +106,11 @@ export class NetworkSvgComponent implements OnChanges {
       "&style=feature:all|element:labels|visibility:off"
     svg.append('image')
       .attr("id", "map")
-      .attr('xlink:href', url)
-      //.attr('xlink:href', 'assets/images/floor2.svg')
-      .attr('transform', "translate(705 -300) rotate(90 180 15)")
-      .attr('width', 1530)              //Original dimensions 900 x 600
-      .attr('height', 1020)
+      // .attr('xlink:href', url)
+      .attr('xlink:href', 'assets/images/floor2.svg')
+      // .attr('transform', "translate(705 -300) rotate(90 180 15)")
+      .attr('width', 900)              //Original dimensions 900 x 600
+      .attr('height', 600)
 
     this.nodes.forEach(function (node, i) {
       if(node.x || node.y) return;
@@ -251,6 +252,7 @@ svg.on('mousemove', function(d) {
       svg.select("#hover").remove();
       comp.oldx = d.x;
       comp.oldy = d.y;
+      NetworkSvgComponent.mousedown = true;
     })
       .on('drag', function (d) {
         svg.select("#hover").remove();
@@ -266,7 +268,7 @@ svg.on('mousemove', function(d) {
         }
       })
       .on("end", function(d) {
-
+        NetworkSvgComponent.mousedown = false;
         let links = []
         comp.links.forEach(function(link) {
           if(link.nodeId[0] === d.id) {

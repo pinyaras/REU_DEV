@@ -33,6 +33,10 @@ export class TablesComponent implements OnInit {
         this.port_labels = [];
         this.getFlowStats();
         this.getPortStats();
+        // setInterval(() => {
+        //     this.getFlowStats();
+        //     this.getPortStats();
+        // }, 6000);
     }
 
     flowBarChartData(): any[] {
@@ -54,7 +58,7 @@ export class TablesComponent implements OnInit {
             data.push(
                 {
                     "data": [],
-                    "label": i
+                    "label": "Flow "+(i+1)
                 }
             )
         }
@@ -88,7 +92,7 @@ export class TablesComponent implements OnInit {
     }
 
     portBarChartData(): any[] {
-        if (!this.flowStats) {
+        if (!this.portStats) {
             return []
         }
         var portStatsList = this.portStats.map(function (element) {
@@ -97,16 +101,18 @@ export class TablesComponent implements OnInit {
         var data = [];
         var index = 0;
         var max_length = 0;
+        var max_length_index = 0;
         for (let i = 0; i < portStatsList.length; i++) {
             if (portStatsList[i].length > max_length) {
                 max_length = portStatsList[i].length;
+                max_length_index = i;
             }
         }
         for (let i = 0; i < max_length; i++) {
             data.push(
                 {
                     "data": [],
-                    "label": i
+                    "label": portStatsList[max_length_index][i].port_no
                 }
             )
         }
@@ -126,7 +132,7 @@ export class TablesComponent implements OnInit {
         return this.port_data;
     }
     portBarChartLabels(): string[] {
-        if (!this.flowStats) {
+        if (!this.portStats) {
             return []
         }
         var labels = this.portStats.map(function (element) {
@@ -181,6 +187,7 @@ export class TablesComponent implements OnInit {
     }
     getFlowStats() {
         var after = function (comp) {
+            comp.flowStats = [];
             for (var i = 0; i < comp.switches.length; i++) {
                 var switch_no = comp.switches[i];
                 comp.controllerStatsticsService.getFlowStats(switch_no).subscribe(data => {
@@ -198,6 +205,7 @@ export class TablesComponent implements OnInit {
 
     getPortStats() {
         var after = function (comp) {
+            comp.portStats = [];
             for (var i = 0; i < comp.switches.length; i++) {
                 var switch_no = comp.switches[i];
                 comp.controllerStatsticsService.getPortStats(switch_no).subscribe(data => {
