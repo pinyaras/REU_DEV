@@ -23,7 +23,7 @@ export class Node {
 	}
 	getInfoLst() {
 		if(this.wireless){
-			return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
+			return ["Node: " + this.nodeName,"ID: " + this.id,"IP: " + this.nodeIp,
 			"MAC: " + this.nodeMac, "Channel: " + this.wireless.channel,
 			"Power: " + this.wireless.power, "Mode: " + this.wireless.mode, "Bandwidth: " + this.wireless.bw,
 			"BSSID: " + this.wireless.bssid, "Bridge: " + this.wireless.bridge];
