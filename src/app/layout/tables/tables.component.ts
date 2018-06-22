@@ -7,6 +7,7 @@ import { SwitchPortStats } from '../../shared/switch-port-stats';
 import { PortStats } from '../../shared/port-stats';
 import { filter } from 'rxjs/operator/filter';
 import { ChartsModule as Ng2Charts } from 'ng2-charts';
+import { equal } from 'assert';
 
 @Component({
     selector: 'app-tables',
@@ -31,19 +32,18 @@ export class TablesComponent implements OnInit {
         this.flow_labels = [];
         this.port_data = [];
         this.port_labels = [];
-        this.getFlowStats();
-        this.getPortStats();
-        // setInterval(() => {
-        //     this.getFlowStats();
-        //     this.getPortStats();
-        // }, 6000);
+        this.load();
+        setInterval(() => {
+            this.load();
+        }, 6000);
     }
 
+    // TODO this fails when flow count drops, or at least causes errors
     flowBarChartData(): any[] {
         if (!this.flowStats) {
             return []
         }
-        var flowStatsList = this.flowStats.map(function (element) {
+        var flowStatsList = this.filterFlowStats().map(function (element) {
             return element.stats
         });
         var data = [];
@@ -58,7 +58,7 @@ export class TablesComponent implements OnInit {
             data.push(
                 {
                     "data": [],
-                    "label": "Flow "+(i+1)
+                    "label": "Flow " + (i + 1)
                 }
             )
         }
@@ -75,16 +75,17 @@ export class TablesComponent implements OnInit {
         if (this.dataChanged(data, this.flow_data)) {
             this.flow_data = data;
         }
+
+
         return this.flow_data;
     }
     flowBarChartLabels(): string[] {
         if (!this.flowStats) {
             return []
         }
-        var labels = this.flowStats.map(function (element) {
-            return "Switch " + element.id;
+        var labels = this.filterFlowStats().map(function (element) {
+            return "Switch " + element.id
         });
-
         if (this.labelsChanged(labels, this.flow_labels)) {
             this.flow_labels = labels;
         }
@@ -95,7 +96,7 @@ export class TablesComponent implements OnInit {
         if (!this.portStats) {
             return []
         }
-        var portStatsList = this.portStats.map(function (element) {
+        var portStatsList = this.filterPortStats().map(function (element) {
             return element.stats
         });
         var data = [];
@@ -135,10 +136,9 @@ export class TablesComponent implements OnInit {
         if (!this.portStats) {
             return []
         }
-        var labels = this.portStats.map(function (element) {
-            return "Switch " + element.id;
+        var labels = this.filterPortStats().map(function (element) {
+            return "Switch " + element.id
         });
-
         if (this.labelsChanged(labels, this.port_labels)) {
             this.port_labels = labels;
         }
@@ -147,15 +147,18 @@ export class TablesComponent implements OnInit {
 
     dataChanged(data, old_data): boolean {
         if (data.length != old_data.length) {
+            // console.log("new length " + data.length + " " + old_data.length)
             return true;
         } else {
             for (var index = 0; index < data.length; index++) {
                 if (data[index].data.length != old_data[index].data.length
                     || data[index].length != old_data[index].length) {
+                    // console.log("new length of data entry" )
                     return true;
                 } else {
                     for (var index2 = 0; index2 < data.length; index2++) {
                         if (data[index].data[index2] != old_data[index].data[index2]) {
+                            // console.log("new item " +data[index].data[index2] +" " +  old_data[index].data[index2])
                             return true;
                         }
                     }
@@ -178,52 +181,32 @@ export class TablesComponent implements OnInit {
 
     ngOnInit() { }
 
-    getSwitches(after = null) {
+    load() {
         var comp = this;
         this.controllerStatsticsService.getSwitches().subscribe((data) => {
             this.switches = data;
-            if (after) after(comp);
-        })
-    }
-    getFlowStats() {
-        var after = function (comp) {
-            comp.flowStats = [];
             for (var i = 0; i < comp.switches.length; i++) {
                 var switch_no = comp.switches[i];
                 comp.controllerStatsticsService.getFlowStats(switch_no).subscribe(data => {
-                    comp.flowStats.push(new SwitchFlowStats(data));
+                    var sfs = new SwitchFlowStats(data);
+                    comp.flowStats[sfs.id] = sfs;
                 });
             }
-        }
-        if (this.switches) {
-            this.getSwitches(after)
-        }
-        else {
-            after(this);
-        }
-    }
-
-    getPortStats() {
-        var after = function (comp) {
-            comp.portStats = [];
             for (var i = 0; i < comp.switches.length; i++) {
                 var switch_no = comp.switches[i];
                 comp.controllerStatsticsService.getPortStats(switch_no).subscribe(data => {
-                    comp.portStats.push(new SwitchPortStats(data));
+                    var sps = new SwitchPortStats(data);
+                    comp.portStats[sps.id] = sps;
                 });
             }
-        }
-        if (this.switches) {
-            this.getSwitches(after)
-        }
-        else {
-            after(this);
-        }
+
+        })
     }
 
     getFlowStatsBySwitchNumber(switch_no): FlowStats[] {
         var item = this.flowStats.find(function (element) {
-            return parseInt(element.id) == switch_no;
+            if (element) return parseInt(element.id) == switch_no;
+            return false;
         })
         if (item) {
             return item.stats;
@@ -233,7 +216,8 @@ export class TablesComponent implements OnInit {
 
     getPortStatsBySwitchNumber(switch_no): PortStats[] {
         var item = this.portStats.find(function (element) {
-            return parseInt(element.id) == switch_no;
+            if (element) return parseInt(element.id) == switch_no;
+            return false;
         })
         if (item) {
             return item.stats;
@@ -241,4 +225,10 @@ export class TablesComponent implements OnInit {
         return undefined;
     }
 
+    filterFlowStats() {
+        return this.flowStats.filter(function (d) { return d });
+    }
+    filterPortStats() {
+        return this.portStats.filter(function (d) { return d });
+    }
 }

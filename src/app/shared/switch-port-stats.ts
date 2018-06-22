@@ -14,4 +14,16 @@ export class SwitchPortStats {
             this.stats.push(new PortStats(item))
         }
     }
+
+    equals(obj: SwitchPortStats){
+        if(this.id != obj.id || this.stats.length != obj.stats.length){
+            return false;
+        }
+        for(var i = 0 ; i < this.stats.length; i++){
+            if(!this.stats[i].equals(obj.stats[i])){
+                return false;
+            }
+        }
+        return true;
+    }
 }
