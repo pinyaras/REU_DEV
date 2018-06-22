@@ -3,7 +3,9 @@ import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
 import { Network } from '../../shared/network';
 import { NetworkService } from '../../shared/services/network.service'
+import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
 import { WirelessNode } from '../../shared/wirelessnode';
+import { NetworkSvgComponent } from '../network-svg/network-svg.component';
 
 @Component({
   selector: 'app-test-d3',
@@ -18,7 +20,13 @@ export class TestD3Component {
   private old_links: Link[];
   constructor(private networkService: NetworkService) {
     this.load();
-    setInterval(() => this.load(), 1000);
+    setInterval(() => {
+      
+      if(!NetworkSvgComponent.mousedown) {
+        this.load()
+      }
+
+    }, 6000);
   }
   private array_equal(a1, a2): boolean {
     if (a1 && a2) {
