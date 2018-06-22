@@ -133,7 +133,7 @@ export class NetworkSvgComponent implements OnChanges {
         }
     }
 //show mouse location textbox-------------------------
-/*/
+
 let text = svg.append('text')
     .attr('x', 20)
     .attr('y', 580)
@@ -143,20 +143,29 @@ let text = svg.append('text')
 svg.on('mousemove', function(d) {
     let coords = d3.mouse(this);
     text.text(coords[0] + " " + coords[1])
-}) //------------------------------------------------ */
+}) //------------------------------------------------
     //HoverBox
     let on_hover = function (d) {
       svg.select("#hover").remove();
       // me
-
-      var test = [0,0]
-      test = d3.mouse(this).y
-      console.log(test)
-      console.log('test^')
-      console.log(d3.mouse(this))
       console.log(d3.mouse(this)[1])
-      let coords = [0, 0] //need this for later when if statements are implemented
+      var coords = [0, 0]
       coords = d3.mouse(this)
+      //if(d3.mouse(this)[1] < 138 && d3.mouse(this)[0] <)
+      if(d3.mouse(this)[1] < 138){
+        coords[1] = 138
+     }
+
+  //if(d3.mouse(this).x > 698){
+  //
+  //
+  //   }
+  //   else{
+  //       coords = d3.mouse(this)   //FOR CORNER [640, 100];
+  // }
+
+      //let coords = [0, 0] //need this for later when if statements are implemented
+      //coords = d3.mouse(this)
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5)
       let info = d.getInfoLst()
 
@@ -198,7 +207,7 @@ svg.on('mousemove', function(d) {
       })
     }
 
-    
+
     for (let x = 0; x < this.nodes.length; x++) {
       for (let i = x + 1; i < this.nodes.length; i++) {
         svg.append('line').attr('class', 'allLines')
@@ -263,7 +272,7 @@ svg.on('mousemove', function(d) {
           if(link.nodeId[0] === d.id) {
             links.push(link);
           }
-        }) 
+        })
 
         if(comp.oldx != d.x || comp.oldy != d.y) {
           links.forEach(function(link) {
