@@ -53,7 +53,7 @@
                 </table>
             </div>
         </div>
-        <div class="card-body" *ngIf="flowStats && flowStats.length == switches.length">
+        <div class="card-body" *ngIf="flowStats && filterFlowStats().length == switches.length">
             <canvas baseChart [datasets]="flowBarChartData()" [labels]="flowBarChartLabels()" chartType="bar" [legend]="false"></canvas>
         </div>
     </div>
@@ -98,7 +98,7 @@
                 </table>
             </div>
         </div>
-        <div class="card-body" *ngIf="portStats && portStats.length == switches.length">
+        <div id="port-stat-chart" class="card-body" *ngIf="portStats && filterPortStats().length == switches.length">
             <canvas baseChart [datasets]="portBarChartData()" [labels]="portBarChartLabels()" chartType="bar" [legend]="false"></canvas>
         </div>
     </div>
