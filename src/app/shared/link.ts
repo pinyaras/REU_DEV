@@ -8,6 +8,7 @@ export class Link {
     xloc: number;
     yloc: number;
     enabled: boolean;
+    active: boolean;
 
     constructor(obj: any) {
         this.id = obj.id;
@@ -17,6 +18,7 @@ export class Link {
         this.xloc = obj.xloc;
         this.yloc = obj.yloc;
         this.enabled = true;
+        this.active = false;
     }
 
 

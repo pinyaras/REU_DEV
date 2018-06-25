@@ -21,7 +21,7 @@ export class NetworkSvgComponent implements OnChanges {
   private static readonly NODE_RADIUS = 20;
   private static readonly COLORS = {
     "line": "dodgerblue",
-    // "line": "#34BD62",
+    "active_line": "#34BD62",
     "line-disabled": "darkred",
     "text": "#292b2c",
     "packet": "white"
@@ -40,7 +40,7 @@ export class NetworkSvgComponent implements OnChanges {
   links: Link[];
   @Input()
   active_nodes: number[];
-  
+
   selectedNode: Node;
   editting: boolean = false;
   networkService: NetworkService;
@@ -59,46 +59,32 @@ export class NetworkSvgComponent implements OnChanges {
     if (this.nodes) {
       this.myOnInit();
     }
-    // console.log(this.active_nodes)
     if (this.active_nodes) {
-      var the_nodes = this.active_nodes.map(function (no) {
+      var the_nodes = this.active_nodes.map(function(no) {
         return this.getNodeById(no);
       }, this);
-      console.log(the_nodes)
-      for (var i = 0; i < the_nodes.length; i++) {
-        for (var j = 0; j < the_nodes.length; j++) {
-          if (i != j) {
-            var line = d3.select("#line-" + the_nodes[i].id + "-" + the_nodes[j].id);
-            if (line) {
-              line.attr('stroke', '#34BD62')
-              // if (line.attr('stroke') == '#34BD62') {
-              //   line.attr('stroke', 'dodgerblue')
-              // } else if (line.attr('stroke') == 'dodgerblue') {
-              //   line.attr('stroke', '#34BD62')
-              // } else {
-              //   return
-              // }
-            }
-          }
-        }
+      console.log(the_nodes);
+      if (the_nodes.length >= 2) {
+        // for (let x = 0; x < the_nodes.length; x++) {
+        //   for (let i = x + 1; i < the_nodes.length; i++) {
+        //     // console.log(the_nodes[x] + " " + the_nodes[i])
+        //     let l = this.getLink(the_nodes[x], the_nodes[i]);
+        //     console.log(l);
+        //   }
+        // }
+
+        console.log(this.getLink(this.nodes[0], this.nodes[2]))
+
       }
 
-      // let line = d3.select(this)
-      // if (line.attr('stroke') == '#34BD62') {
-      //   line.attr('stroke', 'dodgerblue')
-      // } else if (line.attr('stroke') == 'dodgerblue') {
-      //   line.attr('stroke', '#34BD62')
-      // } else {
-      //   return
-      // }
     }
   }
 
   getNodeByIp(ip: string): Node {
-    return this.nodes.find(function (n) { 
+    return this.nodes.find(function(n) {
       let thisNode = false;
       n.wireless.forEach(wn => {
-        if(wn.ipAdd === ip) {
+        if (wn.ipAdd === ip) {
           thisNode = true;
         }
 
@@ -108,14 +94,11 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   getNodeById(id: number): Node {
-    return this.nodes.find(function (n) { return n.id == id; })
+    return this.nodes.find(function(n) { return n.id == id; })
   }
 
   displayWireless(i: number) {
-
     this.index = i;
-    console.log(this.index)
-
   }
 
   myOnInit() {
@@ -125,9 +108,9 @@ export class NetworkSvgComponent implements OnChanges {
       return;
     }
 
-    this.links.forEach(function (link) {
+    this.links.forEach(function(link) {
 
-      let n = comp.nodes.find(function (node) {
+      let n = comp.nodes.find(function(node) {
         return node.id === link.nodeId[0];
       })
       if (n) {
@@ -164,13 +147,13 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('width', 900)              //Original dimensions 900 x 600
       .attr('height', 600)
 
-    this.nodes.forEach(function (node, i) {
+    this.nodes.forEach(function(node, i) {
       if (node.x || node.y) return;
       node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
       node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
     }, this)
 
-    let delete_hover = function () {
+    let delete_hover = function() {
       svg.select("#hover").remove();
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS);
     }
@@ -187,7 +170,7 @@ export class NetworkSvgComponent implements OnChanges {
         text.text(coords[0] + " " + coords[1])
     }) //------------------------------------------------ */
     //HoverBox
-    let on_hover = function (d) {
+    let on_hover = function(d) {
       svg.select("#hover").remove();
 
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5)
@@ -241,7 +224,7 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("x", coords[0] + 5)
         .attr("y", coords[1] - (((size + 1) * 2.3) - 27))
         .attr("fill", NetworkSvgComponent.COLORS["TEXT"]);
-      d.getInfoLst().forEach(function (info) {
+      d.getInfoLst().forEach(function(info) {
         text.append('tspan')
           .text(info)
           .attr('dy', 1 + 'em')
@@ -269,7 +252,7 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
-      .on('dblclick', function (l) {
+      .on('dblclick', function(l) {
         l.enabled = !l.enabled;
         render(comp);
       })
@@ -283,17 +266,17 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('height', 50)
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
-      .on("click", function (d) { comp.editNode(d) });
+      .on("click", function(d) { comp.editNode(d) });
 
     render(comp);
 
-    let dragHandler = d3.drag().on('start', function (d) {
+    let dragHandler = d3.drag().on('start', function(d) {
       svg.select("#hover").remove();
       comp.oldx = d.x;
       comp.oldy = d.y;
       NetworkSvgComponent.mousedown = true;
     })
-      .on('drag', function (d) {
+      .on('drag', function(d) {
         svg.select("#hover").remove();
         let coords = d3.mouse(this);
         if (coords[0] + 20 < parseInt(width) && coords[0] - 20 > 0
@@ -306,17 +289,17 @@ export class NetworkSvgComponent implements OnChanges {
           render(comp);
         }
       })
-      .on("end", function (d) {
+      .on("end", function(d) {
         NetworkSvgComponent.mousedown = false;
         let links = []
-        comp.links.forEach(function (link) {
+        comp.links.forEach(function(link) {
           if (link.nodeId[0] === d.id) {
             links.push(link);
           }
         })
 
         if (comp.oldx != d.x || comp.oldy != d.y) {
-          links.forEach(function (link) {
+          links.forEach(function(link) {
             link.xloc = d.x;
             link.yloc = d.y;
             comp.networkService.updateTopology(link).subscribe()
@@ -328,7 +311,7 @@ export class NetworkSvgComponent implements OnChanges {
 
     function render(comp) {
       svg.selectAll('.allLines')
-        .each(function () {
+        .each(function() {
           let line = d3.select(this);
           let node1 = parseInt(line.attr('node1'))
           let node2 = parseInt(line.attr('node2'))
@@ -337,23 +320,28 @@ export class NetworkSvgComponent implements OnChanges {
             .attr('x2', comp.nodes[node2].x)
             .attr('y2', comp.nodes[node2].y)
         })
-      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x; })
-        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
-        .attr("id", function (l) {
+      lines.attr("x1", function(l) { return comp.getNodeById(l.nodeId[0]).x; })
+        .attr("y1", function(l) { return comp.getNodeById(l.nodeId[0]).y; })
+        .attr("x2", function(l) { return comp.getNodeByIp(l.nexthopNode).x; })
+        .attr("y2", function(l) { return comp.getNodeByIp(l.nexthopNode).y; })
+        .attr("id", function(l) {
           var node1 = comp.getNodeByIp(l.nexthopNode);
           var node2 = comp.getNodeById(l.nodeId[0]);
           return "line-" + node1.id + "-" + node2.id;
         })
-        .attr('stroke', function (l) {
-          return l.enabled ? NetworkSvgComponent.COLORS['line']
-            : NetworkSvgComponent.COLORS['line-disabled']
+        .attr('stroke', function(l) {
+           if(l.active) {
+             return NetworkSvgComponent.COLORS['active_line'];
+           } else if(!l.enabled) {
+             return NetworkSvgComponent.COLORS['line-disabled']
+           } else {
+             return NetworkSvgComponent.COLORS['line'];
+           }
         })
 
       nodes.attr('class', 'nodes')
-        .attr("x", function (d) { return d.x - 25; })
-        .attr("y", function (d) { return d.y - 25; })
+        .attr("x", function(d) { return d.x - 25; })
+        .attr("y", function(d) { return d.y - 25; })
 
     }
   }
@@ -366,7 +354,7 @@ export class NetworkSvgComponent implements OnChanges {
     this.selectedNode = d;
     modal.style.display = "block";
     let span = document.getElementsByClassName("close")[0];
-    span.addEventListener("click", function () {
+    span.addEventListener("click", function() {
 
       modal.style.display = "none";
       comp.editting = false;
@@ -374,14 +362,14 @@ export class NetworkSvgComponent implements OnChanges {
     })
 
     let editButton = document.getElementById("editButton");
-    editButton.addEventListener("click", function () {
+    editButton.addEventListener("click", function() {
 
       comp.editting = true;
 
     })
 
     let saveButton = document.getElementById("saveButton");
-    saveButton.addEventListener("click", function () {
+    saveButton.addEventListener("click", function() {
 
       comp.editting = false;
       modal.style.display = "none";
@@ -390,4 +378,20 @@ export class NetworkSvgComponent implements OnChanges {
     })
   }
 
+  getLink(n1: Node, n2: Node): Link {
+    for (let x = 0; x < this.links.length; x++) {
+      for (let i = x + 1; i < this.links.length; i++) {
+        // console.log(this.links[x] + " " + this.links[i])
+        if (this.links[x].nodeId[0] == n1.id && this.links[i].nexthopNode === n2.wireless[0].ipAdd) {
+          // console.log(this.links[x].nodeId[0] + "  " + n1.id)
+          // console.log(this.links[i].nexthopNode + "  " + n2.wireless[0].ipAdd)
+          return this.links[x];
+        }
+        // if (this.links[x].nodeId[0] == n2.id && this.links[i].nexthopNode === n1.wireless[0].ipAdd) {
+        //   return this.links[x];
+        // }
+      }
+    }
+    return null;
+  }
 }
