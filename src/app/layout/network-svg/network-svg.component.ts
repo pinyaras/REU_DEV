@@ -38,6 +38,8 @@ export class NetworkSvgComponent implements OnChanges {
   nodes: Node[];
   @Input()
   links: Link[];
+  @Input()
+  active_nodes: number[];
   selectedNode: Node = new Node({});
   editting: boolean = false;
   networkService: NetworkService;
@@ -55,6 +57,39 @@ export class NetworkSvgComponent implements OnChanges {
     if (this.nodes) {
       this.myOnInit();
     }
+    // console.log(this.active_nodes)
+    if (this.active_nodes) {
+      var the_nodes = this.active_nodes.map(function (no) {
+        return this.getNodeById(no);
+      }, this);
+      console.log(the_nodes)
+      for (var i = 0; i < the_nodes.length; i++) {
+        for (var j = 0; j < the_nodes.length; j++) {
+          if (i != j) {
+            var line = d3.select("#line-" + the_nodes[i].id + "-" + the_nodes[j].id);
+            if (line) {
+              line.attr('stroke', '#34BD62')
+              // if (line.attr('stroke') == '#34BD62') {
+              //   line.attr('stroke', 'dodgerblue')
+              // } else if (line.attr('stroke') == 'dodgerblue') {
+              //   line.attr('stroke', '#34BD62')
+              // } else {
+              //   return
+              // }
+            }
+          }
+        }
+      }
+
+      // let line = d3.select(this)
+      // if (line.attr('stroke') == '#34BD62') {
+      //   line.attr('stroke', 'dodgerblue')
+      // } else if (line.attr('stroke') == 'dodgerblue') {
+      //   line.attr('stroke', '#34BD62')
+      // } else {
+      //   return
+      // }
+    }
   }
 
   getNodeByIp(ip: string): Node {
@@ -66,19 +101,18 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   myOnInit() {
-
     var comp = this;
 
     if (this.nodes.length > 0 && !this.nodes[0].wireless) {
       return;
     }
 
-    this.links.forEach(function(link) {
+    this.links.forEach(function (link) {
 
-      let n = comp.nodes.find(function(node) {
+      let n = comp.nodes.find(function (node) {
         return node.id === link.nodeId[0];
       })
-      if(n) {
+      if (n) {
         n.x = link.xloc;
         n.y = link.yloc;
       }
@@ -113,38 +147,27 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('height', 600)
 
     this.nodes.forEach(function (node, i) {
-      if(node.x || node.y) return;
-        node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
-        node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
+      if (node.x || node.y) return;
+      node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
+      node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
     }, this)
 
     let delete_hover = function () {
       svg.select("#hover").remove();
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS);
     }
-    let path_mode = function(d) {
-        let line = d3.select(this)
-    console.log("path_mode running")
-    if(line.attr('stroke') == '#34BD62'){
-            line.attr('stroke', 'dodgerblue')
-        }else if(line.attr('stroke') =='dodgerblue'){
-            line.attr('stroke', '#34BD62')
-        }else{
-            return
-        }
-    }
-//show mouse location textbox-------------------------
-/*
-let text = svg.append('text')
-    .attr('x', 20)
-    .attr('y', 580)
-    .text('0 0')
-    .attr('font-size', '20px')
-    .attr('fill', 'white')
-svg.on('mousemove', function(d) {
-    let coords = d3.mouse(this);
-    text.text(coords[0] + " " + coords[1])
-}) //------------------------------------------------ */
+    //show mouse location textbox-------------------------
+    /*
+    let text = svg.append('text')
+        .attr('x', 20)
+        .attr('y', 580)
+        .text('0 0')
+        .attr('font-size', '20px')
+        .attr('fill', 'white')
+    svg.on('mousemove', function(d) {
+        let coords = d3.mouse(this);
+        text.text(coords[0] + " " + coords[1])
+    }) //------------------------------------------------ */
     //HoverBox
     let on_hover = function (d) {
       svg.select("#hover").remove();
@@ -172,17 +195,17 @@ svg.on('mousemove', function(d) {
       var coords = d3.mouse(this)
 
       // X component limiter (flip over)
-      if(d3.mouse(this)[0] > 668){
-          coords[0] = coords[0] - 10 - RectWidth
+      if (d3.mouse(this)[0] > 668) {
+        coords[0] = coords[0] - 10 - RectWidth
       }
       // Y component limiter
-      if(d3.mouse(this)[1] > 300){
+      if (d3.mouse(this)[1] > 300) {
         coords[1] = coords[1] - 15
       }
       // bottom of image
-     if(d3.mouse(this)[1] + ((size + 0.5) * 13.90) > imagelimit){
+      if (d3.mouse(this)[1] + ((size + 0.5) * 13.90) > imagelimit) {
         coords[1] = imagelimit - ((size + 0.5) * 13.90) - 30
-     }
+      }
 
       g.append("rect")
         .attr("x", coords[0] + 5)
@@ -198,7 +221,7 @@ svg.on('mousemove', function(d) {
         .attr("ry", 3);
       let text = g.append("text")
         .attr("x", coords[0] + 5)
-        .attr("y", coords[1] - (((size + 1) * 2.3) - 27 ))
+        .attr("y", coords[1] - (((size + 1) * 2.3) - 27))
         .attr("fill", NetworkSvgComponent.COLORS["TEXT"]);
       d.getInfoLst().forEach(function (info) {
         text.append('tspan')
@@ -228,7 +251,6 @@ svg.on('mousemove', function(d) {
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
-      .on('click', path_mode)
       .on('dblclick', function (l) {
         l.enabled = !l.enabled;
         render(comp);
@@ -243,7 +265,7 @@ svg.on('mousemove', function(d) {
       .attr('height', 50)
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
-      .on("click", function(d) { comp.editNode(d) });
+      .on("click", function (d) { comp.editNode(d) });
 
     render(comp);
 
@@ -266,17 +288,17 @@ svg.on('mousemove', function(d) {
           render(comp);
         }
       })
-      .on("end", function(d) {
+      .on("end", function (d) {
         NetworkSvgComponent.mousedown = false;
         let links = []
-        comp.links.forEach(function(link) {
-          if(link.nodeId[0] === d.id) {
+        comp.links.forEach(function (link) {
+          if (link.nodeId[0] === d.id) {
             links.push(link);
           }
         })
 
-        if(comp.oldx != d.x || comp.oldy != d.y) {
-          links.forEach(function(link) {
+        if (comp.oldx != d.x || comp.oldy != d.y) {
+          links.forEach(function (link) {
             link.xloc = d.x;
             link.yloc = d.y;
             comp.networkService.updateTopology(link).subscribe()
@@ -301,6 +323,11 @@ svg.on('mousemove', function(d) {
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
         .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
         .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
+        .attr("id", function (l) {
+          var node1 = comp.getNodeByIp(l.nexthopNode);
+          var node2 = comp.getNodeById(l.nodeId[0]);
+          return "line-" + node1.id + "-" + node2.id;
+        })
         .attr('stroke', function (l) {
           return l.enabled ? NetworkSvgComponent.COLORS['line']
             : NetworkSvgComponent.COLORS['line-disabled']
@@ -321,7 +348,7 @@ svg.on('mousemove', function(d) {
     this.selectedNode = d;
     modal.style.display = "block";
     let span = document.getElementsByClassName("close")[0];
-    span.addEventListener("click", function() {
+    span.addEventListener("click", function () {
 
       modal.style.display = "none";
       comp.editting = false;
@@ -329,14 +356,14 @@ svg.on('mousemove', function(d) {
     })
 
     let editButton = document.getElementById("editButton");
-    editButton.addEventListener("click", function() {
+    editButton.addEventListener("click", function () {
 
       comp.editting = true;
 
     })
 
     let saveButton = document.getElementById("saveButton");
-    saveButton.addEventListener("click", function() {
+    saveButton.addEventListener("click", function () {
 
       comp.editting = false;
       modal.style.display = "none";

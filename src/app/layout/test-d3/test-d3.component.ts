@@ -19,13 +19,13 @@ import { NetworkSvgComponent } from '../network-svg/network-svg.component';
 export class TestD3Component {
   nodes: Node[];
   links: Link[];
+  active_nodes: number[]; // String of switch number addresses
 
   private old_nodes: Node[];
   private old_links: Link[];
   constructor(private networkService: NetworkService, private controllerStatsService: ControllerStatsticsService) {
     this.load();
     setInterval(() => {
-
       if (!NetworkSvgComponent.mousedown) {
         this.load()
       }
@@ -74,6 +74,7 @@ export class TestD3Component {
         comp.controllerStatsService.getSwitches().subscribe(function (data) {
           let switches = data;
           var updated_matches = [];
+          var active_nodes = [];
           for (let switch_no of switches) {
             comp.controllerStatsService.getFlowStats(switch_no).subscribe(function (stats) {
               var sfs = new SwitchFlowStats(stats);
@@ -84,14 +85,23 @@ export class TestD3Component {
                   var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
                   if (old_fs && old_fs.packet_count != fs.packet_count) {
                     // console.log("flow was hit " + JSON.stringify(fs.match));
-                    updated_matches.push(fs.match);
+                    // console.log(fs.actions);
+                    if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
+                      updated_matches.push({ "switch": switch_no, "out_port": fs.actions[0], "match": fs.match });
+                      if (!active_nodes.includes(switch_no)) {
+                        active_nodes.push(switch_no);
+                        comp.active_nodes = active_nodes.slice();
+                      }
+                      // console.log(fs.actiondds)
+                      console.log("Added match");
+                      // console.log(fs.match);
+                    }
                   }
                 }
               }
               comp.switchFlowStats[sfs.id] = sfs;
             })
           }
-          console.log(updated_matches);
         })
       });
     });
