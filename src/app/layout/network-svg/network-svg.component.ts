@@ -139,11 +139,34 @@ export class NetworkSvgComponent implements OnChanges {
       svg.select("#hover").remove();
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS);
     }
-
+    let path_mode = function(d) {
+        let line = d3.select(this)
+    console.log("path_mode running")
+    if(line.attr('stroke') == '#34BD62'){
+            line.attr('stroke', 'dodgerblue')
+        }else if(line.attr('stroke') =='dodgerblue'){
+            line.attr('stroke', '#34BD62')
+        }else{
+            return
+        }
+    }
+//show mouse location textbox-------------------------
+/*
+let text = svg.append('text')
+    .attr('x', 20)
+    .attr('y', 580)
+    .text('0 0')
+    .attr('font-size', '20px')
+    .attr('fill', 'white')
+svg.on('mousemove', function(d) {
+    let coords = d3.mouse(this);
+    text.text(coords[0] + " " + coords[1])
+}) //------------------------------------------------ */
+    //HoverBox
     let on_hover = function (d) {
       svg.select("#hover").remove();
-      let coords = d3.mouse(this)   //FOR CORNER [640, 100];
-      d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5);
+
+      d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS + 5)
       let info = d.getInfoLst()
 
       let g = svg.append("g")
@@ -152,17 +175,36 @@ export class NetworkSvgComponent implements OnChanges {
       let NodeInfo = d.getInfoLst()
       let MaxInfolen = 0
 
+      // Calculate Rectangle width
       for (var x = 0; x < NodeInfo.length; x++) {
         var CurInfoLen = NodeInfo[x].length
         if (CurInfoLen > MaxInfolen) {
           MaxInfolen = CurInfoLen
         }
       }
+      var RectWidth = (MaxInfolen * 8.5) + 10
+
+      //Determine HoverBox position & keeps it inside the map
+      var imagelimit = d3.select('#map').attr('height')
+      var coords = d3.mouse(this)
+
+      // X component limiter (flip over)
+      if(d3.mouse(this)[0] > 668){
+          coords[0] = coords[0] - 10 - RectWidth
+      }
+      // Y component limiter
+      if(d3.mouse(this)[1] > 300){
+        coords[1] = coords[1] - 15
+      }
+      // bottom of image
+     if(d3.mouse(this)[1] + ((size + 0.5) * 13.90) > imagelimit){
+        coords[1] = imagelimit - ((size + 0.5) * 13.90) - 30
+     }
 
       g.append("rect")
         .attr("x", coords[0] + 5)
-        .attr("y", coords[1] - ((size + 1) * 12 + 7))
-        .attr("width", (MaxInfolen * 8.5) + 10)
+        .attr("y", coords[1] - (((size + 1) * 2.3) - 27))
+        .attr("width", RectWidth)
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "AliceBlue")
         .attr("stroke", "#333333")
@@ -173,26 +215,24 @@ export class NetworkSvgComponent implements OnChanges {
         .attr("ry", 3);
       let text = g.append("text")
         .attr("x", coords[0] + 5)
-        .attr("y", coords[1] - ((size + 1) * 12 + 5))
+        .attr("y", coords[1] - (((size + 1) * 2.3) - 27 ))
         .attr("fill", NetworkSvgComponent.COLORS["TEXT"]);
-
       d.getInfoLst().forEach(function (info) {
         text.append('tspan')
           .text(info)
           .attr('dy', 1 + 'em')
-          .attr('x', coords[0] + 10); //Orginal + 5
+          .attr('x', coords[0] + 10); //Original + 5
       })
     }
 
-    
     for (let x = 0; x < this.nodes.length; x++) {
       for (let i = x + 1; i < this.nodes.length; i++) {
         svg.append('line').attr('class', 'allLines')
           .attr('node1', x)
           .attr('node2', i)
           .attr('stroke-width', 5)
-          .attr('stroke', '#406368')
-          .attr('opacity', .20)
+          .attr('stroke', 'dodgerblue')
+          .attr('opacity', .2)
       }
     }
     // Visual lines between nodes
@@ -205,6 +245,7 @@ export class NetworkSvgComponent implements OnChanges {
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
+      .on('click', path_mode)
       .on('dblclick', function (l) {
         l.enabled = !l.enabled;
         render(comp);
@@ -249,7 +290,7 @@ export class NetworkSvgComponent implements OnChanges {
           if(link.nodeId[0] === d.id) {
             links.push(link);
           }
-        }) 
+        })
 
         if(comp.oldx != d.x || comp.oldy != d.y) {
           links.forEach(function(link) {
@@ -320,4 +361,5 @@ export class NetworkSvgComponent implements OnChanges {
 
     })
   }
+
 }

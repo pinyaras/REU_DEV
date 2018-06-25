@@ -22,6 +22,7 @@ export class Node {
 
 	}
 	getInfoLst() {
+
 		return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
 		"MAC: " + this.nodeMac]
 	}

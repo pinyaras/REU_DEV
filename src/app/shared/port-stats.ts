@@ -20,4 +20,16 @@ export class PortStats {
         this.tx_dropped = obj.tx_dropped;
         this.tx_errors = obj.tx_errors;
     }
+
+    equals(obj: PortStats) {
+        return this.port_no == obj.port_no
+            && this.rx_packets == obj.rx_packets
+            && this.rx_bytes == obj.rx_bytes
+            && this.rx_dropped == obj.rx_dropped
+            && this.rx_errors == obj.rx_errors
+            && this.tx_packets == obj.tx_packets
+            && this.tx_bytes == obj.tx_bytes
+            && this.tx_dropped == obj.tx_dropped
+            && this.tx_errors == obj.tx_errors
+    }
 }
