@@ -25,7 +25,6 @@ export class NodeService {
   }
 
   getRouterDetail(id:number):Observable<DataJson[]> {
-    //console.log(id);
     return this.http.get('http://192.168.122.100/api_iwinfo/'+id)
     .map((res:Response) => <DataJson[]> res.json().data_json)
     .catch(this.handleErrorObservable);
@@ -41,7 +40,5 @@ export class NodeService {
   private handleErrorObservable (error: Response | any) {
 		console.error(error.message || error);
 		return Observable.throw(error.message || error);
-    }
-
-
+   }
 }

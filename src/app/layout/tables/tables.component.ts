@@ -41,7 +41,10 @@ export class TablesComponent implements OnInit {
 
     flowBarChartData(): any[] {
         if (!this.flowStats) {
-            return []
+            return [{
+                    "data": [],
+                    "label": ""
+                    }]
         }
         var flowStatsList = this.flowStats.map(function (element) {
             return element.stats
@@ -79,7 +82,7 @@ export class TablesComponent implements OnInit {
     }
     flowBarChartLabels(): string[] {
         if (!this.flowStats) {
-            return []
+            return ['']
         }
         var labels = this.flowStats.map(function (element) {
             return "Switch " + element.id;

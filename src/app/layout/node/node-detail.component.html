@@ -4,54 +4,33 @@
 
  <div class="row">
 
-   <div *ngFor="let wlan of dataJson" class="col-xl-6 text-xs-center">
+   <div class="col-xl-6 text-xs-center">
      <div class="card mb-3">
        <div class="card-header card-info">
          <h4 class="card-title">
-            <i class="fa fa-wifi" aria-hidden="true"></i> Network {{wlan?.devices}}
-            <span class="badge  badge-success pull-right">Radio {{wlan?.result.phy | slice:-1}} @{{ wlan?.result.frequency }} GHz </span>
+            <i class="fa fa-wifi" aria-hidden="true"></i> Network {{node?.nodeName}}
+            <span class="badge  badge-success pull-right">Radio<!--  {{wlan?.result.phy | slice:-1}} @{{ wlan?.result.frequency }} --> GHz </span>
 
          </h4>
 
        </div>
 
        <div class="card-block">
-           <h5 class="card-subtitle mb-2"><strong>Mode: </strong> {{wlan?.result.mode}}</h5>
-
-            <hr>
-
-
-           <p class="card-text"><strong>Channel:</strong>  {{wlan?.result.channel}}</p>
-           <p class="card-text"><strong>Frequency:</strong>  {{wlan?.result.frequency }}</p>
-
-           <p class="card-text"><strong>TXpower:</strong>
-
-           <input class="powerInput" type="text" [(ngModel)]="new_txpower" placeholder={{wlan?.result.txpower}}/>
-           <button class="btn btn-info" (click)="setRouterDetail(wlan?.result.phy )"> Apply
+           <h5 class="card-subtitle mb-2"><strong>Mode: {{wireless?.mode}}</strong> </h5>
+           <hr>
+           <p class="card-text"><strong>Channel: {{wireless?.channel}}</strong> </p>
+           <p class="card-text"><strong>Frequency: </strong> </p>
+           <p class="card-text"><strong>TXpower: </strong>
+           <input class="powerInput" type="text" [(ngModel)]="new_power" placeholder="{{wireless?.power}}"/>
+           <button class="btn btn-info" (click)="setDetails()"> Apply
              <i class="fa fa-pencil" aria-hidden="true"></i>
            </button>
            </p>
-
-         <!--
-           <p class="card-text"><strong>TXpower:</strong> {{wlan?.result.txpower}}
-             <button class="btn btn-info pull-right" (click)="setWlan(wlan?.result.phy)"> Edit
-               <i class="fa fa-pencil" aria-hidden="true"></i>
-             </button>
-            </p>
-             <div *ngIf="currentWlan">
-               <input type="text" placeholder="New power">
-              </div>
-            -->
-
-
-           <p class="card-text"><strong>Quality:</strong> {{wlan?.result.quality}} </p>
-           <p class="card-text"><strong>Noise:</strong> {{wlan?.result.noise}} </p>
-           <p class="card-text"><strong>Bitrate:</strong> {{wlan?.result.bitrate}} </p>
-
-           <p class="card-text"><strong>HWmode:</strong><span *ngFor="let mode of wlan.result.hwmodes"> 802.11 {{mode}} </span></p>
-           <p class="card-text"><strong>HTmode:</strong><span *ngFor="let mode of wlan.result.htmodes">  {{mode}} </span></p>
-
-
+           <p class="card-text"><strong>Quality:</strong>  </p>
+           <p class="card-text"><strong>Noise:</strong>  </p>
+           <p class="card-text"><strong>Bitrate:</strong>  </p>
+           <p class="card-text"><strong>HWmode:</strong><span > 802.11 </span></p>
+           <p class="card-text"><strong>HTmode:</strong><span> </span></p>
        </div>
 
      </div>

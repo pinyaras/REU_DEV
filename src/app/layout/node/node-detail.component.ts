@@ -1,34 +1,29 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
-
-
-import { NodeService } from '../../shared/services/node.service';
+import { NetworkService } from '../../shared/services/network.service';
 import { RouterNodeDetail } from '../../shared/routerNode-detail';
-import { DataJson } from '../../shared/DataJson';
-
-
 import { Subscription } from "rxjs/Subscription";
+import { Node } from '../../shared/node'
+import { WirelessNode } from '../../shared/wirelessnode'
+import { DataJson } from '../../shared/DataJson'
 
 @Component({
   selector: 'app-node-detail',
   templateUrl: './node-detail.component.html',
   styleUrls: ['./node-detail.component.scss']
 })
+
 export class NodeDetailComponent implements OnInit, OnDestroy {
 
   id:number;
-  router_ip: string;
-  //routerNodeDetail:RouterNodeDetail;
-  dataJson: DataJson[];
+  nodeIp: string;
+  node: Node;
+  wireless: WirelessNode;
   errorMessage:string;
-  sub:Subscription;
-  sub2:Subscription;
-  sub3:Subscription;
   public timeoutId;
-
-  public new_txpower;
+  public new_power;
   public selected:string;
   public current_radio:string;
   public radio_number:string;
@@ -36,63 +31,62 @@ export class NodeDetailComponent implements OnInit, OnDestroy {
   public success;
 
 
-  constructor(private route: ActivatedRoute, private _NodeService:NodeService , private location:Location) { }
+  constructor(private route: ActivatedRoute, private networkService:NetworkService, private location:Location) { }
 
   ngOnInit() {
-  this.sub =  this.route.params.subscribe( params => {
+  this.route.params.subscribe( params => {
       this.id = params['id'];
-      this.router_ip = params['router_ip'];
-      //console.log(this.router_ip);
+      this.nodeIp = params['nodeIp'];
       this.getRouterDetail();
     });
 
   }
 
-
-  setTxpower(radio){
-    this.current_radio = radio ;
-    this.radio_number = this.current_radio.slice(-1);
-    this.set_radio = 'radio'+this.radio_number;
-    alert(this.set_radio);
-
-  }
-
   getRouterDetail(){
-    this.sub2 = this._NodeService.getRouterDetail(this.id)
-    .subscribe(dataJson => {
-    this.dataJson = dataJson
-    console.log(this.dataJson)
+    this.networkService.getNodeDetail(this.id)
+    .subscribe(data => {
+        this.node = new Node(data);
+      },
+      error => this.errorMessage = <any> error
+    );
+    this.networkService.getWirelessNodeDetail(this.id).subscribe(data => {
 
-  },
-    error => this.errorMessage = <any> error);
+      this.wireless = new WirelessNode(data);
+
+    })
   }
 
-  setRouterDetail(radio){
-    clearTimeout(this.timeoutId);
-    this.current_radio = radio ;
-    this.radio_number = this.current_radio.slice(-1);
-    this.set_radio = 'radio'+this.radio_number;
-    //console.log(this.set_radio);
-    //console.log(this.router_ip);
-    //console.log(this.new_txpower);
-    this.sub3 = this._NodeService.updateDB(this.router_ip, this.set_radio, 'txpower', this.new_txpower)
-    .subscribe(
-    data => { this.success = data;
-    console.log(this.success);
-    this.timeoutId = setTimeout(() => {
-      this.getRouterDetail();
+   setDetails() {
 
-    },6000);
-  },
-    error => this.errorMessage = <any> error);
-  }
+     if(this.new_power) {
+       this.wireless.power = this.new_power;
+       this.networkService.updateWirelessNode(this.wireless).subscribe(data => { console.log(data) })
+     }  
+
+   }
+
+  // setRouterDetail(radio){
+  //   clearTimeout(this.timeoutId);
+  //   this.current_radio = radio ;
+  //   this.radio_number = this.current_radio.slice(-1);
+  //   this.set_radio = 'radio'+this.radio_number;
+  //   //console.log(this.set_radio);
+  //   //console.log(this.router_ip);
+  //   //console.log(this.new_txpower);
+  //   this.networkService.updateWirelessNode(this.wireless)
+  //   .subscribe(
+  //   data => { this.success = data;
+  //   console.log(this.success);
+  //   this.timeoutId = setTimeout(() => {
+  //     this.getRouterDetail();
+  //   },6000);
+  // },
+  //   error => this.errorMessage = <any> error);
+  // }
 
 
   ngOnDestroy(){
     console.log('destroy');
-    this.sub.unsubscribe();
-    this.sub2.unsubscribe();
-    this.sub3.unsubscribe();
     clearTimeout(this.timeoutId);
 
   }

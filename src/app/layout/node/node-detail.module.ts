@@ -14,4 +14,4 @@ import { NodeDetailComponent } from './node-detail.component';
   ],
   declarations: [NodeDetailComponent]
 })
-export class NodeDetailModule { }
+export class NodeDetailModule {}

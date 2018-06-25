@@ -7,12 +7,12 @@
       		<div *ngIf="!editting" class="not-editting">
       			<p>Name: {{selectedNode.nodeName}}</p>
 				<p>ID: {{selectedNode.id}}</p>
-				<p>IP Adress: {{selectedNode.nodeIp}}</p>
-				<p>MAC Adress: {{selectedNode.nodeMac}}</p>
+				<p>IP Address: {{selectedNode.nodeIp}}</p>
+				<p>MAC Address: {{selectedNode.nodeMac}}</p>
 				<div *ngIf="selectedNode.wireless">
 					<p>Interface: {{selectedNode.wireless.intName}}</p>
 					<p>Wireless IP: {{selectedNode.wireless.ipAdd}}</p>
-					<p>Wireless MAC: {{selectedNode.wireles}}
+					<p>Wireless MAC: {{selectedNode.wireless.macAdd}}
 					<p>Channel: {{selectedNode.wireless.channel}}</p>
 					<p>Power: {{selectedNode.wireless.power}}</p>
 					<p>Mode: {{selectedNode.wireless.mode}}</p>
