@@ -77,6 +77,7 @@ export class TestD3Component {
           let switches = data;
           var updated_matches = [];
           var active_nodes = [];
+          comp.active_nodes = [];
           for (let switch_no of switches) {
             comp.controllerStatsService.getFlowStats(switch_no).subscribe(function (stats) {
               var sfs = new SwitchFlowStats(stats);
