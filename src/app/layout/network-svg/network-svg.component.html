@@ -4,24 +4,27 @@
 	<div class="modal-content">
     	<div class="modal-body">
     		<span class="close">&times;</span>
-      		<div *ngIf="!editting">
+    		<div *ngIf="selectedNode" class="btns">
+    			<button *ngFor="let wn of selectedNode.wireless; let i = index" class="btn btn-primary" (click)="displayWireless(i)" >Wireless {{(i + 1)}}</button>
+    		</div>
+      		<div *ngIf="!editting && selectedNode" class="not-editting">
       			<p>Name: {{selectedNode.nodeName}}</p>
 				<p>ID: {{selectedNode.id}}</p>
-				<p>IP Adress: {{selectedNode.nodeIp}}</p>
-				<p>MAC Adress: {{selectedNode.nodeMac}}</p>
+				<p>IP Address: {{selectedNode.nodeIp}}</p>
+				<p>MAC Address: {{selectedNode.nodeMac}}</p>
 				<div *ngIf="selectedNode.wireless">
-					<p>Interface: {{selectedNode.wireless.intName}}</p>
-					<p>Wireless IP: {{selectedNode.wireless.ipAdd}}</p>
-					<p>Wireless MAC: {{selectedNode.wireles}}
-					<p>Channel: {{selectedNode.wireless.channel}}</p>
-					<p>Power: {{selectedNode.wireless.power}}</p>
-					<p>Mode: {{selectedNode.wireless.mode}}</p>
-					<p>Band Width: {{selectedNode.wireless.bw}}</p>
-					<p>BSSID: {{selectedNode.wireless.bssid}}</p>
-					<p>Bridge: {{selectedNode.wireless.bridge}}</p>
+					<p>Interface: {{selectedNode.wireless[index].intName}}</p>
+					<p>Wireless IP: {{selectedNode.wireless[index].ipAdd}}</p>
+					<p>Wireless MAC: {{selectedNode.wireless[index].macAdd}}
+					<p>Channel: {{selectedNode.wireless[index].channel}}</p>
+					<p>Power: {{selectedNode.wireless[index].power}}</p>
+					<p>Mode: {{selectedNode.wireless[index].mode}}</p>
+					<p>Band Width: {{selectedNode.wireless[index].bw}}</p>
+					<p>BSSID: {{selectedNode.wireless[index].bssid}}</p>
+					<p>Bridge: {{selectedNode.wireless[index].bridge}}</p>
 				</div>
      		</div>
-     		<div *ngIf="editting">
+     		<div *ngIf="editting && selectedNode">
      			<div class="form-inline">
 	     			<label for="name">Name: </label>
 			      	<input type="text" name="name" class="form-control" [(ngModel)]="selectedNode.nodeName">

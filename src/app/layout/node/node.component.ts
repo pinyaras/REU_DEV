@@ -1,46 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { NodeService } from '../../shared/services/node.service';
-import { RouterNode } from '../../shared/routerNode';
-
-import { RouterAP } from '../../shared/routerAP';
+import { NetworkService } from '../../shared/services/network.service';
+import { Node } from '../../shared/node';
+import { WirelessNode } from '../../shared/wirelessnode';
 import { DataJson } from '../../shared/DataJson';
 
 
 
 @Component({
-    selector: 'app-node',
-    templateUrl: './node.component.html',
-    styleUrls: ['./node.component.scss']
+  selector: 'app-node',
+  templateUrl: './node.component.html',
+  styleUrls: ['./node.component.scss']
 })
 export class NodeComponent implements OnInit {
 
-    routerAP: RouterAP[];
-    routerNode: RouterNode[];
-    dataJson:DataJson;
+  routerAPs: WirelessNode[];
+  routerNodes: Node[];
 
-    constructor(
-      private _NodeService :NodeService,
-      private router : Router) { }
+  constructor(
+    private networkService: NetworkService,
+    private router: Router) { }
 
-    ngOnInit() {
-      this.getRouter();
-  //  console.log("node WOrks");
+  ngOnInit() {
+    this.getNodes();
+    this.getWirelessNodes();
+  }
 
-     }
+  getNodes() {
+    this.networkService.getNodes().subscribe(data => {
+      this.routerNodes = data;
+    })
+  }
 
-    getRouter() {
-      this._NodeService.getIwinfo().subscribe(
-        routerNode => { this.routerNode = routerNode,
-        console.log(this.routerNode);
-        //console.log("");
-        });
-    }
+  getWirelessNodes() {
+    this.networkService.getWirelessNodes().subscribe(data => {
+      this.routerAPs = data;
+    })
+  }
 
-    onShowDetail(routerNode:RouterNode) {
-
-  this.router.navigate(['/node', routerNode.router_id, 'router_ip', routerNode.router_ip]);
-}
+  onShowDetail(node: Node) {
+    this.router.navigate(['/node', node.id, 'router_ip',  node.nodeIp]);
+  }
 
 }

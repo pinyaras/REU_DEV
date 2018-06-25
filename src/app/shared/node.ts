@@ -9,7 +9,7 @@ export class Node {
 	nodeMac: string;
 	x: number;
 	y: number;
-	wireless: WirelessNode;
+	wireless: WirelessNode[] = [];
 
 	constructor(obj: any) {
 
@@ -22,23 +22,28 @@ export class Node {
 
 	}
 	getInfoLst() {
-		if(this.wireless){
-			return ["Node: " + this.nodeName,"ID: " + this.id,"IP: " + this.nodeIp,
-			"MAC: " + this.nodeMac, "Channel: " + this.wireless.channel,
-			"Power: " + this.wireless.power, "Mode: " + this.wireless.mode, "Bandwidth: " + this.wireless.bw,
-			"BSSID: " + this.wireless.bssid, "Bridge: " + this.wireless.bridge];
 
-		}else{return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
+		return ["Node: " + this.nodeName,"Id: " + this.id,"IP: " + this.nodeIp,
 		"MAC: " + this.nodeMac]
-		}
 	}
 
 	equals(other: Node): boolean {
-		if (!other) return false;
+		if (!other || other.wireless.length != this.wireless.length) return false;
+
+		let isEqual = true;
+
+		for(let x = 0; x < this.wireless.length; x++) {
+
+			if(!this.wireless[x].equals(other.wireless[x])) {
+				isEqual = false;
+			}
+
+		}
+
 		return this.id == other.id
 			&& this.nodeName == other.nodeName
 			&& this.nodeMac == other.nodeMac
 			&& this.nodeIp == other.nodeIp
-			&& (!this.wireless || this.wireless.equals(other.wireless));
+			&& (isEqual);
 	}
 }

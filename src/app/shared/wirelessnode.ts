@@ -7,7 +7,7 @@ export class WirelessNode {
 	ipAdd: string;
 	macAdd: string;
 	channel: number
-	power: number
+	power: number;
 	mode: string;
 	bw: string
 	bssid: string

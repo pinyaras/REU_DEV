@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div *ngFor="let item of routerNode"  class="col-md-4">
+    <div *ngFor="let item of routerNodes"  class="col-md-4">
       <div class="card card-inverse card-primary mb-3">
           <div class="card-header">
               <div class="row">
@@ -8,8 +8,8 @@
                       <i class="fa fa-wifi fa-4x"></i>
                   </div>
                   <div class="col col-xs-9 ">
-                      <div class="title"> <h5><strong> WuMesh AP {{item.router_ip | slice:-2}} </strong></h5></div>
-                      <div class="d-block">IP: {{item.router_ip}}</div>
+                      <div class="title"> <h5><strong> {{item.nodeName}} </strong></h5></div>
+                      <div class="d-block">IP: {{item.nodeIp}}</div>
                   </div>
               </div>
           </div>

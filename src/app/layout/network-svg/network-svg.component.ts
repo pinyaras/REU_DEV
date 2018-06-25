@@ -40,12 +40,14 @@ export class NetworkSvgComponent implements OnChanges {
   links: Link[];
   @Input()
   active_nodes: number[];
-  selectedNode: Node = new Node({});
+  
+  selectedNode: Node;
   editting: boolean = false;
   networkService: NetworkService;
   oldx: number = 0;
   oldy: number = 0;
   static mousedown: boolean = false;
+  index: number = 0;
 
   constructor(d3Service: D3Service, networkService: NetworkService) {
 
@@ -93,11 +95,27 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   getNodeByIp(ip: string): Node {
-    return this.nodes.find(function (n) { return n.wireless.ipAdd == ip; })
+    return this.nodes.find(function (n) { 
+      let thisNode = false;
+      n.wireless.forEach(wn => {
+        if(wn.ipAdd === ip) {
+          thisNode = true;
+        }
+
+      })
+      return thisNode;
+    })
   }
 
   getNodeById(id: number): Node {
     return this.nodes.find(function (n) { return n.id == id; })
+  }
+
+  displayWireless(i: number) {
+
+    this.index = i;
+    console.log(this.index)
+
   }
 
   myOnInit() {

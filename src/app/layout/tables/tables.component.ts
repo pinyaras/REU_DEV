@@ -41,7 +41,10 @@ export class TablesComponent implements OnInit {
     // TODO this fails when flow count drops, or at least causes errors
     flowBarChartData(): any[] {
         if (!this.flowStats) {
-            return []
+            return [{
+                    "data": [],
+                    "label": ""
+                    }]
         }
         var flowStatsList = this.filterFlowStats().map(function (element) {
             return element.stats
@@ -81,7 +84,7 @@ export class TablesComponent implements OnInit {
     }
     flowBarChartLabels(): string[] {
         if (!this.flowStats) {
-            return []
+            return ['']
         }
         var labels = this.filterFlowStats().map(function (element) {
             return "Switch " + element.id

@@ -16,10 +16,5 @@ export class RouterNodeDetail {
      public mode,
      public hwmodes,
      public frequency_offset,
-
-
-
-     
-
    ) {}
 }
