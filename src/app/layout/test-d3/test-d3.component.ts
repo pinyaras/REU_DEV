@@ -21,8 +21,8 @@ export class TestD3Component {
   constructor(private networkService: NetworkService) {
     this.load();
     setInterval(() => {
-      
-      if(!NetworkSvgComponent.mousedown) {
+
+      if (!NetworkSvgComponent.mousedown) {
         this.load()
       }
 
@@ -53,12 +53,14 @@ export class TestD3Component {
         new_nodes.push(new Node(node))
       })
       // Get Wireless
-      this.networkService.getWirelessNodes().subscribe(function (wireless_data) {
-        wireless_data.forEach(function (wn) {
-          var node = new_nodes.find(function (node) {
-            return node.id === wn.node;
+      this.networkService.getWirelessNodes().subscribe(function(wireless_data) {
+        wireless_data.forEach(function(wn) {
+          new_nodes.forEach(function(node) {
+            if (node.id === wn.node) {
+              node.wireless.push(new WirelessNode(wn));
+            }
           })
-          node.wireless = new WirelessNode(wn);
+
         })
         if (comp.nodes_changed(new_nodes)) {
           comp.nodes = new_nodes;
