@@ -57,6 +57,10 @@ export class NetworkService {
 		return this.http.delete("http://52.15.133.20/node/" + node.id + "/", httpOptions)
 	}
 
+	deleteLink(link: Link): Observable<Node> {
+		return this.http.delete("http://52.15.133.20/topology/" + link.id + "/", httpOptions)
+	}
+
 	private handleErrorObservable(error: Response | any) {
 		console.error(error.message || error);
 		return Observable.throw(error.message || error);

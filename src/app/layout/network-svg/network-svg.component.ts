@@ -50,33 +50,41 @@ export class NetworkSvgComponent implements OnChanges {
   index: number = 0;
 
   constructor(d3Service: D3Service, networkService: NetworkService) {
-
     this.networkService = networkService;
-
   }
 
   ngOnChanges(): void {
     if (this.nodes) {
       this.myOnInit();
     }
+    if(this.links) {
+      this.links.forEach(link => {
+        link.active = false;
+      })
+    }
     if (this.active_nodes) {
       var the_nodes = this.active_nodes.map(function(no) {
         return this.getNodeById(no);
       }, this);
       console.log(the_nodes);
+      console.log(this.active_nodes)
       if (the_nodes.length >= 2) {
-        // for (let x = 0; x < the_nodes.length; x++) {
-        //   for (let i = x + 1; i < the_nodes.length; i++) {
-        //     // console.log(the_nodes[x] + " " + the_nodes[i])
-        //     let l = this.getLink(the_nodes[x], the_nodes[i]);
-        //     console.log(l);
-        //   }
-        // }
-
-        console.log(this.getLink(this.nodes[0], this.nodes[2]))
-
+        for (let x = 0; x < the_nodes.length; x++) {
+          for (let i = x + 1; i < the_nodes.length; i++) {
+            let l = this.getLink(the_nodes[x], the_nodes[i]);
+            console.log(l)
+            if(l) {
+              l.active = true;
+            }
+          }
+        }
+        
+        this.myOnInit();
+        // setTimeout(() => {
+          
+        //   this.myOnInit();
+        // }, 3000)
       }
-
     }
   }
 
@@ -379,18 +387,16 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   getLink(n1: Node, n2: Node): Link {
+    console.log(n1.id + " " + n2.id)
     for (let x = 0; x < this.links.length; x++) {
-      for (let i = x + 1; i < this.links.length; i++) {
-        // console.log(this.links[x] + " " + this.links[i])
-        if (this.links[x].nodeId[0] == n1.id && this.links[i].nexthopNode === n2.wireless[0].ipAdd) {
-          // console.log(this.links[x].nodeId[0] + "  " + n1.id)
-          // console.log(this.links[i].nexthopNode + "  " + n2.wireless[0].ipAdd)
+        if (this.links[x].nodeId[0] == n1.id && this.links[x].nexthopNode === n2.wireless[0].ipAdd) {
+          // console.log(this.links[x])
           return this.links[x];
         }
-        // if (this.links[x].nodeId[0] == n2.id && this.links[i].nexthopNode === n1.wireless[0].ipAdd) {
-        //   return this.links[x];
-        // }
-      }
+        if (this.links[x].nodeId[0] == n2.id && this.links[x].nexthopNode === n1.wireless[0].ipAdd) {
+          // console.log(this.links[x])
+          return this.links[x];
+        }
     }
     return null;
   }
