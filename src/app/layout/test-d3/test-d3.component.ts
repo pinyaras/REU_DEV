@@ -19,7 +19,7 @@ import { NetworkSvgComponent } from '../network-svg/network-svg.component';
 export class TestD3Component {
   nodes: Node[];
   links: Link[];
-  active_nodes: number[]; // String of switch number addresses
+  active_nodes: [number, string][]; // String of switch number addresses
 
   private old_nodes: Node[];
   private old_links: Link[];
@@ -58,9 +58,9 @@ export class TestD3Component {
         new_nodes.push(new Node(node))
       })
       // Get Wireless
-      this.networkService.getWirelessNodes().subscribe(function(wireless_data) {
-        wireless_data.forEach(function(wn) {
-          new_nodes.forEach(function(node) {
+      this.networkService.getWirelessNodes().subscribe(function (wireless_data) {
+        wireless_data.forEach(function (wn) {
+          new_nodes.forEach(function (node) {
             if (node.id === wn.node) {
               node.wireless.push(new WirelessNode(wn));
             }
@@ -92,7 +92,7 @@ export class TestD3Component {
                     if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
                       updated_matches.push({ "switch": switch_no, "out_port": fs.actions[0], "match": fs.match });
                       if (!active_nodes.includes(switch_no)) {
-                        active_nodes.push(switch_no);
+                        active_nodes.push([switch_no, fs.actions[0].substring(7)]);
                         comp.active_nodes = active_nodes.slice();
                       }
                       // console.log(fs.actiondds)
