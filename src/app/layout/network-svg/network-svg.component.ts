@@ -79,30 +79,27 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.nodes) {
-      this.myOnInit();
-    }
     if (this.links) {
+      // Assume all links are not active until decided later
       this.links.forEach(link => {
         link.active = false;
       })
     }
-    if (this.active_nodes) {
-      var link_pairs = this.active_nodes.filter(function (pair) {
-        return (this.ports[pair[0]][pair[1]]);
-      }, this).map(function (pair) {
-        return [this.getNodeById(pair[0]), this.getNodeById(this.ports[pair[0]][pair[1]])];
-      }, this);
-      for (let link_pair of link_pairs) {
-        let l = this.getLink(link_pair[0], link_pair[1]);
-        console.log(l)
-        if (l) {
-          l.active = true;
+    if (this.nodes) {
+      if (this.active_nodes) {
+        var link_pairs = this.active_nodes.filter(function (pair) {
+          return (this.ports[pair[0]][pair[1]]);
+        }, this).map(function (pair) {
+          return [this.getNodeById(pair[0]), this.getNodeById(this.ports[pair[0]][pair[1]])];
+        }, this);
+        for (let link_pair of link_pairs) {
+          let l = this.getLink(link_pair[0], link_pair[1]);
+          if (l) {
+            l.active = true;
+          }
         }
       }
-      if (link_pairs) {
-        this.myOnInit();
-      }
+      this.myOnInit();
     }
   }
 
@@ -405,14 +402,11 @@ export class NetworkSvgComponent implements OnChanges {
   }
 
   getLink(n1: Node, n2: Node): Link {
-    console.log(n1.id + " " + n2.id)
     for (let x = 0; x < this.links.length; x++) {
       if (this.links[x].nodeId[0] == n1.id && this.links[x].nexthopNode === n2.wireless[0].ipAdd) {
-        // console.log(this.links[x])
         return this.links[x];
       }
       if (this.links[x].nodeId[0] == n2.id && this.links[x].nexthopNode === n1.wireless[0].ipAdd) {
-        // console.log(this.links[x])
         return this.links[x];
       }
     }
