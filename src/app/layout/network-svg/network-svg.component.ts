@@ -87,7 +87,7 @@ export class NetworkSvgComponent implements OnChanges {
       })
     }
     if (this.nodes) {
-      if (this.active_nodes) {
+    /*if (this.active_nodes) {
         var link_pairs = this.active_nodes.filter(function (tuple) {
           return (this.ports[tuple[0]][tuple[1]]);
         }, this).map(function (tuple) {
@@ -101,21 +101,14 @@ export class NetworkSvgComponent implements OnChanges {
             l.byteRate = link_pair[2];
           }
         }
-      }
+      }*/
       this.myOnInit();
     }
   }
 
   getNodeByIp(ip: string): Node {
     return this.nodes.find(function (n) {
-      let thisNode = false;
-      n.wireless.forEach(wn => {
-        if (wn.ipAdd === ip) {
-          thisNode = true;
-        }
-
-      })
-      return thisNode;
+      return n.nodeIp == ip;
     })
   }
 
@@ -134,7 +127,7 @@ export class NetworkSvgComponent implements OnChanges {
       return;
     }
 
-    this.links.forEach(function (link) {
+    /*this.links.forEach(function (link) {
 
       let n = comp.nodes.find(function (node) {
         return node.id === link.nodeId[0];
@@ -144,7 +137,7 @@ export class NetworkSvgComponent implements OnChanges {
         n.y = link.yloc;
       }
 
-    })
+    })*/
 
     var svg = d3.select("svg")
     d3.selectAll('svg > *').remove()
@@ -173,11 +166,11 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('width', 900)              //Original dimensions 900 x 600
       .attr('height', 600)
 
-    this.nodes.forEach(function (node, i) {
+    /*this.nodes.forEach(function (node, i) {
       if (node.x || node.y) return;
       node.x = Math.cos((i / this.nodes.length) * Math.PI * 2) * 200 + 450;
       node.y = Math.sin((i / this.nodes.length) * Math.PI * 2) * 200 + 300;
-    }, this)
+    }, this)*/
 
     let delete_hover = function () {
       svg.select("#hover").remove();
@@ -298,8 +291,8 @@ export class NetworkSvgComponent implements OnChanges {
 
     let dragHandler = d3.drag().on('start', function (d) {
       svg.select("#hover").remove();
-      comp.oldx = d.x;
-      comp.oldy = d.y;
+      comp.oldx = d.xloc;
+      comp.oldy = d.yloc;
       NetworkSvgComponent.mousedown = true;
     })
       .on('drag', function (d) {
@@ -307,28 +300,26 @@ export class NetworkSvgComponent implements OnChanges {
         let coords = d3.mouse(this);
         if (coords[0] + 20 < parseInt(width) && coords[0] - 20 > 0
           && coords[1] + 20 < height && coords[1] - 20 > 0) {
-          d.x = coords[0];
-          d.y = coords[1];
+          d.xloc = coords[0];
+          d.yloc = coords[1];
           let node = d3.select(this);
-          node.attr('x', d.x + 25)
-          node.attr('y', d.y + 25);
+          node.attr('x', d.xloc + 25)
+          node.attr('y', d.yloc + 25);
           render(comp);
         }
       })
       .on("end", function (d) {
+        console.log(d)
         NetworkSvgComponent.mousedown = false;
-        let links = []
-        comp.links.forEach(function (link) {
-          if (link.nodeId[0] === d.id) {
-            links.push(link);
+        let nodes = []
+        comp.nodes.forEach(function (node) {
+          if (node.id === d.id) {
+            nodes.push(node);
           }
         })
-
-        if (comp.oldx != d.x || comp.oldy != d.y) {
-          links.forEach(function (link) {
-            link.xloc = d.x;
-            link.yloc = d.y;
-            comp.networkService.updateTopology(link).subscribe()
+        if (comp.oldx != d.xloc || comp.oldy != d.yloc) {
+          nodes.forEach(function (node) {
+            comp.networkService.updateNode(node).subscribe()
           })
         }
       })
@@ -336,20 +327,21 @@ export class NetworkSvgComponent implements OnChanges {
     dragHandler(svg.selectAll('image.nodes'));
 
     function render(comp) {
+
       svg.selectAll('.allLines')
         .each(function () {
           let line = d3.select(this);
           let node1 = parseInt(line.attr('node1'))
           let node2 = parseInt(line.attr('node2'))
-          line.attr('x1', comp.nodes[node1].x)
-            .attr('y1', comp.nodes[node1].y)
-            .attr('x2', comp.nodes[node2].x)
-            .attr('y2', comp.nodes[node2].y)
+          line.attr('x1', comp.nodes[node1].xloc)
+            .attr('y1', comp.nodes[node1].yloc)
+            .attr('x2', comp.nodes[node2].xloc)
+            .attr('y2', comp.nodes[node2].yloc)
         })
-      lines.attr("x1", function (l) { return comp.getNodeById(l.nodeId[0]).x; })
-        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).y; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).x; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).y; })
+      lines.attr("x1", function (l) {  return comp.getNodeById(l.nodeId[0]).xloc; })
+        .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).yloc; })
+        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).xloc; })
+        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).yloc; })
         .attr("id", function (l) {
           var node1 = comp.getNodeByIp(l.nexthopNode);
           var node2 = comp.getNodeById(l.nodeId[0]);
@@ -366,8 +358,8 @@ export class NetworkSvgComponent implements OnChanges {
         })
 
       nodes.attr('class', 'nodes')
-        .attr("x", function (d) { return d.x - 25; })
-        .attr("y", function (d) { return d.y - 25; })
+        .attr("x", function (d) { return d.xloc - 25; })
+        .attr("y", function (d) { return d.yloc - 25; })
 
     }
   }

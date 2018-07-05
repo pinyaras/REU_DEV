@@ -229,7 +229,9 @@ export class TablesComponent implements OnInit {
     }
 
     filterFlowStats() {
-        return this.flowStats.filter(function (d) { return d });
+        var filtered = this.flowStats.filter(function (d) { return d });
+	console.log(filtered)
+	return filtered
     }
     filterPortStats() {
         return this.portStats.filter(function (d) { return d });

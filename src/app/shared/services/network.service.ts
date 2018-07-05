@@ -21,44 +21,45 @@ export class NetworkService {
 	constructor(private http: HttpClient) { }
 
 	getNodes(): Observable<Node[]> {
-		return this.http.get("http://52.15.133.20/node/")
+		return this.http.get("http://localhost:8000/node/")
 		.catch(this.handleErrorObservable);
 	}
 	getNodeDetail(id: number): Observable<Node> {
-		return this.http.get("http://52.15.133.20/node/" + id + '/')
+		return this.http.get("http://localhost:8000/node/" + id + '/')
 		.catch(this.handleErrorObservable);
 	}
 	getWirelessNodeDetail(id: number): Observable<WirelessNode> {
-		return this.http.get("http://52.15.133.20/wireless/" + id + '/')
+		return this.http.get("http://localhost:8000/wireless/" + id + '/')
 	}
-	
+
 	getWirelessNodes(): Observable<WirelessNode[]> {
-		return this.http.get("http://52.15.133.20/wireless/")
+		return this.http.get("http://localhost:8000/wireless/")
 		.catch(this.handleErrorObservable);
 	}
 	getWirelessLinks(): Observable<Link[]> {
-		return this.http.get("http://52.15.133.20/topology/")
+		return this.http.get("http://localhost:8000/topology/")
 		.catch(this.handleErrorObservable);
 	}
 
-	updateTopology(link: Link): Observable<Link> {
-		return this.http.put<Link>("http://52.15.133.20/topology/" + link.id + "/", link, httpOptions);
+	updateTopology(node: Node): Observable<Node> {
+		return this.http.put<Node>("http://localhost:8000/node/" + node.id + "/", node, httpOptions);
 	}
 
 	updateNode(node: Node): Observable<Node> {
-		return this.http.put<Node>("http://52.15.133.20/node/" + node.id + "/", node, httpOptions)
+		console.log(node)
+		return this.http.put<Node>("http://localhost:8000/node/" + node.id + "/", node, httpOptions)
 	}
 
 	updateWirelessNode(wireless: WirelessNode): Observable<WirelessNode> {
-		return this.http.put<WirelessNode>("http://52.15.133.20/wireless/" + wireless.node + "/", wireless, httpOptions)
+		return this.http.put<WirelessNode>("http://localhost:8000/wireless/" + wireless.node + "/", wireless, httpOptions)
 	}
 
 	deleteNode(node: Node): Observable<Node> {
-		return this.http.delete("http://52.15.133.20/node/" + node.id + "/", httpOptions)
+		return this.http.delete("http://localhost:8000/node/" + node.id + "/", httpOptions)
 	}
 
 	deleteLink(link: Link): Observable<Node> {
-		return this.http.delete("http://52.15.133.20/topology/" + link.id + "/", httpOptions)
+		return this.http.delete("http://localhost:8000/topology/" + link.id + "/", httpOptions)
 	}
 
 	private handleErrorObservable(error: Response | any) {

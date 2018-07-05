@@ -7,8 +7,8 @@ export class Node {
 	nodeName: string;
 	nodeIp: string;
 	nodeMac: string;
-	x: number;
-	y: number;
+	xloc: number;
+	yloc: number;
 	wireless: WirelessNode[] = [];
 
 	constructor(obj: any) {
@@ -17,8 +17,8 @@ export class Node {
 		this.nodeName = obj.nodeName;
 		this.nodeIp = obj.nodeIp;
 		this.nodeMac = obj.nodeMac;
-		this.x = obj.x;
-		this.y = obj.y;
+		this.xloc = obj.xloc;
+		this.yloc = obj.yloc;
 
 	}
 	getInfoLst() {

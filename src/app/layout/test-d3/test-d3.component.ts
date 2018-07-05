@@ -57,6 +57,8 @@ export class TestD3Component {
       node_data.forEach(node => {
         new_nodes.push(new Node(node))
       })
+
+      //console.log(new_nodes)
       // Get Wireless
       this.networkService.getWirelessNodes().subscribe(function (wireless_data) {
         wireless_data.forEach(function (wn) {
