@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SwitchFlowStats } from '../switch-flow-stats';
 import { SwitchPortStats } from '../switch-port-stats';
-
+import { Port } from '../port'
 @Injectable()
 export class ControllerStatsticsService {
 
@@ -21,6 +21,13 @@ export class ControllerStatsticsService {
   getPortStats(switch_no:number): Observable<SwitchPortStats>{
     return this.http.get(this.controller_url + "stats/port/"+switch_no)
     	.catch(this.handleErrorObservable);
+  }
+
+  getPortDesc(switch_no:number): Observable<Port> {
+
+    return this.http.get(this.controller_url + "stats/portdesc/" + switch_no)
+      .catch(this.handleErrorObservable);
+
   }
 
   getSwitches(): Observable<number[]> {

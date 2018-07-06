@@ -130,7 +130,10 @@ export class TablesComponent implements OnInit {
                 }
             }
         }
+        console.log(data.length)
+        console.log(this.port_data.length)
         if (this.dataChanged(data, this.port_data)) {
+          console.log(data)
             this.port_data = data;
         }
         return this.port_data;
@@ -146,7 +149,7 @@ export class TablesComponent implements OnInit {
             this.port_labels = labels;
         }
         return this.port_labels;
-    }
+    }filtered
 
     dataChanged(data, old_data): boolean {
         if (data.length != old_data.length) {
@@ -185,6 +188,7 @@ export class TablesComponent implements OnInit {
     ngOnInit() { }
 
     load() {
+
         var comp = this;
         this.controllerStatsticsService.getSwitches().subscribe((data) => {
             this.switches = data;
@@ -193,6 +197,7 @@ export class TablesComponent implements OnInit {
                 comp.controllerStatsticsService.getFlowStats(switch_no).subscribe(data => {
                     var sfs = new SwitchFlowStats(data);
                     comp.flowStats[sfs.id] = sfs;
+                    //console.log(comp.flowStats)
                 });
             }
             for (var i = 0; i < comp.switches.length; i++) {
@@ -229,9 +234,11 @@ export class TablesComponent implements OnInit {
     }
 
     filterFlowStats() {
-        var filtered = this.flowStats.filter(function (d) { return d });
-	console.log(filtered)
-	return filtered
+        // console.log(flowStats)
+        // for(let x = 0; x < flowStats.length; x++) {
+        //
+        // }
+	      return [];
     }
     filterPortStats() {
         return this.portStats.filter(function (d) { return d });

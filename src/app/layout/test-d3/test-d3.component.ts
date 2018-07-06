@@ -58,6 +58,8 @@ export class TestD3Component {
         new_nodes.push(new Node(node))
       })
 
+
+
       //console.log(new_nodes)
       // Get Wireless
       this.networkService.getWirelessNodes().subscribe(function (wireless_data) {
@@ -74,6 +76,9 @@ export class TestD3Component {
         }
         comp.old_nodes = new_nodes;
 
+
+
+
         // Get stats to compare
         comp.controllerStatsService.getSwitches().subscribe(function (data) {
           let switches = data;
@@ -81,6 +86,9 @@ export class TestD3Component {
           var active_nodes = [];
           comp.active_nodes = [];
           for (let switch_no of switches) {
+            comp.controllerStatsService.getPortDesc(switch_no).subscribe(data => {
+              console.log(data);
+            })
             comp.controllerStatsService.getFlowStats(switch_no).subscribe(function (stats) {
               var sfs = new SwitchFlowStats(stats);
               if (sfs.id in comp.switchFlowStats) {

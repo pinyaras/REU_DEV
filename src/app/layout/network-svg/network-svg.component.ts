@@ -3,6 +3,7 @@ import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
 import { Network } from '../../shared/network';
 import { NetworkService } from '../../shared/services/network.service'
+import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
 import * as d3 from 'd3';
 import {
   D3Service,
@@ -44,6 +45,7 @@ export class NetworkSvgComponent implements OnChanges {
   selectedNode: Node;
   editting: boolean = false;
   networkService: NetworkService;
+  controllerService: ControllerStatsticsService;
   oldx: number = 0;
   oldy: number = 0;
   static mousedown: boolean = false;
@@ -74,8 +76,9 @@ export class NetworkSvgComponent implements OnChanges {
     },
   }
 
-  constructor(d3Service: D3Service, networkService: NetworkService) {
+  constructor(d3Service: D3Service, networkService: NetworkService, controllerService: ControllerStatsticsService) {
     this.networkService = networkService;
+    this.controllerService = controllerService;
   }
 
   ngOnChanges(): void {

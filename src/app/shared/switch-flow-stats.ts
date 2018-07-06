@@ -6,12 +6,15 @@ export class SwitchFlowStats {
 
     constructor(obj: any){
         for(let x in obj){
+
             this.id = x;
             break;
         }
         this.stats = [];
         for(let item of obj[this.id]){
+
             this.stats.push(new FlowStats(item))
         }
+        
     }
 }
