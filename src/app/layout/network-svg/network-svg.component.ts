@@ -51,31 +51,6 @@ export class NetworkSvgComponent implements OnChanges {
   static mousedown: boolean = false;
   index: number = 0;
 
-  ports = {
-    "1": {
-      "2": 6
-    },
-    "2": {
-      "2": 5
-    },
-    "3": {
-      "2": 6
-    },
-    "4": {
-      "2": 6
-    },
-    "5": {
-      "2": 6,
-      "3": 2
-    },
-    "6": {
-      "2": 3,
-      "3": 1,
-      "4": 4,
-      "5": 5
-    },
-  }
-
   constructor(d3Service: D3Service, networkService: NetworkService, controllerService: ControllerStatsticsService) {
     this.networkService = networkService;
     this.controllerService = controllerService;
@@ -90,23 +65,41 @@ export class NetworkSvgComponent implements OnChanges {
       })
     }
     if (this.nodes) {
-    /*if (this.active_nodes) {
-        var link_pairs = this.active_nodes.filter(function (tuple) {
-          return (this.ports[tuple[0]][tuple[1]]);
-        }, this).map(function (tuple) {
-          return [this.getNodeById(tuple[0]), this.getNodeById(this.ports[tuple[0]][tuple[1]]), tuple[2]];
-        }, this);
-        for (let link_pair of link_pairs) {
-          let l = this.getLink(link_pair[0], link_pair[1]);
-          if (l) {
-            l.active = true;
-            console.log(link_pair[2])
-            l.byteRate = link_pair[2];
+      if (this.active_nodes) {
+          var link_pairs = this.active_nodes.map(function (tuple) {
+            return [this.getNodeByDpid(tuple[0]), this.getNodeByWlMac(tuple[1]), tuple[2]];
+          }, this).filter(function(tuple){
+            return tuple[0] && tuple[1]
+          });
+          console.log(link_pairs)
+          for (let link_pair of link_pairs) {
+            let l = this.getLink(link_pair[0], link_pair[1]);
+            if (l) {
+              l.active = true;
+              l.byteRate = link_pair[2];
+            }
           }
         }
-      }*/
       this.myOnInit();
     }
+  }
+
+  getNodeByDpid(dpid: string) {
+    return this.nodes.find(n => {
+      return n.dpid == dpid;
+    })
+  }
+
+  getNodeByWlMac(mac: string) {
+    return this.nodes.find(n => {
+      let found = false
+      n.wireless.forEach(wn => {
+        if(wn.macAdd == mac) {
+          found = true;
+        }
+      })
+      return found;
+    })
   }
 
   getNodeByIp(ip: string): Node {
@@ -343,10 +336,10 @@ export class NetworkSvgComponent implements OnChanges {
         })
       lines.attr("x1", function (l) {  return comp.getNodeById(l.nodeId[0]).xloc; })
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).yloc; })
-        .attr("x2", function (l) { return comp.getNodeByIp(l.nexthopNode).xloc; })
-        .attr("y2", function (l) { return comp.getNodeByIp(l.nexthopNode).yloc; })
+        .attr("x2", function (l) { return comp.getNodeById(l.nexthopNode).xloc; })
+        .attr("y2", function (l) { return comp.getNodeById(l.nexthopNode).yloc; })
         .attr("id", function (l) {
-          var node1 = comp.getNodeByIp(l.nexthopNode);
+          var node1 = comp.getNodeById(l.nexthopNode);
           var node2 = comp.getNodeById(l.nodeId[0]);
           return "line-" + node1.id + "-" + node2.id;
         })

@@ -10,6 +10,7 @@ export class Node {
 	xloc: number;
 	yloc: number;
 	wireless: WirelessNode[] = [];
+	dpid : string;
 
 	constructor(obj: any) {
 
@@ -19,7 +20,7 @@ export class Node {
 		this.nodeMac = obj.nodeMac;
 		this.xloc = obj.xloc;
 		this.yloc = obj.yloc;
-
+		this.dpid = "";
 	}
 	getInfoLst() {
 

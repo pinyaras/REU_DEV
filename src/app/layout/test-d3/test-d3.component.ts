@@ -75,20 +75,24 @@ export class TestD3Component {
           comp.nodes = new_nodes;
         }
         comp.old_nodes = new_nodes;
-
-
-
-
         // Get stats to compare
         comp.controllerStatsService.getSwitches().subscribe(function (data) {
           let switches = data;
-          var updated_matches = [];
+          // var updated_matches = [];
           var active_nodes = [];
           comp.active_nodes = [];
           for (let switch_no of switches) {
             comp.controllerStatsService.getPortDesc(switch_no).subscribe(data => {
-              console.log(data);
-            })
+              data = data[switch_no.toString()]
+              var port = data.find(d => d.name == 'ofmesh')
+              comp.nodes.forEach(node => {
+                node.wireless.forEach(wl => {
+                    if(wl.macAdd == port.hw_addr){
+                      node.dpid = switch_no.toString();
+                    }
+                })
+              })
+            });
             comp.controllerStatsService.getFlowStats(switch_no).subscribe(function (stats) {
               var sfs = new SwitchFlowStats(stats);
               if (sfs.id in comp.switchFlowStats) {
@@ -96,10 +100,10 @@ export class TestD3Component {
                   var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
                   if (old_fs && old_fs.packet_count != fs.packet_count) {
                     if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
-                      updated_matches.push({ "switch": switch_no, "out_port": fs.actions[0], "match": fs.match });
+                      // updated_matches.push({ "switch": switch_no, "out_port": fs.actions[0], "match": fs.match });
                       if (!active_nodes.includes(switch_no)) {
                         var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
-                        active_nodes.push([switch_no, fs.actions[0].substring(7), diff]);
+                        active_nodes.push([switch_no, fs.match.dl_dst, diff]);
                         comp.active_nodes = active_nodes.slice();
                       }
                     }

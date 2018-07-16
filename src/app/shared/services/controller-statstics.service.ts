@@ -23,7 +23,7 @@ export class ControllerStatsticsService {
     	.catch(this.handleErrorObservable);
   }
 
-  getPortDesc(switch_no:number): Observable<Port> {
+  getPortDesc(switch_no:number): Observable<any> {
 
     return this.http.get(this.controller_url + "stats/portdesc/" + switch_no)
       .catch(this.handleErrorObservable);

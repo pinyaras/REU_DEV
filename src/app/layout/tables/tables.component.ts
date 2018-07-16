@@ -128,10 +128,7 @@ export class TablesComponent implements OnInit {
                 }
             }
         }
-        console.log(data.length)
-        console.log(this.port_data.length)
         if (this.dataChanged(data, this.port_data)) {
-          console.log(data)
             this.port_data = data;
             // console.log(this.port_data)
         }
@@ -213,19 +210,11 @@ export class TablesComponent implements OnInit {
     }
 
     filterFlowStats() {
-<<<<<<< HEAD
-        // console.log(flowStats)
-        // for(let x = 0; x < flowStats.length; x++) {
-        //
-        // }
-	      return [];
-=======
         var filtered = []
         for (var key in this.flowStats) {
             filtered.push(this.flowStats[key]);
         }
         return filtered;
->>>>>>> d176ac934273fbfe6e4ff562e4ab45451b1c3594
     }
     filterPortStats() {
         var filtered = []
