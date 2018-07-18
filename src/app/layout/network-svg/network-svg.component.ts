@@ -40,7 +40,10 @@ export class NetworkSvgComponent implements OnChanges {
   @Input()
   links: Link[];
   @Input()
-  active_nodes: number[];
+  active_nodes: any[];
+
+  @Input()
+  all_flows: [string,string][];
 
   selectedNode: Node;
   editting: boolean = false;

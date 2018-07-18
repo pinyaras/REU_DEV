@@ -20,6 +20,7 @@ export class TestD3Component {
   nodes: Node[];
   links: Link[];
   active_nodes: [number, string][]; // String of switch number addresses
+  all_flows: [string, string][]; // String of src, dst, 
 
   private old_nodes: Node[];
   private old_links: Link[];
@@ -58,8 +59,6 @@ export class TestD3Component {
         new_nodes.push(new Node(node))
       })
 
-
-
       //console.log(new_nodes)
       // Get Wireless
       this.networkService.getWirelessNodes().subscribe(function (wireless_data) {
@@ -81,6 +80,7 @@ export class TestD3Component {
           // var updated_matches = [];
           var active_nodes = [];
           comp.active_nodes = [];
+          comp.all_flows = [];
           for (let switch_no of switches) {
             comp.controllerStatsService.getPortDesc(switch_no).subscribe(data => {
               data = data[switch_no.toString()]
@@ -106,6 +106,7 @@ export class TestD3Component {
                         active_nodes.push([switch_no, fs.match.dl_dst, diff]);
                         comp.active_nodes = active_nodes.slice();
                       }
+                      comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
                     }
                   }
                 }
