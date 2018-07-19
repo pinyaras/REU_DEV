@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Network } from '../network';
 import { Node } from '../node';
 import { WirelessNode } from '../wirelessnode';
+import { Host } from '../host';
 import { Link } from '../link';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
@@ -19,6 +20,11 @@ const httpOptions = {
 export class NetworkService {
 
 	constructor(private http: HttpClient) { }
+
+	getHosts(): Observable<Host[]> {
+		return this.http.get("http://localhost:8000/hosts")
+			.catch(this.handleErrorObservable);
+	}
 
 	getNodes(): Observable<Node[]> {
 		return this.http.get("http://localhost:8000/node/")

@@ -1,6 +1,7 @@
 import { Component, ElementRef, NgZone, OnDestroy, Input, OnChanges } from '@angular/core';
 import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
+import { Host } from '../../shared/host';
 import { Network } from '../../shared/network';
 import { NetworkService } from '../../shared/services/network.service'
 import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
@@ -40,6 +41,8 @@ export class NetworkSvgComponent implements OnChanges {
   @Input()
   links: Link[];
   @Input()
+  hosts: Host[];
+  @Input()
   active_nodes: any[];
 
   @Input()
@@ -74,7 +77,7 @@ export class NetworkSvgComponent implements OnChanges {
           }, this).filter(function(tuple){
             return tuple[0] && tuple[1]
           });
-          console.log(link_pairs)
+          //console.log(link_pairs)
           for (let link_pair of link_pairs) {
             let l = this.getLink(link_pair[0], link_pair[1]);
             if (l) {
@@ -126,6 +129,10 @@ export class NetworkSvgComponent implements OnChanges {
       return;
     }
 
+    if(!this.hosts) {
+      return;
+    }
+
     /*this.links.forEach(function (link) {
 
       let n = comp.nodes.find(function (node) {
@@ -164,6 +171,8 @@ export class NetworkSvgComponent implements OnChanges {
       // .attr('transform', "translate(705 -300) rotate(90 180 15)")
       .attr('width', 900)              //Original dimensions 900 x 600
       .attr('height', 600)
+
+
 
     /*this.nodes.forEach(function (node, i) {
       if (node.x || node.y) return;
@@ -286,6 +295,15 @@ export class NetworkSvgComponent implements OnChanges {
       .on("mouseout", delete_hover)
       .on("click", function (d) { comp.editNode(d) });
 
+    var hosts = svg.selectAll("image.hosts")
+      .data(this.hosts)
+      .enter()
+      .append("image")
+      .attr('xlink:href', 'assets/images/host.svg')
+      .attr('width', 40)
+      .attr('height', 40)
+
+
     render(comp);
 
     let dragHandler = d3.drag().on('start', function (d) {
@@ -323,7 +341,7 @@ export class NetworkSvgComponent implements OnChanges {
         }
       })
 
-    dragHandler(svg.selectAll('image.nodes'));
+    dragHandler(svg.selectAll('image.dragable'));
 
     function render(comp) {
 
@@ -356,9 +374,11 @@ export class NetworkSvgComponent implements OnChanges {
           }
         })
 
-      nodes.attr('class', 'nodes')
+      nodes.attr('class', 'nodes dragable')
         .attr("x", function (d) { return d.xloc - 25; })
         .attr("y", function (d) { return d.yloc - 25; })
+
+        hosts.attr('class', 'hosts dragable')
 
     }
   }
