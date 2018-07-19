@@ -23,7 +23,7 @@ export class TestD3Component {
   // Keeps track of flows that have changed
   active_nodes: [number, string][]; // String of switch number addresses
   // All valid src, dst pairs based on flows
-  all_flows: [string, string][]; // String of src, dst, 
+  all_flows: [string, string][]; // String of src, dst,
 
 
   private old_nodes: Node[];
@@ -114,18 +114,17 @@ export class TestD3Component {
                       var dl_dst;
                       var out_port;
                       fs.actions.forEach(element => {
-                        if(element.includes("MOD_DL_DST")){
-                          dl_dst = element.substring(10)
+                        if(element.includes("MOD_DL_DST:")){
+                          dl_dst = element.substring(11)
                         }
                         if(element.includes("OUTPUT:")){
                           out_port = element.substring(7)
                         }
                       });
-                      if (!active_nodes.includes(switch_no)) {
-                        var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
-                        active_nodes.push([switch_no, fs.match.dl_dst, diff]);
-                        comp.active_nodes = active_nodes.slice();
-                      }
+                      var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
+                      console.log([switch_no, out_port, dl_dst, diff]);
+                      active_nodes.push([switch_no, out_port, dl_dst, diff]);
+                      comp.active_nodes = active_nodes.slice();
                       comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
                     }
                   }

@@ -35,6 +35,8 @@ export class NetworkSvgComponent implements OnChanges {
   private static readonly PACKET_TIME = 100;
 
   private parentNativeElement: any;
+  private hostLocations: any = {};
+  private hostToSwitch: any = {};
 
   @Input()
   nodes: Node[];
@@ -73,8 +75,16 @@ export class NetworkSvgComponent implements OnChanges {
     if (this.nodes) {
       if (this.active_nodes) {
           var link_pairs = this.active_nodes.map(function (tuple) {
-            return [this.getNodeByDpid(tuple[0]), this.getNodeByWlMac(tuple[1]), tuple[2]];
+            // If out_port is wireless
+            if(tuple[1] == 4){
+              return [this.getNodeByDpid(tuple[0]), this.getNodeByWlMac(tuple[2]), tuple[3]];
+            }
+            // Else output to host
+            else {
+              return [this.getNodeByDpid(tuple[0]), this.getHostByMac(tuple[2]), tuple[3]];
+            }
           }, this).filter(function(tuple){
+            // make sure both nodes were found
             return tuple[0] && tuple[1]
           });
           //console.log(link_pairs)
@@ -108,6 +118,12 @@ export class NetworkSvgComponent implements OnChanges {
     })
   }
 
+  getHostByMac(mac: string){
+    return this.hosts.find(n => {
+      return n.clientMac == mac;
+    })
+  }
+
   getNodeByIp(ip: string): Node {
     return this.nodes.find(function (n) {
       return n.nodeIp == ip;
@@ -133,17 +149,40 @@ export class NetworkSvgComponent implements OnChanges {
       return;
     }
 
-    /*this.links.forEach(function (link) {
+    for(let host of this.hosts) {
 
-      let n = comp.nodes.find(function (node) {
-        return node.id === link.nodeId[0];
+      let s = this.nodes.find(node => {
+        return node.id == host.node;
       })
-      if (n) {
-        n.x = link.xloc;
-        n.y = link.yloc;
+      if(s) {
+        this.hostToSwitch[host.id] = s
       }
+    }
 
-    })*/
+    for(let key in this.hostToSwitch) {
+
+      let s = this.hostToSwitch[key]
+
+      this.hostLocations[key] = [s.xloc + 50, s.yloc + 50]
+
+    }
+
+    for(let host of this.hosts) {
+
+      host.xloc = this.hostLocations[host.id][0]
+      host.yloc = this.hostLocations[host.id][1]
+
+    }
+
+    for(let host of this.hosts) {
+
+      let link = new Link({"nexthopNode" : host.clientIp,
+        "nodeId": host.node,
+        "bw": 0,
+        "isHost": true});
+      this.links.push(link)
+
+    }
 
     var svg = d3.select("svg")
     d3.selectAll('svg > *').remove()
@@ -259,7 +298,7 @@ export class NetworkSvgComponent implements OnChanges {
       })
     }
 
-    for (let x = 0; x < this.nodes.length; x++) {
+    /*for (let x = 0; x < this.nodes.length; x++) {
       for (let i = x + 1; i < this.nodes.length; i++) {
         svg.append('line').attr('class', 'allLines')
           .attr('node1', x)
@@ -268,7 +307,7 @@ export class NetworkSvgComponent implements OnChanges {
           .attr('stroke', 'dodgerblue')
           .attr('opacity', .2)
       }
-    }
+    }*/
     // Visual lines between nodes
     var lines = svg.selectAll('.link')
       .data(this.links)
@@ -276,6 +315,15 @@ export class NetworkSvgComponent implements OnChanges {
       .append('line')
       .attr('stroke-width', 5)
       .attr("class", "link")
+      .attr("stroke-dasharray", function(d) {
+
+        if(d.isHost) {
+          return "0"
+        } else {
+          return "25,10"
+        }
+
+      })
       .attr("stroke", NetworkSvgComponent.COLORS['line'])
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
@@ -283,6 +331,15 @@ export class NetworkSvgComponent implements OnChanges {
         l.enabled = !l.enabled;
         render(comp);
       })
+
+    /*let hostLinks = svg.selectAll('.hostLink')
+      .data(this.hosts)
+      .enter()
+      .append('line')
+      .attr("class", "link")
+      .attr("stroke", NetworkSvgComponent.COLORS['line'])
+      .attr("stroke-width", 5)
+      */
 
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
@@ -302,6 +359,8 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('xlink:href', 'assets/images/host.svg')
       .attr('width', 40)
       .attr('height', 40)
+      .on("mousemove", on_hover)
+      .on("mouseout", delete_hover)
 
 
     render(comp);
@@ -341,7 +400,22 @@ export class NetworkSvgComponent implements OnChanges {
         }
       })
 
-    dragHandler(svg.selectAll('image.dragable'));
+    let hostDragHandler = d3.drag().on("start", d => {
+
+      NetworkSvgComponent.mousedown = true;
+
+      }
+    )
+    .on("drag", d => {
+
+
+    })
+    .on("end", d => {
+
+
+    })
+
+    dragHandler(svg.selectAll('image.nodes'));
 
     function render(comp) {
 
@@ -357,13 +431,27 @@ export class NetworkSvgComponent implements OnChanges {
         })
       lines.attr("x1", function (l) {  return comp.getNodeById(l.nodeId[0]).xloc; })
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).yloc; })
-        .attr("x2", function (l) { return comp.getNodeById(l.nexthopNode).xloc; })
-        .attr("y2", function (l) { return comp.getNodeById(l.nexthopNode).yloc; })
-        .attr("id", function (l) {
-          var node1 = comp.getNodeById(l.nexthopNode);
-          var node2 = comp.getNodeById(l.nodeId[0]);
-          return "line-" + node1.id + "-" + node2.id;
+        .attr("x2", function (l) {
+            if(l.isHost) {
+              // return comp.getNodeById(l.nodeId[0]).xloc + 70;
+              return comp.hostLocations[l.nodeId][0] + 20;
+            } else {
+              return comp.getNodeById(l.nexthopNode).xloc;
+            }
+          })
+        .attr("y2", function (l) {
+          if(l.isHost) {
+            // return comp.getNodeById(l.nodeId[0]).yloc + 70;
+            return comp.hostLocations[l.nodeId][1] + 20;
+          } else {
+            return comp.getNodeById(l.nexthopNode).yloc;
+          }
         })
+        // .attr("id", function (l) {
+        //   var node1 = comp.getNodeById(l.nexthopNode);
+        //   var node2 = comp.getNodeById(l.nodeId[0]);
+        //   return "line-" + node1.id + "-" + node2.id;
+        // })
         .attr('stroke', function (l) {
           if (l.active) {
             return NetworkSvgComponent.COLORS['active_line'];
@@ -373,12 +461,21 @@ export class NetworkSvgComponent implements OnChanges {
             return NetworkSvgComponent.COLORS['line'];
           }
         })
+        // hostLinks.attr("x1", function(h) { return h.xloc + 25; })
+        //   .attr("y1", function(h) { return h.yloc + 25 })
+        //   .attr("x2", function(h) { return comp.hostToSwitch[h.id].xloc})
+        //   .attr("y2", function(h) { return comp.hostToSwitch[h.id].yloc})
 
-      nodes.attr('class', 'nodes dragable')
+          //.attr("x2", h => { return this.hostToSwitch[h.id].xloc })
+          //.attr("y2", h => { return this.hostToSwitch[h.id].yloc })
+
+      nodes.attr('class', 'nodes')
         .attr("x", function (d) { return d.xloc - 25; })
         .attr("y", function (d) { return d.yloc - 25; })
 
-        hosts.attr('class', 'hosts dragable')
+      hosts.attr('class', 'hosts')
+        .attr('x', d => { return d.xloc })
+        .attr('y', d => { return d.yloc })
 
     }
   }
@@ -415,13 +512,21 @@ export class NetworkSvgComponent implements OnChanges {
     })
   }
 
-  getLink(n1: Node, n2: Node): Link {
-    for (let x = 0; x < this.links.length; x++) {
-      if (this.links[x].nodeId[0] == n1.id && this.links[x].nexthopNode === n2.wireless[0].ipAdd) {
-        return this.links[x];
+  getLink(n1: Node, n2: any): Link {
+    if(n2 instanceof Node) {
+      for (let x = 0; x < this.links.length; x++) {
+        if (this.links[x].nodeId[0] == n1.id && this.links[x].nexthopNode === n2.wireless[0].ipAdd) {
+          return this.links[x];
+        }
+        if (this.links[x].nodeId[0] == n2.id && this.links[x].nexthopNode === n1.wireless[0].ipAdd) {
+          return this.links[x];
+        }
       }
-      if (this.links[x].nodeId[0] == n2.id && this.links[x].nexthopNode === n1.wireless[0].ipAdd) {
-        return this.links[x];
+    } else {
+      for (let x = 0; x < this.links.length; x++) {
+        if (this.links[x].nodeId[0] == n1.id && this.links[x].nexthopNode == n2.nexthopNode) {
+          return this.links[x];
+        }
       }
     }
     return null;

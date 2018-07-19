@@ -6,6 +6,8 @@ export class Host {
   clientIp: string;
   clientMac: string;
   node: number;
+  xloc: number;
+  yloc: number;
 
   constructor(obj: any) {
 
@@ -21,6 +23,12 @@ export class Host {
     return this.id == other.id && this.clientIp == other.clientIp
       && this.clientMac == other.clientMac
       && this.node == other.node;
+
+  }
+
+  getInfoLst() {
+
+    return ["IP: " + this.clientIp, "MAC: " + this.clientMac]
 
   }
 
