@@ -2,11 +2,11 @@ import { Component, ElementRef, NgZone, OnDestroy } from '@angular/core';
 
 import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
+import { Host } from '../../shared/host';
 import { Network } from '../../shared/network';
 import { WirelessNode } from '../../shared/wirelessnode';
 import { SwitchFlowStats } from '../../shared/switch-flow-stats';
 import { FlowStats } from '../../shared/flow-stats';
-
 import { NetworkService } from '../../shared/services/network.service'
 import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
 import { NetworkSvgComponent } from '../network-svg/network-svg.component';
@@ -19,11 +19,13 @@ import { NetworkSvgComponent } from '../network-svg/network-svg.component';
 export class TestD3Component {
   nodes: Node[];
   links: Link[];
+  hosts: Host[];
   active_nodes: [number, string][]; // String of switch number addresses
-  all_flows: [string, string][]; // String of src, dst, 
+  all_flows: [string, string][]; // String of src, dst,
 
   private old_nodes: Node[];
   private old_links: Link[];
+  private old_hosts: Host[];
   constructor(private networkService: NetworkService, private controllerStatsService: ControllerStatsticsService) {
     this.load();
     setInterval(() => {
@@ -47,6 +49,9 @@ export class TestD3Component {
   }
   private links_changed(link_data): boolean {
     return !this.array_equal(link_data, this.old_links)
+  }
+  private hosts_changed(host_data): boolean {
+    return !this.array_equal(host_data, this.old_hosts)
   }
 
   switchFlowStats: SwitchFlowStats[] = [];
@@ -82,7 +87,7 @@ export class TestD3Component {
           comp.active_nodes = [];
           comp.all_flows = [];
           for (let switch_no of switches) {
-            comp.controllerStatsService.getPortDesc(switch_no).subscribe(data => {
+          /*comp.controllerStatsService.getPortDesc(switch_no).subscribe(data => {
               data = data[switch_no.toString()]
               var port = data.find(d => d.name == 'ofmesh')
               comp.nodes.forEach(node => {
@@ -92,7 +97,7 @@ export class TestD3Component {
                     }
                 })
               })
-            });
+            });*/
             comp.controllerStatsService.getFlowStats(switch_no).subscribe(function (stats) {
               var sfs = new SwitchFlowStats(stats);
               if (sfs.id in comp.switchFlowStats) {
@@ -117,6 +122,18 @@ export class TestD3Component {
         })
       });
     });
+
+    this.networkService.getHosts().subscribe(host_data => {
+      var new_hosts = [];
+      host_data.forEach(host => {
+        new_hosts.push(new Host(host))
+      })
+      if (this.links_changed(new_hosts)) {
+        comp.hosts = new_hosts;
+      }
+      comp.old_hosts = host_data;
+    });
+
     //Get Links
     this.networkService.getWirelessLinks().subscribe(link_data => {
       var new_links = [];
@@ -128,5 +145,6 @@ export class TestD3Component {
       }
       comp.old_links = link_data;
     });
+
   }
 }

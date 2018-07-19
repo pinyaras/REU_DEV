@@ -1,12 +1,12 @@
 <svg></svg>
-<div>
+<div *ngIf="all_flows">
 	<label>Source:</label>
 	<select>
-			<option *ngFor="flow_pair of all_flows" [selected]="flow_pair[0] == 'all_flows[0][0]'">{{flow_pair[0]}}</option>
+			<option *ngFor="let flow_pair of all_flows" [selected]="flow_pair[0] == 'all_flows[0][0]'">{{flow_pair[0]}}</option>
 	</select>
 	<label>Destination:</label>
 	<select>
-			<option *ngFor="flow_pair of all_flows" [selected]="flow_pair[1] == 'all_flows[0][1]'">{{flow_pair[1]}}</option>
+			<option *ngFor="let flow_pair of all_flows" [selected]="flow_pair[1] == 'all_flows[0][1]'">{{flow_pair[1]}}</option>
 	</select>
 	<button class="btn btn-primary">Show</button>
 </div>
@@ -93,14 +93,3 @@
       	<button [hidden]="!editting" class="btn btn-success" id="saveButton">Save</button>
 	</div>
 </div>
-
-
-
-
-
-
-
-
-
-		
-      	
