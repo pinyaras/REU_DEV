@@ -84,6 +84,7 @@ export class TestD3Component {
         comp.old_nodes = new_nodes;
         // Get stats to compare
         comp.controllerStatsService.getSwitches().subscribe(function (data) {
+        console.log(data)
           let switches = data;
           // var updated_matches = [];
           var active_nodes = [];

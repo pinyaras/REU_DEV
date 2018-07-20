@@ -13,24 +13,24 @@ export class ControllerStatsticsService {
 
   constructor(private http: HttpClient) { }
 
-  getFlowStats(switch_no:number): Observable<SwitchFlowStats>{
+  getFlowStats(switch_no:string): Observable<SwitchFlowStats>{
     return this.http.get(this.controller_url + "stats/flow/" + switch_no)
     	.catch(this.handleErrorObservable);
   }
 
-  getPortStats(switch_no:number): Observable<SwitchPortStats>{
+  getPortStats(switch_no:string): Observable<SwitchPortStats>{
     return this.http.get(this.controller_url + "stats/port/"+switch_no)
     	.catch(this.handleErrorObservable);
   }
 
-  getPortDesc(switch_no:number): Observable<any> {
+  getPortDesc(switch_no:string): Observable<any> {
 
     return this.http.get(this.controller_url + "stats/portdesc/" + switch_no)
       .catch(this.handleErrorObservable);
 
   }
 
-  getSwitches(): Observable<number[]> {
+  getSwitches(): Observable<string[]> {
     return this.http.get(this.controller_url + "stats/switches")
     	.catch(this.handleErrorObservable);
   }

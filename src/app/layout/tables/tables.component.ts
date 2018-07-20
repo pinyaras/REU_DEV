@@ -15,7 +15,7 @@ import { equal } from 'assert';
     styleUrls: ['./tables.component.scss']
 })
 export class TablesComponent implements OnInit {
-    private switches: number[];
+    private switches: string[];
 
     private flowStats;
     private portStats;
@@ -143,7 +143,7 @@ export class TablesComponent implements OnInit {
             this.port_labels = labels;
         }
         return this.port_labels;
-    }filtered
+    }
 
     dataChanged(data, old_data): boolean {
         if (data.length != old_data.length) {
