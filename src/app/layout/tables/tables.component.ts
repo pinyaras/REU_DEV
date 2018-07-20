@@ -182,7 +182,15 @@ export class TablesComponent implements OnInit {
 
         var comp = this;
         this.controllerStatsticsService.getSwitches().subscribe((data) => {
-            this.switches = data;
+	          data = data.substring(1, data.length - 1).split(', ')
+            if(data[0]){
+              this.switches = data
+            }
+            else {
+              this.switches = []
+            }
+            console.log(this.switches)
+
             for (var i = 0; i < comp.switches.length; i++) {
                 var switch_no = comp.switches[i];
                 comp.controllerStatsticsService.getFlowStats(switch_no).subscribe(data => {

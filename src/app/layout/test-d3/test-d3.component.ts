@@ -66,6 +66,11 @@ export class TestD3Component {
       node_data.forEach(node => {
         new_nodes.push(new Node(node))
       })
+      this.networkService.getOFBR().subscribe(ofbrs =>{
+        ofbrs.forEach(ofbr => {
+          new_nodes.find(node => node.id == ofbr.nodeId).dpid = ofbr.dpid
+        })
+      }
 
       //console.log(new_nodes)
       // Get Wireless
@@ -84,24 +89,19 @@ export class TestD3Component {
         comp.old_nodes = new_nodes;
         // Get stats to compare
         comp.controllerStatsService.getSwitches().subscribe(function (data) {
-        console.log(data)
-          let switches = data;
+          data = data.substring(1, data.length - 1).split(', ')
+          var switches;
+          if(data[0]){
+            switches = data
+          }
+          else {
+            switches = []
+          }
           // var updated_matches = [];
           var active_nodes = [];
           comp.active_nodes = [];
           comp.all_flows = [];
           for (let switch_no of switches) {
-          /*comp.controllerStatsService.getPortDesc(switch_no).subscribe(data => {
-              data = data[switch_no.toString()]
-              var port = data.find(d => d.name == 'ofmesh')
-              comp.nodes.forEach(node => {
-                node.wireless.forEach(wl => {
-                    if(wl.macAdd == port.hw_addr){
-                      node.dpid = switch_no.toString();
-                    }
-                })
-              })
-            });*/
             comp.controllerStatsService.getFlowStats(switch_no).subscribe(function (stats) {
               var sfs = new SwitchFlowStats(stats);
               if (sfs.id in comp.switchFlowStats) {
@@ -110,20 +110,17 @@ export class TestD3Component {
                   if (old_fs && old_fs.packet_count != fs.packet_count) {
                     // Flows outputting to controller aren't displayed
                     if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
-                      // updated_matches.push({ "switch": switch_no, "out_port": fs.actions[0], "match": fs.match });
-                      // "OUTPUT:2"
                       var dl_dst;
                       var out_port;
                       fs.actions.forEach(element => {
-                        if(element.includes("MOD_DL_DST:")){
-                          dl_dst = element.substring(11)
+                        if(element.includes("SET_FIELD: {eth_dst")){
+                  			  dl_dst = element.substring(20, element.length - 1)
                         }
                         if(element.includes("OUTPUT:")){
                           out_port = element.substring(7)
                         }
                       });
                       var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
-                      console.log([switch_no, out_port, dl_dst, diff]);
                       active_nodes.push([switch_no, out_port, dl_dst, diff]);
                       comp.active_nodes = active_nodes.slice();
                       comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])

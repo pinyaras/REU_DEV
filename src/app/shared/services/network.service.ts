@@ -22,50 +22,53 @@ export class NetworkService {
 	constructor(private http: HttpClient) { }
 
 	getHosts(): Observable<any> {
-		return this.http.get("http://localhost:8001/hosts")
+		return this.http.get("http://localhost:8000/hosts")
 			.catch(this.handleErrorObservable);
 	}
 
 	getNodes(): Observable<any> {
-		return this.http.get("http://localhost:8001/node/")
+		return this.http.get("http://localhost:8000/node/")
 		.catch(this.handleErrorObservable);
 	}
 	getNodeDetail(id: number): Observable<any> {
-		return this.http.get("http://localhost:8001/node/" + id + '/')
+		return this.http.get("http://localhost:8000/node/" + id + '/')
 		.catch(this.handleErrorObservable);
 	}
 	getWirelessNodeDetail(id: number): Observable<any> {
-		return this.http.get("http://localhost:8001/wireless/" + id + '/')
+		return this.http.get("http://localhost:8000/wireless/" + id + '/')
 	}
 
 	getWirelessNodes(): Observable<any> {
-		return this.http.get("http://localhost:8001/wireless/")
+		return this.http.get("http://localhost:8000/wireless/")
 		.catch(this.handleErrorObservable);
 	}
 	getWirelessLinks(): Observable<any> {
-		return this.http.get("http://localhost:8001/topology/")
+		return this.http.get("http://localhost:8000/topology/")
 		.catch(this.handleErrorObservable);
 	}
 
 	updateTopology(node: Node): Observable<any> {
-		return this.http.put<Node>("http://localhost:8001/node/" + node.id + "/", node, httpOptions);
+		return this.http.put<Node>("http://localhost:8000/node/" + node.id + "/", node, httpOptions);
 	}
 
 	updateNode(node: Node): Observable<any> {
-		console.log(node)
-		return this.http.put<Node>("http://localhost:8001/node/" + node.id + "/", node, httpOptions)
+		return this.http.put<Node>("http://localhost:8000/node/" + node.id + "/", node, httpOptions)
 	}
 
 	updateWirelessNode(wireless: WirelessNode): Observable<any> {
-		return this.http.put<WirelessNode>("http://localhost:8001/wireless/" + wireless.node + "/", wireless, httpOptions)
+		return this.http.put<WirelessNode>("http://localhost:8000/wireless/" + wireless.node + "/", wireless, httpOptions)
 	}
 
 	deleteNode(node: Node): Observable<any> {
-		return this.http.delete("http://localhost:8001/node/" + node.id + "/", httpOptions)
+		return this.http.delete("http://localhost:8000/node/" + node.id + "/", httpOptions)
 	}
 
 	deleteLink(link: Link): Observable<any> {
-		return this.http.delete("http://localhost:8001/topology/" + link.id + "/", httpOptions)
+		return this.http.delete("http://localhost:8000/topology/" + link.id + "/", httpOptions)
+	}
+
+	getOFBR(): Observable<any> {
+		return this.http.get("http://localhost:8000/ofbr/");
 	}
 
 	private handleErrorObservable(error: Response | any) {

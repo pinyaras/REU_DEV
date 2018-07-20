@@ -23,9 +23,12 @@ export class Link {
     }
 
     getInfoLst() {
-        var data = ["Bandwidth: " + this.bw.toString()];
+      var data = []
+        if(!this.isHost){
+          data.push("PHYS: " + this.bw.toString());
+        }
         // The three comes from the interval that it is refreshed at in the trestd3component
-        data.push("Bit rate: " + this.filterUnit(this.byteRate / 3, true));
+        data.push("MAC: " + this.filterUnit(this.byteRate / 3, true));
         return data;
 
     }

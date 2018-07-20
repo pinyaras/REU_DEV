@@ -31,7 +31,7 @@ export class ControllerStatsticsService {
   }
 
   getSwitches(): Observable<any> {
-    return this.http.get(this.controller_url + "stats/switches")
+    return this.http.get(this.controller_url + "stats/switches", {responseType: 'text'})
     	.catch(this.handleErrorObservable);
   }
 
