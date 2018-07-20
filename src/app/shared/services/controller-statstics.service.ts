@@ -13,12 +13,12 @@ export class ControllerStatsticsService {
 
   constructor(private http: HttpClient) { }
 
-  getFlowStats(switch_no:string): Observable<SwitchFlowStats>{
+  getFlowStats(switch_no:string): Observable<any>{
     return this.http.get(this.controller_url + "stats/flow/" + switch_no)
     	.catch(this.handleErrorObservable);
   }
 
-  getPortStats(switch_no:string): Observable<SwitchPortStats>{
+  getPortStats(switch_no:string): Observable<any>{
     return this.http.get(this.controller_url + "stats/port/"+switch_no)
     	.catch(this.handleErrorObservable);
   }
@@ -30,7 +30,7 @@ export class ControllerStatsticsService {
 
   }
 
-  getSwitches(): Observable<string[]> {
+  getSwitches(): Observable<any> {
     return this.http.get(this.controller_url + "stats/switches")
     	.catch(this.handleErrorObservable);
   }

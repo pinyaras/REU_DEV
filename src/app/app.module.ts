@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-// import { HttpModule, Http } from '@angular/http';
+import { Http } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -18,7 +18,7 @@ import { ControllerStatsticsService } from './shared/services/controller-statsti
 import { D3Service } from 'd3-ng2-service'; // <-- import statement
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 // import { HttpClientModule } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -34,7 +34,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         FormsModule,
         AppRoutingModule,
         Ng2SmartTableModule,
-        HttpClient,
+        HttpClientModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
