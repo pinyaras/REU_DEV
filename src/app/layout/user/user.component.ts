@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Http } from '@angular/http';
+// import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+
 import { Ng2SmartTableModule, ServerDataSource } from 'ng2-smart-table';
 
 import { apiUsersService } from '../../shared/services/api_users.service';
@@ -41,7 +43,7 @@ export class UserComponent implements OnInit {
 source: ServerDataSource;
 public resMsg;
 
-constructor(private http: Http, private api_users:apiUsersService) {
+constructor(private http: HttpClient, private api_users:apiUsersService) {
  this.source = new ServerDataSource(http, { endPoint: 'http://192.168.122.100/api_users/admin/all_data' });
 }
     ngOnInit() {}

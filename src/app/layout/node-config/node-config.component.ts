@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Ng2SmartTableModule, ServerDataSource } from 'ng2-smart-table';
-import { Http } from '@angular/http';
+// import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { apiRoutersService } from '../../shared/services/api_routers.service';
 
 @Component({
@@ -40,7 +41,7 @@ export class NodeConfigComponent{
     source: ServerDataSource;
     public resMsg;
 
-    constructor(private http: Http, private api_routers:apiRoutersService) {
+    constructor(private http: HttpClient, private api_routers:apiRoutersService) {
       this.source = new ServerDataSource(http, { endPoint: 'http://192.168.122.100/api_routers' });
     }
 
