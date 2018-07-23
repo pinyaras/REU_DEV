@@ -6,10 +6,6 @@ import { Network } from '../../shared/network';
 import { NetworkService } from '../../shared/services/network.service'
 import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
 import * as d3 from 'd3';
-import {
-  D3Service,
-  D3
-} from 'd3-ng2-service';
 import { WirelessNode } from '../../shared/wirelessnode';
 
 
@@ -58,8 +54,9 @@ export class NetworkSvgComponent implements OnChanges {
   oldy: number = 0;
   static mousedown: boolean = false;
   index: number = 0;
+  hostLinks: Link[];
 
-  constructor(d3Service: D3Service, networkService: NetworkService, controllerService: ControllerStatsticsService) {
+  constructor(networkService: NetworkService, controllerService: ControllerStatsticsService) {
     this.networkService = networkService;
     this.controllerService = controllerService;
   }
@@ -114,11 +111,11 @@ export class NetworkSvgComponent implements OnChanges {
     })
   }
 
-  getHostByIp(ip: string) {
-    return this.hosts.find(host => {
-      return host.clientIp == ip;
-    }
-  }
+  // getHostByIp(ip: string) {
+  //   return this.hosts.find(host => {
+  //     return host.clientIp == ip;
+  //   }
+  // }
 
   getNodeByWlMac(mac: string) {
     return this.nodes.find(n => {
@@ -523,10 +520,10 @@ export class NetworkSvgComponent implements OnChanges {
     if(n2 instanceof Node) {
       for (let x = 0; x < this.links.length; x++) {
 
-        if (this.links[x].nodeId[0] == n1.id && this.links[x].nexthopNode == n2.id) {
+        if (this.links[x].nodeId[0] == n1.id && this.links[x].nexthopNode === n2.id) {
           return this.links[x];
         }
-        if (this.links[x].nodeId[0] == n2.id && this.links[x].nexthopNode == n1.id) {
+        if (this.links[x].nodeId[0] == n2.id && this.links[x].nexthopNode === n1.id) {
           return this.links[x];
         }
       }

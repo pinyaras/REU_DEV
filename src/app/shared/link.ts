@@ -3,7 +3,7 @@ import { filter } from 'rxjs/operator/filter';
 
 export class Link {
     id: number;
-    nexthopNode: string;
+    nexthopNode: number;
     bw: number;
     nodeId: number[];
     enabled: boolean;

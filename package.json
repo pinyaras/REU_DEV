@@ -27,7 +27,6 @@
     "@ngx-translate/http-loader": "^3.0.1",
     "core-js": "^2.5.7",
     "d3": "^5.5.0",
-    "d3-ng2-service": "^2.2.0",
     "font-awesome": "^4.7.0",
     "material-design-icons": "^3.0.1",
     "ng2-charts": "^1.6.0",
