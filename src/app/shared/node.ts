@@ -29,6 +29,7 @@ export class Node {
 	}
 
 	equals(other: Node): boolean {
+	
 		if (!other || other.wireless.length != this.wireless.length) return false;
 
 		let isEqual = true;
@@ -40,6 +41,7 @@ export class Node {
 			}
 
 		}
+
 
 		return this.id == other.id
 			&& this.nodeName == other.nodeName

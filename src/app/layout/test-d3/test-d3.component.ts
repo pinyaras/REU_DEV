@@ -24,12 +24,15 @@ export class TestD3Component {
   active_nodes: [number, string][]; // String of switch number addresses
   // All valid src, dst pairs based on flows
   all_flows: [string, string][]; // String of src, dst,
-
+  flows: FlowStats[];
 
   private old_nodes: Node[];
   private old_links: Link[];
   private old_hosts: Host[];
   constructor(private networkService: NetworkService, private controllerStatsService: ControllerStatsticsService) {
+    this.old_nodes = []
+    this.old_links = []
+    this.old_hosts = []
     this.load();
     setInterval(() => {
       if (!NetworkSvgComponent.mousedown) {
@@ -48,6 +51,8 @@ export class TestD3Component {
   }
 
   private nodes_changed(node_data): boolean {
+
+
     return !this.array_equal(node_data, this.old_nodes)
   }
   private links_changed(link_data): boolean {
@@ -74,18 +79,20 @@ export class TestD3Component {
       })
 
       this.networkService.getWirelessNodes().subscribe(wireless_data => {
-        wireless_data.forEach(function (wn) {
-          new_nodes.forEach(function (node) {
+        wireless_data.forEach( (wn) =>  {
+          new_nodes.forEach((node) =>  {
             if (node.id === wn.node) {
               node.wireless.push(new WirelessNode(wn));
             }
           })
         })
+        if (this.nodes_changed(new_nodes)) {
+
+          this.nodes = new_nodes;
+        }
+        this.old_nodes = new_nodes;
+      
       })
-      if (comp.nodes_changed(new_nodes)) {
-        comp.nodes = new_nodes;
-      }
-      comp.old_nodes = new_nodes;
     })
 
     comp.controllerStatsService.getSwitches().subscribe(data => {
@@ -99,9 +106,13 @@ export class TestD3Component {
       var active_nodes = [];
       comp.active_nodes = [];
       comp.all_flows = [];
+      comp.flows = [];
       for(let switch_no of switches) {
         comp.controllerStatsService.getFlowStats(switch_no).subscribe(stats => {
           var sfs = new SwitchFlowStats(stats);
+          for(let flow of sfs.stats) {
+            comp.flows.push(flow)
+          }
           if (sfs.id in comp.switchFlowStats) {
             for (let fs of comp.switchFlowStats[sfs.id].stats) {
               var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
@@ -121,8 +132,8 @@ export class TestD3Component {
                   var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
                   active_nodes.push([switch_no, out_port, dl_dst, diff]);
                   comp.active_nodes = active_nodes.slice();
-                  comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
                 }
+                comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
               }
             }
           }
@@ -130,6 +141,8 @@ export class TestD3Component {
         })
       }
     })
+
+
 
     this.networkService.getWirelessLinks().subscribe(link_data => {
       var new_links = [];
@@ -152,5 +165,7 @@ export class TestD3Component {
       }
       comp.old_hosts = host_data;
     });
+
   }
+
 }

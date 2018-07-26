@@ -7,8 +7,8 @@ import { NetworkService } from '../../shared/services/network.service'
 import { ControllerStatsticsService } from '../../shared/services/controller-statstics.service'
 import * as d3 from 'd3';
 import { WirelessNode } from '../../shared/wirelessnode';
-
-
+import { SwitchFlowStats } from '../../shared/switch-flow-stats'
+import { FilterPipe } from '../../shared/pipes/filter-pipe'
 @Component({
   selector: 'app-network-svg',
   templateUrl: './network-svg.component.html',
@@ -42,10 +42,13 @@ export class NetworkSvgComponent implements OnChanges {
   hosts: Host[];
   @Input()
   active_nodes: any[];
-
+  @Input()
+  flows: SwitchFlowStats;
   @Input()
   all_flows: [string,string][];
-
+  selected_src: string = 'any';
+  selected_dst: string = 'any';
+  selected_color: string = "#ffa547"
   selectedNode: Node;
   editting: boolean = false;
   networkService: NetworkService;
@@ -61,6 +64,15 @@ export class NetworkSvgComponent implements OnChanges {
     this.controllerService = controllerService;
   }
 
+  filter(list, obj){
+    if(list) {
+       return list.filter( n => {n == "any"
+      || (n instanceof Node && obj instanceof Node && !n.equals(obj))
+      || (n instanceof Host && obj instanceof Host && !n.equals(obj))})
+    } else {
+      return list
+    }
+  }
   ngOnChanges(): void {
     if (this.links) {
       // Assume all links are not active until decided later
@@ -101,6 +113,7 @@ export class NetworkSvgComponent implements OnChanges {
             }
           }
         }
+    
       this.myOnInit();
     }
   }
@@ -111,23 +124,21 @@ export class NetworkSvgComponent implements OnChanges {
     })
   }
 
-  // getHostByIp(ip: string) {
-  //   return this.hosts.find(host => {
-  //     return host.clientIp == ip;
-  //   }
-  // }
-
   getNodeByWlMac(mac: string) {
     return this.nodes.find(n => {
       let found = false
       n.wireless.forEach(wn => {
-        //console.log(wn.macAdd + " " + mac)
-        //console.log(wn.macAdd == mac)
         if(wn.macAdd == mac) {
           found = true;
         }
       })
       return found;
+    })
+  }
+
+  getHostByIp(ip: string) {
+    return this.hosts.find(h => {
+      return h.clientIp == ip;
     })
   }
 
@@ -149,6 +160,13 @@ export class NetworkSvgComponent implements OnChanges {
 
   displayWireless(i: number) {
     this.index = i;
+  }
+
+  addPath(src: string, dst: string, color: string) {
+
+    console.log("Added path")
+    console.log(src + " " + dst + " " + color)
+
   }
 
   myOnInit() {

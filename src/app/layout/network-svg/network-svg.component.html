@@ -1,14 +1,19 @@
 <svg></svg>
-<div *ngIf="all_flows">
+<div>
 	<label>Source:</label>
-	<select>
-			<option *ngFor="let flow_pair of all_flows" [selected]="flow_pair[0] == 'all_flows[0][0]'">{{flow_pair[0]}}</option>
+	<select [(ngModel)]="selected_src">
+		<option [ngValue]="any">Any</option>
+		<option *ngFor="let host of hosts" [ngValue]="host.clientIp">{{ host.clientIp }}</option>
+		<option *ngFor="let node of nodes" [ngValue]="node.wireless[0].macAdd">{{ node.wireless[0].macAdd }}</option>
 	</select>
 	<label>Destination:</label>
-	<select>
-			<option *ngFor="let flow_pair of all_flows" [selected]="flow_pair[1] == 'all_flows[0][1]'">{{flow_pair[1]}}</option>
+	<select [(ngModel)]="selected_dst">
+		<option [ngValue]="any">Any</option>
+		<option *ngFor="let host of hosts" [ngValue]="host.clientIp">{{ host.clientIp }}</option>
+		<option *ngFor="let node of nodes" [ngValue]="node.wireless[0].macAdd">{{ node.wireless[0].macAdd }}</option>
 	</select>
-	<button class="btn btn-primary">Show</button>
+	<input type="color" id="cp" [(ngModel)]="selected_color">
+	<button class="btn btn-primary" (click)="addPath(selected_src, selected_dst, selected_color)">Add</button>
 </div>
 <div id="myModal" class="modal">
   <!-- Modal content -->
