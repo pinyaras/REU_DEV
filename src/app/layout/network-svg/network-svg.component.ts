@@ -1,4 +1,4 @@
-import { Component, ElementRef, NgZone, OnDestroy, Input, OnChanges } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, Input, OnChanges, OnInit } from '@angular/core';
 import { Node } from '../../shared/node';
 import { Link } from '../../shared/link';
 import { Host } from '../../shared/host';
@@ -24,6 +24,7 @@ export class NetworkSvgComponent implements OnChanges {
     "text": "#292b2c",
     "packet": "white"
   };
+
   private static readonly PADDING = 20;
   private static readonly SVG_FILL = "#292b2c";
   private static readonly PACKETS_PER_LINE = 3;
@@ -73,7 +74,9 @@ export class NetworkSvgComponent implements OnChanges {
       return list
     }
   }
+
   ngOnChanges(): void {
+
     if (this.links) {
       // Assume all links are not active until decided later
       this.links.forEach(link => {
@@ -113,7 +116,7 @@ export class NetworkSvgComponent implements OnChanges {
             }
           }
         }
-    
+
       this.myOnInit();
     }
   }
@@ -205,27 +208,35 @@ export class NetworkSvgComponent implements OnChanges {
 
     }
 
+// Test
+    let width = 900;
+    let height = 600;
+    var svg = d3.select("svg");
+    // d3.selectAll('svg > *').remove()
+    svg.attr("width",width)
+      .attr("height",height)
+      .attr("background-color", NetworkSvgComponent.SVG_FILL);
 
 
-    var svg = d3.select("svg")
-    d3.selectAll('svg > *').remove()
-    svg.style("background-color", NetworkSvgComponent.SVG_FILL);
-    let width = svg.style('width');
-    let height = parseInt(svg.style('height'));
+    // var svg = d3.select("svg")
+    // d3.selectAll('svg > *').remove()
+    // svg.style("background-color", NetworkSvgComponent.SVG_FILL);
+    // let width = svg.style('width');
+    // let height = parseInt(svg.style('height'));
 
-    let locations = {
-      "woodward": "35.3070814,-80.735740"
-    }
-    let url = "https://maps.google.com/maps/api/staticmap" +
-      "?key=AIzaSyCDvRL-n6Nh7bnPv4VsAhFKdWCRxc6LcI8" +
-      "&center=" + locations.woodward +
-      "&zoom=20" +
-      "&size=300x600" +
-      "&maptype=roadmap" +
-      // "&scale=2" +
-      "&style=feature:landscape|element:geometry.fill|color:0x292b2c" +
-      "&style=feature:landscape|element:geometry.stoke||color:0x000000" +
-      "&style=feature:all|element:labels|visibility:off"
+    // let locations = {
+    //   "woodward": "35.3070814,-80.735740"
+    // }
+    // let url = "https://maps.google.com/maps/api/staticmap" +
+    //   "?key=AIzaSyCDvRL-n6Nh7bnPv4VsAhFKdWCRxc6LcI8" +
+    //   "&center=" + locations.woodward +
+    //   "&zoom=20" +
+    //   "&size=300x600" +
+    //   "&maptype=roadmap" +
+    //   "&scale=10" +
+    //   "&style=feature:landscape|element:geometry.fill|color:0x292b2c" +
+    //   "&style=feature:landscape|element:geometry.stoke||color:0x000000" +
+    //   "&style=feature:all|element:labels|visibility:off"
     svg.append('image')
       .attr("id", "map")
       // .attr('xlink:href', url)
@@ -247,7 +258,7 @@ export class NetworkSvgComponent implements OnChanges {
       d3.select(this).attr('r', NetworkSvgComponent.NODE_RADIUS);
     }
     //show mouse location textbox-------------------------
-    /*
+
     let text = svg.append('text')
         .attr('x', 20)
         .attr('y', 580)
@@ -257,7 +268,8 @@ export class NetworkSvgComponent implements OnChanges {
     svg.on('mousemove', function(d) {
         let coords = d3.mouse(this);
         text.text(coords[0] + " " + coords[1])
-    }) //------------------------------------------------ */
+    })
+
     //HoverBox
     let on_hover = function (d) {
       svg.select("#hover").remove();
@@ -297,9 +309,11 @@ export class NetworkSvgComponent implements OnChanges {
         coords[1] = imagelimit - ((size + 0.5) * 13.90) - 30
       }
 
+      // Hover box
       g.append("rect")
         .attr("x", coords[0] + 5)
         .attr("y", coords[1] - (((size + 1) * 2.3) - 27))
+
         .attr("width", RectWidth)
         .attr("height", (size + 0.5) + "em")
         .attr("fill", "AliceBlue")
@@ -362,7 +376,7 @@ export class NetworkSvgComponent implements OnChanges {
       l.enabled = !l.enabled;
       render(comp);
     })
-
+// build up SVG
     var nodes = svg.selectAll("image.nodes")
       .data(this.nodes)
       .enter()
@@ -370,9 +384,15 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('xlink:href', 'assets/images/router.svg')
       .attr('width', 50)
       .attr('height', 50)
+      .attr("transform", function (d)
+      {
+        return "translate(" + d.xloc + "," + d.yloc +")";
+      })
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
       .on("click", function (d) { comp.editNode(d) });
+
+
 
     var hosts = svg.selectAll("image.hosts")
       .data(this.hosts)
@@ -450,6 +470,7 @@ export class NetworkSvgComponent implements OnChanges {
             .attr('x2', comp.nodes[node2].xloc)
             .attr('y2', comp.nodes[node2].yloc)
         })
+
       lines.attr("x1", function (l) {  return comp.getNodeById(l.nodeId[0]).xloc; })
         .attr("y1", function (l) { return comp.getNodeById(l.nodeId[0]).yloc; })
         .attr("x2", function (l) {
@@ -460,6 +481,7 @@ export class NetworkSvgComponent implements OnChanges {
               return comp.getNodeById(l.nexthopNode).xloc;
             }
           })
+
         .attr("y2", function (l) {
           if(l.isHost) {
             // return comp.getNodeById(l.nodeId[0]).yloc + 70;
@@ -468,6 +490,7 @@ export class NetworkSvgComponent implements OnChanges {
             return comp.getNodeById(l.nexthopNode).yloc;
           }
         })
+
         .attr('stroke', function (l) {
           if (l.active) {
             return NetworkSvgComponent.COLORS['active_line'];

@@ -33,14 +33,22 @@ export class TestD3Component {
     this.old_nodes = []
     this.old_links = []
     this.old_hosts = []
-    this.load();
-    setInterval(() => {
-      if (!NetworkSvgComponent.mousedown) {
-        this.load()
-      }
 
-    }, 3000);
+    // Start with the load function
+
+    this.load();
+    // comment out the time interval for now
+
+    // setInterval(() => {
+    //   if (!NetworkSvgComponent.mousedown) {
+    //     this.load()
+    //   }
+    //
+    // }, 3000);
   }
+
+
+  // compare function
   private array_equal(a1, a2): boolean {
     if (a1 && a2) {
       var result = (a1.length === a2.length && a1.every((v, i) => v.equals(a2[i])))
@@ -51,96 +59,107 @@ export class TestD3Component {
   }
 
   private nodes_changed(node_data): boolean {
-
-
     return !this.array_equal(node_data, this.old_nodes)
   }
+
   private links_changed(link_data): boolean {
     return !this.array_equal(link_data, this.old_links)
   }
+  
   private hosts_changed(host_data): boolean {
     return !this.array_equal(host_data, this.old_hosts)
   }
 
+
+
+
   switchFlowStats: SwitchFlowStats[] = [];
+
+  // load function main
   load(): void {
     var comp = this;
-
+    // get the new/current data from networkService
     this.networkService.getNodes().subscribe(node_data => {
       var new_nodes = [];
       node_data.forEach(node => {
+        // console.log(node)
         new_nodes.push(new Node(node))
       })
 
       this.networkService.getOFBR().subscribe(ofbrs => {
         ofbrs.forEach(ofbr => {
+          // console.log(ofbr)
           new_nodes.find(node => node.id == ofbr.nodeId).dpid = ofbr.dpid
         })
       })
 
+
       this.networkService.getWirelessNodes().subscribe(wireless_data => {
         wireless_data.forEach( (wn) =>  {
+          // console.log(wn)
+
           new_nodes.forEach((node) =>  {
             if (node.id === wn.node) {
               node.wireless.push(new WirelessNode(wn));
             }
           })
         })
+        //pass the new_nodes data to check in nodes_changed function
         if (this.nodes_changed(new_nodes)) {
 
           this.nodes = new_nodes;
         }
         this.old_nodes = new_nodes;
-      
+
       })
     })
 
-    comp.controllerStatsService.getSwitches().subscribe(data => {
-      data = data.substring(1, data.length - 1).split(', ')
-      var switches;
-      if(data[0]){
-        switches = data
-      } else {
-        switches = []
-      }
-      var active_nodes = [];
-      comp.active_nodes = [];
-      comp.all_flows = [];
-      comp.flows = [];
-      for(let switch_no of switches) {
-        comp.controllerStatsService.getFlowStats(switch_no).subscribe(stats => {
-          var sfs = new SwitchFlowStats(stats);
-          for(let flow of sfs.stats) {
-            comp.flows.push(flow)
-          }
-          if (sfs.id in comp.switchFlowStats) {
-            for (let fs of comp.switchFlowStats[sfs.id].stats) {
-              var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
-              if (old_fs && old_fs.packet_count != fs.packet_count) {
-                // Flows outputting to controller aren't displayed
-                if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
-                  var dl_dst;
-                  var out_port;
-                  fs.actions.forEach(element => {
-                    if(element.includes("SET_FIELD: {eth_dst")){
-                      dl_dst = element.substring(20, element.length - 1)
-                    }
-                    if(element.includes("OUTPUT:")){
-                      out_port = element.substring(7)
-                    }
-                  });
-                  var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
-                  active_nodes.push([switch_no, out_port, dl_dst, diff]);
-                  comp.active_nodes = active_nodes.slice();
-                }
-                comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
-              }
-            }
-          }
-        comp.switchFlowStats[sfs.id] = sfs;
-        })
-      }
-    })
+    // comp.controllerStatsService.getSwitches().subscribe(data => {
+    //   data = data.substring(1, data.length - 1).split(', ')
+    //   var switches;
+    //   if(data[0]){
+    //     switches = data
+    //   } else {
+    //     switches = []
+    //   }
+    //   var active_nodes = [];
+    //   comp.active_nodes = [];
+    //   comp.all_flows = [];
+    //   comp.flows = [];
+    //   for(let switch_no of switches) {
+    //     comp.controllerStatsService.getFlowStats(switch_no).subscribe(stats => {
+    //       var sfs = new SwitchFlowStats(stats);
+    //       for(let flow of sfs.stats) {
+    //         comp.flows.push(flow)
+    //       }
+    //       if (sfs.id in comp.switchFlowStats) {
+    //         for (let fs of comp.switchFlowStats[sfs.id].stats) {
+    //           var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
+    //           if (old_fs && old_fs.packet_count != fs.packet_count) {
+    //             // Flows outputting to controller aren't displayed
+    //             if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
+    //               var dl_dst;
+    //               var out_port;
+    //               fs.actions.forEach(element => {
+    //                 if(element.includes("SET_FIELD: {eth_dst")){
+    //                   dl_dst = element.substring(20, element.length - 1)
+    //                 }
+    //                 if(element.includes("OUTPUT:")){
+    //                   out_port = element.substring(7)
+    //                 }
+    //               });
+    //               var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
+    //               active_nodes.push([switch_no, out_port, dl_dst, diff]);
+    //               comp.active_nodes = active_nodes.slice();
+    //             }
+    //             comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
+    //           }
+    //         }
+    //       }
+    //     comp.switchFlowStats[sfs.id] = sfs;
+    //     })
+    //   }
+    // })
 
 
 

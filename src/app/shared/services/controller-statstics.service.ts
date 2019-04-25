@@ -8,8 +8,8 @@ import { Port } from '../port'
 @Injectable()
 export class ControllerStatsticsService {
 
-  //private controller_url = "http://192.168.56.101:8080/";
-  private controller_url = "http://localhost:8080/";
+  private controller_url = "http://10.69.124.241:8080/";
+  // private controller_url = "http://localhost:8080/";
 
   constructor(private http: HttpClient) { }
 

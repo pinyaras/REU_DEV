@@ -16,59 +16,61 @@ const httpOptions = {
 	})
 };
 
+
 @Injectable()
 export class NetworkService {
+	private controller_url = "http://10.69.124.129:8080/";
 
 	constructor(private http: HttpClient) { }
 
 	getHosts(): Observable<any> {
-		return this.http.get("http://localhost:8000/hosts")
+		return this.http.get(this.controller_url + "hosts")
 			.catch(this.handleErrorObservable);
 	}
 
 	getNodes(): Observable<any> {
-		return this.http.get("http://localhost:8000/node/")
+		return this.http.get(this.controller_url + "node/")
 		.catch(this.handleErrorObservable);
 	}
 	getNodeDetail(id: number): Observable<any> {
-		return this.http.get("http://localhost:8000/node/" + id + '/')
+		return this.http.get("http://10.69.124.129:8080/node/" + id + '/')
 		.catch(this.handleErrorObservable);
 	}
 	getWirelessNodeDetail(id: number): Observable<any> {
-		return this.http.get("http://localhost:8000/wireless/" + id + '/')
+		return this.http.get("http://10.69.124.129:8080/wireless/" + id + '/')
 	}
 
 	getWirelessNodes(): Observable<any> {
-		return this.http.get("http://localhost:8000/wireless/")
+		return this.http.get("http://10.69.124.129:8080/wireless/")
 		.catch(this.handleErrorObservable);
 	}
 	getWirelessLinks(): Observable<any> {
-		return this.http.get("http://localhost:8000/topology/")
+		return this.http.get("http://10.69.124.129:8080/topology/")
 		.catch(this.handleErrorObservable);
 	}
 
 	updateTopology(node: Node): Observable<any> {
-		return this.http.put<Node>("http://localhost:8000/node/" + node.id + "/", node, httpOptions);
+		return this.http.put<Node>("http://10.69.124.129:8080/node/" + node.id + "/", node, httpOptions);
 	}
 
 	updateNode(node: Node): Observable<any> {
-		return this.http.put<Node>("http://localhost:8000/node/" + node.id + "/", node, httpOptions)
+		return this.http.put<Node>("http://10.69.124.129:8080/node/" + node.id + "/", node, httpOptions)
 	}
 
 	updateWirelessNode(wireless: WirelessNode): Observable<any> {
-		return this.http.put<WirelessNode>("http://localhost:8000/wireless/" + wireless.node + "/", wireless, httpOptions)
+		return this.http.put<WirelessNode>("http://10.69.124.129:8080/wireless/" + wireless.node + "/", wireless, httpOptions)
 	}
 
 	deleteNode(node: Node): Observable<any> {
-		return this.http.delete("http://localhost:8000/node/" + node.id + "/", httpOptions)
+		return this.http.delete("http://10.69.124.129:8080/node/" + node.id + "/", httpOptions)
 	}
 
 	deleteLink(link: Link): Observable<any> {
-		return this.http.delete("http://localhost:8000/topology/" + link.id + "/", httpOptions)
+		return this.http.delete("http://10.69.124.129:8080/topology/" + link.id + "/", httpOptions)
 	}
 
 	getOFBR(): Observable<any> {
-		return this.http.get("http://localhost:8000/ofbr/");
+		return this.http.get("http://10.69.124.129:8080/ofbr/");
 	}
 
 	private handleErrorObservable(error: Response | any) {

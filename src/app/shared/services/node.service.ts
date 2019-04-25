@@ -15,6 +15,7 @@ import { DataJson } from '../DataJson'
 
 @Injectable()
 export class NodeService {
+  private controller_url = "http://10.69.124.129:8080/";
 
   constructor( private http:Http) { }
 
