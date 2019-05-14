@@ -209,20 +209,20 @@ export class NetworkSvgComponent implements OnChanges {
     }
 
 // Test
-    let width = 900;
-    let height = 600;
-    var svg = d3.select("svg");
-    // d3.selectAll('svg > *').remove()
-    svg.attr("width",width)
-      .attr("height",height)
-      .attr("background-color", NetworkSvgComponent.SVG_FILL);
+    // let width = 900;
+    // let height = 600;
+    // var svg = d3.select("svg");
+    // // d3.selectAll('svg > *').remove()
+    // svg.attr("width",width)
+    //   .attr("height",height)
+    //   .attr("background-color", NetworkSvgComponent.SVG_FILL);
 
 
-    // var svg = d3.select("svg")
-    // d3.selectAll('svg > *').remove()
-    // svg.style("background-color", NetworkSvgComponent.SVG_FILL);
-    // let width = svg.style('width');
-    // let height = parseInt(svg.style('height'));
+    var svg = d3.select("svg")
+    d3.selectAll('svg > *').remove()
+    svg.style("background-color", NetworkSvgComponent.SVG_FILL);
+    let width = svg.style('width');
+    let height = parseInt(svg.style('height'));
 
     // let locations = {
     //   "woodward": "35.3070814,-80.735740"
@@ -401,6 +401,7 @@ export class NetworkSvgComponent implements OnChanges {
       .attr('xlink:href', 'assets/images/host.svg')
       .attr('width', 40)
       .attr('height', 40)
+      
       .on("mousemove", on_hover)
       .on("mouseout", delete_hover)
 

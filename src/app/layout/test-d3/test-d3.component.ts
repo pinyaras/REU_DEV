@@ -65,7 +65,7 @@ export class TestD3Component {
   private links_changed(link_data): boolean {
     return !this.array_equal(link_data, this.old_links)
   }
-  
+
   private hosts_changed(host_data): boolean {
     return !this.array_equal(host_data, this.old_hosts)
   }
@@ -114,52 +114,52 @@ export class TestD3Component {
       })
     })
 
-    // comp.controllerStatsService.getSwitches().subscribe(data => {
-    //   data = data.substring(1, data.length - 1).split(', ')
-    //   var switches;
-    //   if(data[0]){
-    //     switches = data
-    //   } else {
-    //     switches = []
-    //   }
-    //   var active_nodes = [];
-    //   comp.active_nodes = [];
-    //   comp.all_flows = [];
-    //   comp.flows = [];
-    //   for(let switch_no of switches) {
-    //     comp.controllerStatsService.getFlowStats(switch_no).subscribe(stats => {
-    //       var sfs = new SwitchFlowStats(stats);
-    //       for(let flow of sfs.stats) {
-    //         comp.flows.push(flow)
-    //       }
-    //       if (sfs.id in comp.switchFlowStats) {
-    //         for (let fs of comp.switchFlowStats[sfs.id].stats) {
-    //           var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
-    //           if (old_fs && old_fs.packet_count != fs.packet_count) {
-    //             // Flows outputting to controller aren't displayed
-    //             if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
-    //               var dl_dst;
-    //               var out_port;
-    //               fs.actions.forEach(element => {
-    //                 if(element.includes("SET_FIELD: {eth_dst")){
-    //                   dl_dst = element.substring(20, element.length - 1)
-    //                 }
-    //                 if(element.includes("OUTPUT:")){
-    //                   out_port = element.substring(7)
-    //                 }
-    //               });
-    //               var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
-    //               active_nodes.push([switch_no, out_port, dl_dst, diff]);
-    //               comp.active_nodes = active_nodes.slice();
-    //             }
-    //             comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
-    //           }
-    //         }
-    //       }
-    //     comp.switchFlowStats[sfs.id] = sfs;
-    //     })
-    //   }
-    // })
+    comp.controllerStatsService.getSwitches().subscribe(data => {
+      data = data.substring(1, data.length - 1).split(', ')
+      var switches;
+      if(data[0]){
+        switches = data
+      } else {
+        switches = []
+      }
+      var active_nodes = [];
+      comp.active_nodes = [];
+      comp.all_flows = [];
+      comp.flows = [];
+      for(let switch_no of switches) {
+        comp.controllerStatsService.getFlowStats(switch_no).subscribe(stats => {
+          var sfs = new SwitchFlowStats(stats);
+          for(let flow of sfs.stats) {
+            comp.flows.push(flow)
+          }
+          if (sfs.id in comp.switchFlowStats) {
+            for (let fs of comp.switchFlowStats[sfs.id].stats) {
+              var old_fs = sfs.stats.find(function (other_fs) { return other_fs.match.equals(fs.match) })
+              if (old_fs && old_fs.packet_count != fs.packet_count) {
+                // Flows outputting to controller aren't displayed
+                if (!fs.actions.includes("OUTPUT:CONTROLLER")) {
+                  var dl_dst;
+                  var out_port;
+                  fs.actions.forEach(element => {
+                    if(element.includes("SET_FIELD: {eth_dst")){
+                      dl_dst = element.substring(20, element.length - 1)
+                    }
+                    if(element.includes("OUTPUT:")){
+                      out_port = element.substring(7)
+                    }
+                  });
+                  var diff = parseInt(old_fs.byte_count) - parseInt(fs.byte_count);
+                  active_nodes.push([switch_no, out_port, dl_dst, diff]);
+                  comp.active_nodes = active_nodes.slice();
+                }
+                comp.all_flows.push([fs.match.dl_src, fs.match.dl_dst])
+              }
+            }
+          }
+        comp.switchFlowStats[sfs.id] = sfs;
+        })
+      }
+    })
 
 
 

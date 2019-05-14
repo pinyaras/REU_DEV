@@ -16,7 +16,7 @@ export class Link {
         this.isHost = obj.isHost
         this.nexthopNode = obj.nexthopNode;
         this.bw = obj.bw;
-        this.nodeId = obj.nodeId;
+        this.nodeId = obj.node;
         this.enabled = true;
         this.active = false;
         this.byteRate = 0;
